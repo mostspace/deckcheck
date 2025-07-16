@@ -1,0 +1,138 @@
+@extends('layouts.app')
+
+@section('title', 'Deficiencies')
+
+@section('content')
+
+    {{-- #System Messages --}}
+    @if (session('success'))
+        <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    {{-- #Header --}}
+    <div class="mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-semibold text-[#0f1728]">Maintenance Index</h1>
+                <p class="text-[#475466]">Overview of equipment maintenance requirements.</p>
+            </div>
+        </div>
+    </div>
+
+    {{-- #Dashboard --}}
+    <div class="mb-8" id="deficiencies-hero">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            {{-- ##Chart --}}
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm p-6">
+                    <div class="mb-6">
+                        <h2 class="text-lg font-semibold text-[#0f1728] mb-2">Deficiency Age Distribution</h2>
+                        <p class="text-sm text-[#475466]">Current open deficiencies grouped by age</p>
+                    </div>
+                    <div class="h-[300px] relative flex items-center justify-center">
+                        <canvas id="deficiencyPieChart" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ##Cards --}}
+            <div class="space-y-4">
+
+                {{-- ### <30 Days --}}
+                <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-[#344053]">&lt; 30 Days</h3>
+                        <div class="w-3 h-3 bg-[#12b76a] rounded-full"></div>
+                    </div>
+                    <div class="text-2xl font-semibold text-[#0f1728] mb-1">12</div>
+                    <div class="text-sm text-[#475466]">Recent deficiencies</div>
+                </div>
+
+                {{-- ### 30-90 Days --}}
+                <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-[#344053]">30-90 Days</h3>
+                        <div class="w-3 h-3 bg-[#f79009] rounded-full"></div>
+                    </div>
+                    <div class="text-2xl font-semibold text-[#0f1728] mb-1">8</div>
+                    <div class="text-sm text-[#475466]">Aging deficiencies</div>
+                </div>
+
+                {{-- ### >90 Days --}}
+                <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-3">
+                        <h3 class="text-sm font-medium text-[#344053]">&gt; 90 Days</h3>
+                        <div class="w-3 h-3 bg-[#f04438] rounded-full"></div>
+                    </div>
+                    <div class="text-2xl font-semibold text-[#0f1728] mb-1">3</div>
+                    <div class="text-sm text-[#475466]">Critical deficiencies</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- #Open Deficiencies --}}
+    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead class="bg-[#f8f9fb] text-[#475466] uppercase text-xs border-b border-[#e4e7ec]">
+                <tr>
+                    <th class="text-left px-6 py-3">ID</th>
+                    <th class="text-left px-6 py-3">Equipment</th>
+                    <th class="text-left px-6 py-3">Subject</th>
+                    <th class="text-left px-6 py-3">Priority</th>
+                    <th class="text-left px-6 py-3">Status</th>
+                    <th class="text-left px-6 py-3">Opened</th>
+                    <th class="text-left px-6 py-3">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody class="text-[#344053]">
+
+                {{-- ##Deficiencies Conditional --}}
+                @if ($deficiencies->count())
+
+                    {{-- ###Deficiencies Loop --}}
+                    @foreach ($deficiencies as $deficiency)
+
+                        <tr class="border-b border-[#e4e7ec] hover:bg-[#f9fafb]">
+                            <td class="px-6 py-4 font-mono text-xs text-[#6941c6]">#{{ $deficiency->id }}</td>
+                            <td class="px-6 py-4">
+                                {{ $deficiency->equipment->name ?? '—' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $deficiency->subject }}
+                            </td>
+                            <td class="px-6 py-4 capitalize">
+                                <span class="inline-block px-2 py-1 rounded text-xs font-medium bg-[#f3f4f6] text-[#0f1728]">
+                                    {{ ucfirst($deficiency->priority) }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                {!! status_badge($deficiency->status) !!}
+                            </td>
+                            <td class="px-6 py-4 text-xs text-[#667084]">
+                                {{ $deficiency->created_at->format('M j, Y') }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="{{ route('deficiencies.show', $deficiency) }}" class="text-sm font-medium text-[#6941c6] hover:underline">
+                                    View →
+                                </a>
+                            </td>
+                        </tr>
+
+                    @endforeach
+
+                    @else
+                        <div class="text-sm text-[#475466]">
+                            No deficiencies have been logged yet.
+                        </div>
+                    @endif
+
+            </tbody>
+        </table>
+    </div>
+
+@endsection

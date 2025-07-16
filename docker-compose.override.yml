@@ -1,0 +1,14 @@
+services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"                     # Exposes phpMyAdmin at http://localhost:8080
+    environment:
+      PMA_ARBITRARY: 1               # Allows connecting to any host in the Docker network
+      PMA_HOST: mysql                # Matches the name of Sail’s MySQL service
+      PMA_USER: "${DB_USERNAME}"     # Pulls your DB user from .env
+      PMA_PASSWORD: "${DB_PASSWORD}" # Pulls your DB password from .env
+    depends_on:
+      - mysql
+    networks:
+      - sail
