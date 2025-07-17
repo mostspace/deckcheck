@@ -49,6 +49,8 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        logger('Login succeeded for: ' . $this->input('email'));
+
         RateLimiter::clear($this->throttleKey());
     }
 
