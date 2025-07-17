@@ -190,7 +190,7 @@ class EquipmentController extends Controller
 
         // Handle file upload
         if ($request->hasFile('hero_photo')) {
-            $path = $request->file('hero_photo')->store('hero_photos', 'public');
+            $path = $request->file('hero_photo')->store('hero_photos', 's3_public');
             $data['hero_photo'] = $path;
         }
 
