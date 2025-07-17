@@ -134,7 +134,7 @@
             <h3 class="font-medium text-base sm:text-lg">Interval Maintenance</h3>
           </div>
           <p class="text-navy-300 text-sm sm:text-base">
-            Low-touch tracking and management for inspection intervals and automated work scheduling.
+            Low-touch tracking and management for inspection intervals with automated work scheduling.
           </p>
         </div>
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">

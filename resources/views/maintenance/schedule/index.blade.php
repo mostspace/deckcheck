@@ -226,6 +226,8 @@
                                             'frequency' => $frequency,
                                             'date' => $date->toDateString(),
                                             'group' => $group,
+                                            'dateRangeLabel' => $formattedRange,
+                                            'groupName' => $groupName,
                                         ],
                                         request('assigned') ? ['assigned' => 1] : [],
                                     ),
@@ -243,8 +245,9 @@
                                     </span>
                                 </div>
 
-                                <button onclick="launchFlow({{ Js::from($groupedIds) }})">Start Flow</button>
-
+                                <button onclick="launchFlow({{ Js::from($groupedIds) }}, {{ Js::from($groupName) }})">
+                                    Start Flow
+                                </button>
                             </div>
 
 
@@ -336,223 +339,273 @@
 
 
     <script>
-    let workOrderIds = [];
-    let currentIndex = 0;
+        let workOrderIds = [];
+        let currentIndex = 0;
 
-    function launchFlow(selectedIds) {
-        const params = new URLSearchParams({
-            frequency: '{{ $frequency }}',
-            date: '{{ $date->toDateString() }}',
-            group: '{{ $group }}',
-            @if (request('assigned')) assigned: '1', @endif
-        });
+        function updateFlowProgressBar() {
+    const totalSteps = workOrderIds.length;
+    const currentStep = currentIndex + 1;
 
-        selectedIds.forEach(id => params.append('ids[]', id));
+    // Update step number
+    const stepNumEl = document.getElementById('flow-step-num');
+    if (stepNumEl) {
+        stepNumEl.textContent = currentStep;
+    }
 
-        fetch(`/maintenance/schedule/flow?${params.toString()}`)
-            .then(res => res.text())
-            .then(html => {
-                // Inject into panel
-                const panel = document.getElementById('flow-slideout-panel');
-                const overlay = document.getElementById('flow-slideout-overlay');
-                const wrapper = document.getElementById('flow-slideout-wrapper');
+    // Update progress bar width
+    const progressBarEl = document.getElementById('flow-progress-bar');
+    if (progressBarEl) {
+        const percentage = Math.round((currentStep / totalSteps) * 100);
+        progressBarEl.style.width = `${percentage}%`;
+    }
 
-                panel.innerHTML = html;
+    // Enable/disable Prev and Next buttons
+    const prevButton = document.getElementById('prev-button');
+    const nextButton = document.getElementById('next-button');
 
-                // Pull workOrderIds and currentIndex from modal markup
-                const idContainer = panel.querySelector('#flow-work-order-ids');
-                const currentIdEl = panel.querySelector('#flow-current-id');
-                if (idContainer && currentIdEl) {
-                    workOrderIds = JSON.parse(idContainer.textContent);
-                    currentIndex = workOrderIds.indexOf(parseInt(currentIdEl.textContent));
-                }
+    if (prevButton) {
+        const atFirst = currentIndex === 0;
+        prevButton.disabled = atFirst;
+        prevButton.classList.toggle('opacity-50', atFirst);
+        prevButton.classList.toggle('cursor-not-allowed', atFirst);
+    }
 
-                // Slide in
-                panel.classList.remove('translate-x-full');
-                overlay.classList.remove('hidden');
-                overlay.classList.add('opacity-100');
-                wrapper.classList.remove('pointer-events-none');
+    if (nextButton) {
+        const atLast = currentIndex === totalSteps - 1;
+        nextButton.disabled = atLast;
+        nextButton.classList.toggle('opacity-50', atLast);
+        nextButton.classList.toggle('cursor-not-allowed', atLast);
+    }
+}
 
-                // Bind behaviors
-                bindCompletionForm();
-                checkWorkOrderCompletable();
-            })
-            .catch(err => {
-                console.error('Failed to load flow modal:', err);
-                alert('Something went wrong loading the flow interface.');
+
+
+        function launchFlow(selectedIds, groupName) {
+            const params = new URLSearchParams({
+                frequency: '{{ $frequency }}',
+                date: '{{ $date->toDateString() }}',
+                group: '{{ $group }}',
+                groupName: groupName,
+                dateRangeLabel: '{{ $formattedRange }}',
+                @if (request('assigned'))
+                    assigned: '1',
+                @endif
             });
-    }
 
-    function closeFlowModal() {
-        const panel = document.getElementById('flow-slideout-panel');
-        const overlay = document.getElementById('flow-slideout-overlay');
-        const wrapper = document.getElementById('flow-slideout-wrapper');
+            selectedIds.forEach(id => params.append('ids[]', id));
 
-        panel.classList.add('translate-x-full');
-        overlay.classList.add('hidden');
-        wrapper.classList.add('pointer-events-none');
+            fetch(`/maintenance/schedule/flow?${params.toString()}`)
+                .then(res => res.text())
+                .then(html => {
+                    const panel = document.getElementById('flow-slideout-panel');
+                    const overlay = document.getElementById('flow-slideout-overlay');
+                    const wrapper = document.getElementById('flow-slideout-wrapper');
 
-        setTimeout(() => {
-            panel.innerHTML = '';
-        }, 300);
-    }
+                    panel.innerHTML = html;
 
-    function loadWorkOrderAt(index) {
-        if (index < 0 || index >= workOrderIds.length) return;
+                    // Pull workOrderIds and currentIndex from modal markup
+                    const idContainer = panel.querySelector('#flow-work-order-ids');
+                    const currentIdEl = panel.querySelector('#flow-current-id');
+                    if (idContainer && currentIdEl) {
+                        workOrderIds = JSON.parse(idContainer.textContent);
+                        currentIndex = workOrderIds.indexOf(parseInt(currentIdEl.textContent));
+                        updateFlowProgressBar();
+                    }
 
-        const workOrderId = workOrderIds[index];
-        fetch(`/maintenance/schedule/flow/load/${workOrderId}`)
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('work-order-container').innerHTML = html;
-                currentIndex = index;
+                    // Slide in
+                    panel.classList.remove('translate-x-full');
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('opacity-100');
+                    wrapper.classList.remove('pointer-events-none');
 
-                bindCompletionForm();
-                checkWorkOrderCompletable();
+                    bindCompletionForm();
+                    checkWorkOrderCompletable();
+                })
+                .catch(err => {
+                    console.error('Failed to load flow modal:', err);
+                    alert('Something went wrong loading the flow interface.');
+                });
+        }
+
+
+
+        function closeFlowModal() {
+            const panel = document.getElementById('flow-slideout-panel');
+            const overlay = document.getElementById('flow-slideout-overlay');
+            const wrapper = document.getElementById('flow-slideout-wrapper');
+
+            panel.classList.add('translate-x-full');
+            overlay.classList.add('hidden');
+            wrapper.classList.add('pointer-events-none');
+
+            setTimeout(() => {
+                panel.innerHTML = '';
+            }, 300);
+        }
+
+        function loadWorkOrderAt(index) {
+            if (index < 0 || index >= workOrderIds.length) return;
+
+            const workOrderId = workOrderIds[index];
+            fetch(`/maintenance/schedule/flow/load/${workOrderId}`)
+                .then(res => res.text())
+                .then(html => {
+                    currentIndex = index;
+                    document.getElementById('work-order-container').innerHTML = html;
+
+                    updateFlowProgressBar();
+                    bindCompletionForm();
+                    checkWorkOrderCompletable();
+                });
+        }
+
+        function loadNextWorkOrder() {
+            loadWorkOrderAt(currentIndex + 1);
+            updateFlowProgressBar();
+        }
+
+        function loadPrevWorkOrder() {
+            loadWorkOrderAt(currentIndex - 1);
+            updateFlowProgressBar();
+        }
+
+        function updateTaskStatus(button) {
+            const taskId = button.getAttribute('data-task-id');
+            const status = button.getAttribute('data-status');
+
+            fetch(`/work-orders/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        const container = button.closest('.flex');
+                        const completeBtn = container.querySelector('button[data-status="completed"]');
+                        const flagBtn = container.querySelector('button[data-status="flagged"]');
+
+                        completeBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
+                        flagBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
+                        completeBtn.disabled = false;
+                        flagBtn.disabled = false;
+
+                        if (status === 'completed') {
+                            completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]', 'text-white');
+                            completeBtn.classList.remove('text-[#027947]', 'hover:bg-[#d0fadf]', 'bg-[#ebfdf2]');
+                            completeBtn.disabled = true;
+                        } else if (status === 'flagged') {
+                            flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]', 'text-white');
+                            flagBtn.classList.remove('text-[#b42318]', 'hover:bg-[#fee4e2]', 'bg-[#fef3f2]');
+                            flagBtn.disabled = true;
+                        }
+
+                        checkWorkOrderCompletable();
+                    } else {
+                        alert('Failed to update task.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('There was a problem updating the task.');
+                });
+        }
+
+        function checkWorkOrderCompletable() {
+            const taskButtons = document.querySelectorAll('[data-task-id]');
+            const completeButton = document.getElementById('complete-work-order-button');
+
+            const allResolved = Array.from(taskButtons).every(btn => {
+                const container = btn.closest('.flex');
+                return container.querySelector('button[disabled]');
             });
-    }
 
-    function loadNextWorkOrder() {
-        loadWorkOrderAt(currentIndex + 1);
-    }
-
-    function loadPrevWorkOrder() {
-        loadWorkOrderAt(currentIndex - 1);
-    }
-
-    function updateTaskStatus(button) {
-        const taskId = button.getAttribute('data-task-id');
-        const status = button.getAttribute('data-status');
-
-        fetch(`/work-orders/tasks/${taskId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ status })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const container = button.closest('.flex');
-                const completeBtn = container.querySelector('button[data-status="completed"]');
-                const flagBtn = container.querySelector('button[data-status="flagged"]');
-
-                completeBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
-                flagBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
-                completeBtn.disabled = false;
-                flagBtn.disabled = false;
-
-                if (status === 'completed') {
-                    completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]', 'text-white');
-                    completeBtn.classList.remove('text-[#027947]', 'hover:bg-[#d0fadf]', 'bg-[#ebfdf2]');
-                    completeBtn.disabled = true;
-                } else if (status === 'flagged') {
-                    flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]', 'text-white');
-                    flagBtn.classList.remove('text-[#b42318]', 'hover:bg-[#fee4e2]', 'bg-[#fef3f2]');
-                    flagBtn.disabled = true;
+            if (completeButton) {
+                if (allResolved) {
+                    completeButton.disabled = false;
+                    completeButton.classList.remove('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
+                    completeButton.classList.add('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
+                } else {
+                    completeButton.disabled = true;
+                    completeButton.classList.add('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
+                    completeButton.classList.remove('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
                 }
-
-                checkWorkOrderCompletable();
-            } else {
-                alert('Failed to update task.');
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            alert('There was a problem updating the task.');
-        });
-    }
-
-    function checkWorkOrderCompletable() {
-        const taskButtons = document.querySelectorAll('[data-task-id]');
-        const completeButton = document.getElementById('complete-work-order-button');
-
-        const allResolved = Array.from(taskButtons).every(btn => {
-            const container = btn.closest('.flex');
-            return container.querySelector('button[disabled]');
-        });
-
-        if (completeButton) {
-            if (allResolved) {
-                completeButton.disabled = false;
-                completeButton.classList.remove('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
-                completeButton.classList.add('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
-            } else {
-                completeButton.disabled = true;
-                completeButton.classList.add('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
-                completeButton.classList.remove('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
             }
         }
-    }
 
-    function toggleAssigneeDropdown(id = null) {
-        const dropdown = id
-            ? document.getElementById(`assignee-options-${id}`)
-            : document.getElementById('assignee-options');
+        function toggleAssigneeDropdown(id = null) {
+            const dropdown = id ?
+                document.getElementById(`assignee-options-${id}`) :
+                document.getElementById('assignee-options');
 
-        if (dropdown) dropdown.classList.toggle('hidden');
-    }
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
 
-    function assignUser(workOrderId, userId) {
-        fetch(`/work-orders/${workOrderId}/assign`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({ assigned_to: userId })
-        })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        })
-        .then(() => loadWorkOrderAt(currentIndex))
-        .catch(error => {
-            console.error('Error assigning user:', error);
-            alert('Failed to assign user.');
+        function assignUser(workOrderId, userId) {
+            fetch(`/work-orders/${workOrderId}/assign`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        assigned_to: userId
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(() => loadWorkOrderAt(currentIndex))
+                .catch(error => {
+                    console.error('Error assigning user:', error);
+                    alert('Failed to assign user.');
+                });
+        }
+
+        function bindCompletionForm() {
+            const completeForm = document.getElementById('complete-form');
+            if (!completeForm) return;
+
+            completeForm.onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(completeForm);
+
+                fetch(completeForm.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            loadNextWorkOrder();
+                        } else {
+                            alert('There was an error completing this work order.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('There was a problem submitting the completion form.');
+                    });
+            };
+        }
+
+        // Optional — only useful for initial render (e.g. preloaded modal)
+        document.addEventListener('DOMContentLoaded', () => {
+            checkWorkOrderCompletable();
+            bindCompletionForm();
         });
-    }
-
-    function bindCompletionForm() {
-        const completeForm = document.getElementById('complete-form');
-        if (!completeForm) return;
-
-        completeForm.onsubmit = function(e) {
-            e.preventDefault();
-            const formData = new FormData(completeForm);
-
-            fetch(completeForm.action, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    loadNextWorkOrder();
-                } else {
-                    alert('There was an error completing this work order.');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                alert('There was a problem submitting the completion form.');
-            });
-        };
-    }
-
-    // Optional — only useful for initial render (e.g. preloaded modal)
-    document.addEventListener('DOMContentLoaded', () => {
-        checkWorkOrderCompletable();
-        bindCompletionForm();
-    });
-</script>
+    </script>
 
 @endsection

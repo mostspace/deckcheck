@@ -12,21 +12,31 @@
             </button>
 
             {{-- Header --}}
-            <div class="mb-6 flex justify-between items-center">
-                <div>
-                    <h1 class="text-2xl font-semibold text-[#0f1728]">Maintenance Flow</h1>
-                    <p class="text-sm text-[#667084]">Complete all work orders in sequence.</p>
+            <div class="mb-6">
+                <h1 class="text-2xl font-semibold text-[#0f1728]">
+                    <h1 class="text-2xl font-semibold text-[#0f1728]">
+                        {{ strtoupper($frequency) }} Flow – {{ $groupName }} {{ $dateRangeLabel }}
+                    </h1>
+
+                </h1>
+                <p class="text-sm text-[#667084]">Complete all work orders in sequence.</p>
+
+                {{-- Progress Bar --}}
+                @php
+                    $index = $workOrders->search(fn($wo) => $wo->id === $currentWorkOrder->id);
+                    $count = $workOrders->count();
+                    $progress = $count > 0 ? (($index + 1) / $count) * 100 : 0;
+                @endphp
+
+                <div class="text-sm text-gray-500 mb-1">
+                    Step <span id="flow-step-num">{{ $currentIndex + 1 }}</span> of {{ $workOrders->count() }}
+                </div>
+                <div class="w-full h-1 bg-gray-100 rounded-full">
+                    <div id="flow-progress-bar" class="h-1 bg-purple-600 rounded-full transition-all duration-300"
+                        style="width: {{ round((($currentIndex + 1) / $workOrders->count()) * 100) }}%;">
+                    </div>
                 </div>
 
-                {{-- Navigation Controls --}}
-                <div class="flex gap-2">
-                    <button id="prev-button" onclick="loadPrevWorkOrder()" class="btn btn-sm bg-[#f2f4f7] hover:bg-[#e4e7ec]">
-                        <i class="fa-solid fa-chevron-left mr-1"></i> Previous
-                    </button>
-                    <button id="next-button" onclick="loadNextWorkOrder()" class="btn btn-sm bg-[#6840c6] text-white hover:bg-[#5a35a8]">
-                        Next <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </button>
-                </div>
             </div>
 
             {{-- Dynamic Work Order Container --}}
@@ -34,12 +44,16 @@
                 @include('maintenance.schedule.flow.partials.work-order', [
                     'workOrder' => $currentWorkOrder,
                     'availableUsers' => $currentWorkOrder->equipmentInterval->equipment->vessel->users,
+                    'index' => $index,
+                    'count' => $count,
                 ])
             </div>
         </div>
     </div>
 
+    {{-- IDs passed to JS --}}
     <span id="flow-work-order-ids" class="hidden">{{ $workOrders->pluck('id')->toJson() }}</span>
     <span id="flow-current-id" class="hidden">{{ $currentWorkOrder->id }}</span>
+
 
 @endsection

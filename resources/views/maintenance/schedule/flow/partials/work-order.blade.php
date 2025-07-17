@@ -119,10 +119,9 @@
     </div>
 
     <div class="space-y-4">
-        
+
         {{-- #Tasks Loop --}}
         @forelse ($workOrder->tasks->sortBy('sequence_position') as $task)
-
             <div class="border border-[#e4e7ec] rounded-lg p-4">
                 <div class="flex items-start justify-between mb-3">
                     <div class="flex-1">
@@ -168,7 +167,6 @@
 
     {{-- #Completion Form --}}
     @if ($workOrder->tasks->count())
-
         <div class="border-t border-[#e4e7ec] pt-6 mt-6">
             <form id="complete-form" action="{{ route('work-orders.complete', $workOrder) }}" method="POST">
                 @csrf
@@ -178,18 +176,25 @@
                     class="w-full px-3.5 py-2.5 bg-white rounded-lg shadow-sm border border-[#cfd4dc] text-[#0f1728] text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#6840c6]"
                     rows="4" placeholder="Enter any final notes about this record...">{{ old('notes', $workOrder->notes) }}</textarea>
 
-                <div class="mt-6 text-right">
+                {{-- Navigation Buttons --}}
+                <div class="mt-6 flex justify-end gap-2">
+                    <button id="prev-button" type="button" onclick="loadPrevWorkOrder()"
+                        class="px-4 py-2 rounded-lg text-sm font-semibold border border-[#344053] text-[#344053] hover:bg-[#e4e7ec]">
+                        <i class="fa-solid fa-chevron-left mr-2"></i> Previous
+                    </button>
+
+                    <button id="next-button" type="button" onclick="loadNextWorkOrder()"
+                        class="px-4 py-2 rounded-lg text-sm font-semibold border border-[#344053] text-[#344053] hover:bg-[#e4e7ec]">
+                        Next <i class="fa-solid fa-chevron-right ml-2"></i>
+                    </button>
+
                     <button type="submit" id="complete-work-order-button"
-                        class="px-4 py-2 rounded-lg text-sm font-semibold bg-[#e4e7ec] text-[#667085] cursor-not-allowed" disabled>
-                        <i class="fa-solid fa-check mr-2"></i> Mark Work Order Complete
+                        class="px-4 py-2 ml-4 rounded-lg text-sm font-semibold bg-[#6840c6] text-white hover:bg-[#5a35a8] cursor-pointer" disabled>
+                        <i class="fa-solid fa-check mr-2"></i> Complete & Next
                     </button>
                 </div>
             </form>
         </div>
-    
     @endif
 
 </div>
-
-
-

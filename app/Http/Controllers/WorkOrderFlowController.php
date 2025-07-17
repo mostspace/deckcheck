@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\WorkOrder;
 use App\Models\Vessel;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Carbon;
 
 class WorkOrderFlowController extends Controller
 {
@@ -36,10 +37,18 @@ class WorkOrderFlowController extends Controller
             ->values();
 
         $currentWorkOrder = $workOrders->firstWhere('id', $currentId) ?? $workOrders->first();
+        $currentIndex = $workOrders->search(fn($wo) => $wo->id === $currentWorkOrder->id);
+
+        $dateRangeLabel = $request->input('dateRangeLabel');
+        $groupName = $request->input('groupName');
 
         return view('maintenance.schedule.flow.modal', [
             'workOrders' => $workOrders,
             'currentWorkOrder' => $currentWorkOrder,
+            'currentIndex' => $currentIndex,
+            'groupName' => $groupName,
+            'frequency' => ucfirst($request->input('frequency', 'Scheduled')),
+            'dateRangeLabel' => $dateRangeLabel,
         ]);
     }
 
