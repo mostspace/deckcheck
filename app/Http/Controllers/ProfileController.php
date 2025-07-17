@@ -47,7 +47,7 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-        $path = $request->file('profile_pic')->store('profile_pictures', 'public');
+        $path = $request->file('profile_pic')->store('profile_pictures', 's3_public');
         $user->profile_pic = $path;
         $user->save();
 
