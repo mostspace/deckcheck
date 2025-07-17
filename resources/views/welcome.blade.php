@@ -89,17 +89,17 @@
         </h1>
 
         <p id="subheading" class="text-lg md:text-2xl sm:text-xl text-navy-200 mb-8 leading-relaxed opacity-0">
-          A smarter way to manage maintenance, tasks, and inspections onboard. Built for crew who need to stay ahead of the work.
+          A smarter way to manage admin and SMS compliance. Solutions that just make sense, built by crew.
         </p>
 
         <div id="cta-buttons" class="flex flex-col sm:flex-row gap-4 mb-8 opacity-0">
           <a href="{{ route('login') }}"
-             class="sm:w-auto bg-transparent border border-[#8cdfd8] hover:border-teal-500 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
+             class="sm:w-auto bg-transparent border border-[#8cdfd8] hover:border-navy-200 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
             Log In
           </a>
           <a href="#"
-             class="sm:w-auto bg-transparent border border-[#8cdfd8] hover:border-teal-500 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
-            Contact Us
+             class="sm:w-auto bg-transparent border border-navy-500 hover:border-navy-200 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
+            Get in Touch
           </a>
         </div>
 
@@ -111,11 +111,11 @@
       <div id="illustration" class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-6 opacity-0">
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg flex flex-col items-center">
           <i class="fa-solid fa-wrench text-navy-400 text-2xl sm:text-3xl mb-3"></i>
-          <span class="text-navy-300 text-sm sm:text-base">Equipment Tracking</span>
+          <span class="text-navy-300 text-sm sm:text-base">Asset Management</span>
         </div>
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg flex flex-col items-center">
           <i class="fa-solid fa-list-check text-navy-400 text-2xl sm:text-3xl mb-3"></i>
-          <span class="text-navy-300 text-sm sm:text-base">Task Management</span>
+          <span class="text-navy-300 text-sm sm:text-base">Task Automation</span>
         </div>
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg flex flex-col items-center">
           <i class="fa-solid fa-compass text-navy-400 text-2xl sm:text-3xl mb-3"></i>
@@ -126,21 +126,21 @@
 
     <!-- FEATURES -->
     <section id="features-section" class="mt-12 sm:mt-16 border-t border-navy-700 pt-10 sm:pt-12 opacity-0">
-      <h2 class="text-xl sm:text-2xl font-semibold mb-6 sm:mb-8">Built for professional yacht crew</h2>
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 sm:mb-8">Built for crew, not bureaucrats:</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
           <div class="flex items-center mb-3">
             <i class="fa-solid fa-calendar-check text-navy-400 mr-2"></i>
-            <h3 class="font-medium text-base sm:text-lg">Maintenance Scheduling</h3>
+            <h3 class="font-medium text-base sm:text-lg">Interval Maintenance</h3>
           </div>
           <p class="text-navy-300 text-sm sm:text-base">
-            Track and manage equipment inspection intervals and maintenance schedules in one centralized system.
+            Low-touch tracking and management for inspection intervals and automated work scheduling.
           </p>
         </div>
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
           <div class="flex items-center mb-3">
             <i class="fa-solid fa-clipboard-list text-navy-400 mr-2"></i>
-            <h3 class="font-medium text-base sm:text-lg">Task Assignment</h3>
+            <h3 class="font-medium text-base sm:text-lg">Work Assignment</h3>
           </div>
           <p class="text-navy-300 text-sm sm:text-base">
             Assign tasks to crew members and track completion status with clear accountability.
@@ -152,16 +152,16 @@
             <h3 class="font-medium text-base sm:text-lg">Compliance Reporting</h3>
           </div>
           <p class="text-navy-300 text-sm sm:text-base">
-            Generate reports for flag state, class society, and internal compliance requirements.
+            Generate reports for flag, class, and internal compliance.
           </p>
         </div>
         <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
           <div class="flex items-center mb-3">
             <i class="fa-solid fa-boxes-stacked text-navy-400 mr-2"></i>
-            <h3 class="font-medium text-base sm:text-lg">Equipment Inventory</h3>
+            <h3 class="font-medium text-base sm:text-lg">Equipment Lifecycle</h3>
           </div>
           <p class="text-navy-300 text-sm sm:text-base">
-            Maintain a comprehensive inventory of onboard equipment with location mapping.
+            Maintain a comprehensive inventory of onboard assets with location and tailored records.
           </p>
         </div>
       </div>
