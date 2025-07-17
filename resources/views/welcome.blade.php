@@ -177,7 +177,7 @@
             <i class="fa-solid fa-clipboard-check mr-2"></i>
             DeckCheck
           </div>
-          <p class="text-navy-400 text-xs sm:text-sm mt-1">Beta version 0.9.2</p>
+          <p class="text-navy-400 text-xs sm:text-sm mt-1">Beta version 1.0.0</p>
         </div>
         <div class="flex space-x-4">
           <a href="#" class="text-navy-300 hover:text-white transition-colors text-sm">Privacy</a>
