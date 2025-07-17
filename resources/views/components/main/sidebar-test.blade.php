@@ -36,7 +36,7 @@
             <!-- User avatar at the bottom -->
             <div class="mt-auto mb-4">
                 <button id="sidebar-user-btn" class="block">
-                    <img src="/storage/{{ $user->profile_pic }}" alt="User avatar"
+                    <img src="{{ Storage::url($user->profile_pic) }}" alt="User avatar"
                         class="w-8 h-8 rounded-full border-2 border-white hover:ring-2 hover:ring-[#6840c6] transition" />
                 </button>
             </div>
