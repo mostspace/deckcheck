@@ -65,8 +65,8 @@
 <body class="bg-navy-900 text-white font-sans min-h-screen">
 
   <!-- HEADER -->
-  <header class="py-6 px-6 md:px-10 flex justify-between items-center">
-    <div id="logo" class="text-navy-100 font-semibold text-xl flex items-center opacity-0">
+  <header class="py-4 px-4 sm:py-6 sm:px-6 md:px-10 flex justify-between items-center">
+    <div id="logo" class="text-navy-100 font-semibold text-lg sm:text-xl flex items-center opacity-0">
       <i class="fa-solid fa-clipboard-check mr-2"></i>
       DeckCheck
     </div>
@@ -79,91 +79,88 @@
   </header>
 
   <!-- MAIN -->
-  <main class="px-6 md:px-10 pt-12 pb-20 max-w-3xl mx-auto">
+  <main class="px-4 sm:px-6 md:px-10 pt-12 pb-16 max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto">
     <!-- HERO -->
-    <section class="h-[500px] flex flex-col justify-center">
-      <div class="mb-16">
-        <!-- Reserve space, then overlay typed text with teal-highlight -->
-        <h1 class="text-4xl md:text-5xl font-bold mb-4 relative">
+    <section class="flex flex-col justify-center">
+      <div class="mb-12 sm:mb-16">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 relative">
           <span class="invisible"><strong class="text-[#8cdfd8]">DeckCheck</strong> is in Beta.</span>
           <span id="typed-headline" class="absolute left-0 top-0"></span>
         </h1>
 
-        <p id="subheading" class="text-xl md:text-2xl text-navy-200 mb-10 leading-relaxed opacity-0">
+        <p id="subheading" class="text-lg md:text-2xl sm:text-xl text-navy-200 mb-8 leading-relaxed opacity-0">
           A smarter way to manage maintenance, tasks, and inspections onboard. Built for crew who need to stay ahead of the work.
         </p>
 
-        <div id="cta-buttons" class="flex flex-col sm:flex-row gap-4 mb-12 opacity-0">
+        <div id="cta-buttons" class="flex flex-col sm:flex-row gap-4 mb-8 opacity-0">
           <a href="{{ route('login') }}"
-             class="bg-transparent border border-[#8cdfd8] hover:border-teal-500 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
+             class="sm:w-auto bg-transparent border border-[#8cdfd8] hover:border-teal-500 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
             Log In
           </a>
           <a href="#"
-             class="bg-transparent border border-[#8cdfd8] hover:border-teal-500 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
+             class="sm:w-auto bg-transparent border border-[#8cdfd8] hover:border-teal-500 text-white py-3 px-6 rounded-md font-medium text-center transition-colors">
             Contact Us
           </a>
         </div>
 
-        <p id="supporting-text" class="text-navy-300 max-w-2xl opacity-0">
+        <p id="supporting-text" class="text-base sm:text-lg text-navy-300 opacity-0">
           We're actively building DeckCheck with input from working crew. If you're interested in testing or learning more, drop us a line — we'd love to connect.
         </p>
       </div>
 
-      <div id="illustration" class="flex justify-center mt-8 opacity-0">
-        <div class="grid grid-cols-3 gap-6">
-          <div class="bg-navy-800 p-6 rounded-lg flex flex-col items-center">
-            <i class="fa-solid fa-wrench text-navy-400 text-3xl mb-4"></i>
-            <span class="text-navy-300 text-sm">Equipment Tracking</span>
-          </div>
-          <div class="bg-navy-800 p-6 rounded-lg flex flex-col items-center">
-            <i class="fa-solid fa-list-check text-navy-400 text-3xl mb-4"></i>
-            <span class="text-navy-300 text-sm">Task Management</span>
-          </div>
-          <div class="bg-navy-800 p-6 rounded-lg flex flex-col items-center">
-            <i class="fa-solid fa-compass text-navy-400 text-3xl mb-4"></i>
-            <span class="text-navy-300 text-sm">Compliance Tools</span>
-          </div>
+      <div id="illustration" class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-6 opacity-0">
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg flex flex-col items-center">
+          <i class="fa-solid fa-wrench text-navy-400 text-2xl sm:text-3xl mb-3"></i>
+          <span class="text-navy-300 text-sm sm:text-base">Equipment Tracking</span>
+        </div>
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg flex flex-col items-center">
+          <i class="fa-solid fa-list-check text-navy-400 text-2xl sm:text-3xl mb-3"></i>
+          <span class="text-navy-300 text-sm sm:text-base">Task Management</span>
+        </div>
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg flex flex-col items-center">
+          <i class="fa-solid fa-compass text-navy-400 text-2xl sm:text-3xl mb-3"></i>
+          <span class="text-navy-300 text-sm sm:text-base">Compliance Tools</span>
         </div>
       </div>
     </section>
 
     <!-- FEATURES -->
-    <section id="features-section" class="mt-20 border-t border-navy-700 pt-12 opacity-0">
-      <h2 class="text-2xl font-semibold mb-8">Built for professional yacht crew</h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-navy-800 p-6 rounded-lg">
-          <div class="flex items-center mb-4">
-            <i class="fa-solid fa-calendar-check text-navy-400 mr-3"></i>
-            <h3 class="font-medium">Maintenance Scheduling</h3>
+    <section id="features-section" class="mt-12 sm:mt-16 border-t border-navy-700 pt-10 sm:pt-12 opacity-0">
+      <h2 class="text-xl sm:text-2xl font-semibold mb-6 sm:mb-8">Built for professional yacht crew</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
+          <div class="flex items-center mb-3">
+            <i class="fa-solid fa-calendar-check text-navy-400 mr-2"></i>
+            <h3 class="font-medium text-base sm:text-lg">Maintenance Scheduling</h3>
           </div>
-          <p class="text-navy-300 text-sm">
+          <p class="text-navy-300 text-sm sm:text-base">
             Track and manage equipment inspection intervals and maintenance schedules in one centralized system.
           </p>
         </div>
-        <div class="bg-navy-800 p-6 rounded-lg">
-          <div class="flex items-center mb-4">
-            <i class="fa-solid fa-clipboard-list text-navy-400 mr-3"></i>
-            <h3 class="font-medium">Task Assignment</h3>
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
+          <div class="flex items-center mb-3">
+            <i class="fa-solid fa-clipboard-list text-navy-400 mr-2"></i>
+            <h3 class="font-medium text-base sm:text-lg">Task Assignment</h3>
           </div>
-          <p class="text-navy-300 text-sm">
+          <p class="text-navy-300 text-sm sm:text-base">
             Assign tasks to crew members and track completion status with clear accountability.
           </p>
         </div>
-        <div class="bg-navy-800 p-6 rounded-lg">
-          <div class="flex items-center mb-4">
-            <i class="fa-solid fa-file-lines text-navy-400 mr-3"></i>
-            <h3 class="font-medium">Compliance Reporting</h3>
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
+          <div class="flex items-center mb-3">
+            <i class="fa-solid fa-file-lines text-navy-400 mr-2"></i>
+            <h3 class="font-medium text-base sm:text-lg">Compliance Reporting</h3>
           </div>
-          <p class="text-navy-300 text-sm">
+          <p class="text-navy-300 text-sm sm:text-base">
             Generate reports for flag state, class society, and internal compliance requirements.
           </p>
         </div>
-        <div class="bg-navy-800 p-6 rounded-lg">
-          <div class="flex items-center mb-4">
-            <i class="fa-solid fa-boxes-stacked text-navy-400 mr-3"></i>
-            <h3 class="font-medium">Equipment Inventory</h3>
+        <div class="bg-navy-800 p-4 sm:p-6 rounded-lg">
+          <div class="flex items-center mb-3">
+            <i class="fa-solid fa-boxes-stacked text-navy-400 mr-2"></i>
+            <h3 class="font-medium text-base sm:text-lg">Equipment Inventory</h3>
           </div>
-          <p class="text-navy-300 text-sm">
+          <p class="text-navy-300 text-sm sm:text-base">
             Maintain a comprehensive inventory of onboard equipment with location mapping.
           </p>
         </div>
@@ -172,23 +169,23 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-navy-800 py-8 px-6 md:px-10 mt-12">
-    <div class="max-w-6xl mx-auto">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-6 md:mb-0">
-          <div class="text-navy-100 font-semibold flex items-center">
+  <footer class="bg-navy-800 py-6 px-4 sm:py-8 sm:px-6 md:px-10 mt-12">
+    <div class="max-w-xl sm:max-w-2xl lg:max-w-3xl mx-auto">
+      <div class="flex flex-col sm:flex-row justify-between items-center">
+        <div class="mb-4 sm:mb-0 text-center sm:text-left">
+          <div class="text-navy-100 font-semibold flex items-center justify-center sm:justify-start">
             <i class="fa-solid fa-clipboard-check mr-2"></i>
             DeckCheck
           </div>
-          <p class="text-navy-400 text-sm mt-2">Beta version 1.0.0</p>
+          <p class="text-navy-400 text-xs sm:text-sm mt-1">Beta version 0.9.2</p>
         </div>
-        <div class="flex space-x-6">
-          <a href="#" class="text-navy-300 hover:text-white transition-colors">Privacy</a>
-          <a href="#" class="text-navy-300 hover:text-white transition-colors">Terms</a>
-          <a href="#" class="text-navy-300 hover:text-white transition-colors">Support</a>
+        <div class="flex space-x-4">
+          <a href="#" class="text-navy-300 hover:text-white transition-colors text-sm">Privacy</a>
+          <a href="#" class="text-navy-300 hover:text-white transition-colors text-sm">Terms</a>
+          <a href="#" class="text-navy-300 hover:text-white transition-colors text-sm">Support</a>
         </div>
       </div>
-      <div class="mt-8 pt-6 border-t border-navy-700 text-center text-navy-400 text-sm">
+      <div class="mt-6 pt-4 border-t border-navy-700 text-center text-navy-400 text-xs sm:text-sm">
         © {{ now()->year }} DeckCheck. All rights reserved.
       </div>
     </div>
