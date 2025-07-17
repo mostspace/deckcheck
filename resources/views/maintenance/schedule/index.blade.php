@@ -451,7 +451,21 @@
                 .then(res => res.text())
                 .then(html => {
                     currentIndex = index;
-                    document.getElementById('work-order-container').innerHTML = html;
+                    const container = document.getElementById('work-order-container');
+
+container.classList.add('opacity-0', 'transition-opacity', 'duration-200');
+
+setTimeout(() => {
+    container.innerHTML = html;
+    bindCompletionForm();
+    checkWorkOrderCompletable();
+    updateFlowProgressBar();
+
+    // Fade in after small delay
+    setTimeout(() => {
+        container.classList.remove('opacity-0');
+    }, 10);
+}, 200);
 
                     updateFlowProgressBar();
                     bindCompletionForm();
