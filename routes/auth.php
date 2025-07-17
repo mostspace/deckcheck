@@ -57,3 +57,10 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+Route::get('/check-auth', function () {
+    return auth()->check()
+        ? 'Logged in as: ' . auth()->user()->email
+        : 'Not authenticated';
+});
+
