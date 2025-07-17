@@ -18,7 +18,6 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\WorkOrderFlowController;
 use Illuminate\Support\Facades\Route;
 
-// Test Git
 
 Route::get('/', function () {
     return view('welcome');
