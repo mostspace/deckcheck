@@ -99,12 +99,12 @@ class ScheduleController extends Controller
                     $sub->whereNotIn('status', ['completed', 'deferred'])
                         ->where(function (Builder $inner) use ($start, $end) {
                             $inner->whereBetween('due_date', [$start, $end])
-                                ->orWhereNull('due_date'); // <-- this line is new
+                                ->orWhereNull('due_date'); 
                         });
                 })
                 ->orWhere(function (Builder $sub) use ($start, $end) {
                     $sub->whereIn('status', ['completed', 'deferred'])
-                        ->whereBetween('completed_at', [$start, $end]);
+                        ->whereBetween('due_date', [$start, $end]);
                 });
             });
 

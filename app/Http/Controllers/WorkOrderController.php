@@ -148,19 +148,30 @@ class WorkOrderController extends Controller
             return back()->with('error', 'Please include notes when flagging tasks to complete this work order.');
         }
 
-        // Update work order
+        // Determine new status and timestamps
         $newStatus = 'completed';
+        $now       = now();
 
-        $workOrder->update([
+        // Build update payload
+        $updateData = [
             'status'       => $newStatus,
-            'completed_at' => now(),
+            'completed_at' => $now,
             'notes'        => $notes,
-        ]);
+        ];
+
+        // If this is the very first work order (due_date still null), stamp it now
+        if (is_null($workOrder->due_date)) {
+            $updateData['due_date'] = $now;
+        }
+
+        // Perform the update
+        $workOrder->update($updateData);
 
         $interval = $workOrder->equipmentInterval;
 
         $interval->update([
             'next_due_date'  => now()
+            
         ]);
 
         // Create a deficiency if any tasks were flagged
