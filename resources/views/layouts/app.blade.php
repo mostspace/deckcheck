@@ -50,17 +50,17 @@
     @endphp
 
     <div id="app-layout" class="flex">
-        @include('components.main.sidebar-test')
+    @include('components.main.sidebar-test')
 
-        <div class="flex-1 flex flex-col min-h-screen">
-            <main id="main-content" class="flex-1 p-8">
-
-                @include('components.main.notification-button')
-                @include('components.main.user-modal')
-                @yield('content')
-            </main>
-        </div>
+    <div class="flex-1 flex flex-col min-h-screen">
+        <main id="main-content" class="flex-1 ml-14 p-8 transition-margin duration-300 ease-in-out">
+            @include('components.main.notification-button')
+            @include('components.main.user-modal')
+            @yield('content')
+        </main>
     </div>
+</div>
+
 
     @push('scripts')
         
