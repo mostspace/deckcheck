@@ -46,7 +46,6 @@
         </div>
     @endif
 
-
     {{-- Header --}}
     <div class="mb-6">
 
@@ -75,8 +74,9 @@
             </a>
         </div>
 
-        {{-- Regular Content --}}
+    {{-- Regular Content --}}
     @else
+
         {{-- Interval Navigation --}}
         <div class="bg-white rounded-lg border border-[#e4e7ec] mb-6">
 
@@ -569,8 +569,6 @@
                     alert('Something went wrong loading the flow interface.');
                 });
         }
-
-
 
         function closeFlowModal() {
             const panel = document.getElementById('flow-slideout-panel');

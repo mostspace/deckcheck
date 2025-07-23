@@ -156,6 +156,7 @@ class WorkOrderController extends Controller
         $updateData = [
             'status'       => $newStatus,
             'completed_at' => $now,
+            'completed_by' => auth()->id(),
             'notes'        => $notes,
         ];
 

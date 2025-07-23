@@ -121,9 +121,10 @@ class ScheduleController extends Controller
         $resolvedWorkOrders = $allWorkOrders->filter(fn($wo) => in_array($wo->status, ['completed', 'deferred']));
 
         // Default Grouping by Date
-       $group  = $request->input('group', 'date');
+        $group  = $request->input('group', 'date');
         $groups = [];
 
+        // Group by Category
         if ($group === 'category') {
             // 1) group & sort active by category
             $activeByCat = $activeWorkOrders
@@ -152,6 +153,8 @@ class ScheduleController extends Controller
                 ];
             }
         }
+
+        // Group by Location
         elseif ($group === 'location') {
             // 1) sort & group active and resolved exactly as before
             $act = $activeWorkOrders
@@ -215,75 +218,5 @@ class ScheduleController extends Controller
             'availableUsers'
         ));
     }
-
-    /*
-    public function flow(Request $request, WorkOrder $workOrder)
-    {
-        $vessel = currentVessel();
-
-        if (! $vessel || $workOrder->equipment?->vessel_id !== $vessel->id) {
-            abort(404, 'Work order not found for current vessel.');
-        }
-
-        $frequency = $request->input('frequency', 'daily');
-        $date = Carbon::parse($request->input('date', now()));
-
-        [$start, $end] = $this->getDateRange($frequency, $date);
-
-        $workOrders = WorkOrder::whereHas('equipment', function ($query) use ($vessel) {
-                $query->where('vessel_id', $vessel->id);
-            })
-            ->whereBetween('due_date', [$start, $end])
-            ->orderBy('due_date')
-            ->pluck('id')
-            ->toArray();
-
-        $currentIndex = array_search($workOrder->id, $workOrders);
-        $prevId = $workOrders[$currentIndex - 1] ?? null;
-        $nextId = $workOrders[$currentIndex + 1] ?? null;
-
-        $workOrder->load(['equipment', 'equipmentInterval', 'equipmentInterval.interval', 'tasks']);
-
-        return view('maintenance.schedule.flow', [
-            'workOrder' => $workOrder,
-            'frequency' => $frequency,
-            'date' => $date,
-            'prevId' => $prevId,
-            'nextId' => $nextId,
-        ]);
-    }
-
-    private function getDateRange(string $frequency, Carbon $date): array
-    {
-        $intervalMap = [
-            'daily'        => '1 day',
-            'weekly'       => '1 week',
-            'bi-weekly'    => '2 weeks',
-            'monthly'      => '1 month',
-            'quarterly'    => '3 months',
-            'bi-annually'  => '6 months',
-            'annual'       => '1 year',
-            '2-yearly'     => '2 years',
-            '3-yearly'     => '3 years',
-            '5-yearly'     => '5 years',
-            '6-yearly'     => '6 years',
-            '10-yearly'    => '10 years',
-            '12-yearly'    => '12 years',
-        ];
-
-        $duration = $intervalMap[$frequency] ?? '1 day';
-
-        try {
-            $start = $date->copy()->startOfDay();
-            $end = $date->copy()->add($duration)->subSecond();
-        } catch (\Exception $e) {
-            // Fallback to 1-day slice if something went wrong
-            $start = $date->copy()->startOfDay();
-            $end = $date->copy()->endOfDay();
-        }
-
-        return [$start, $end];
-    }
-        */
 
 }
