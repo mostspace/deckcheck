@@ -113,9 +113,6 @@ class ScheduleController extends Controller
             $query->where('assigned_to', auth()->id());
         }
 
-        // Default Grouping by Date
-        $group = $request->input('group', 'date');
-        
         // Full Query
         $allWorkOrders = $query->get();
 
@@ -123,54 +120,99 @@ class ScheduleController extends Controller
         $activeWorkOrders = $allWorkOrders->filter(fn($wo) => !in_array($wo->status, ['completed', 'deferred']));
         $resolvedWorkOrders = $allWorkOrders->filter(fn($wo) => in_array($wo->status, ['completed', 'deferred']));
 
-        // Group by Category or Location when Toggled
-        switch ($group) {
-            case 'category':
-                $activeWorkOrders = $activeWorkOrders->sortBy([
-                    fn($a, $b) => strcmp($a->equipmentInterval->equipment->category->name ?? '', $b->equipmentInterval->equipment->category->name ?? ''),
-                    fn($a, $b) => $a->due_date <=> $b->due_date,
-                ])->groupBy(fn($wo) => $wo->equipmentInterval->equipment->category->name ?? 'Uncategorized');
+        // Default Grouping by Date
+       $group  = $request->input('group', 'date');
+        $groups = [];
 
-                $resolvedWorkOrders = $resolvedWorkOrders->sortBy([
-                    fn($a, $b) => strcmp($a->equipmentInterval->equipment->category->name ?? '', $b->equipmentInterval->equipment->category->name ?? ''),
-                    fn($a, $b) => $a->completed_at <=> $b->completed_at,
-                ])->groupBy(fn($wo) => $wo->equipmentInterval->equipment->category->name ?? 'Uncategorized');
+        if ($group === 'category') {
+            // 1) group & sort active by category
+            $activeByCat = $activeWorkOrders
+                ->sortBy([
+                    fn($a,$b) => strcmp($a->equipmentInterval->equipment->category->name ?? '', $b->equipmentInterval->equipment->category->name ?? ''),
+                    fn($a,$b) => $a->due_date <=> $b->due_date,
+                ])
+                ->groupBy(fn($wo) => $wo->equipmentInterval->equipment->category->name ?? 'Uncategorized');
 
-                break;
+            // 2) group & sort resolved by category
+            $resolvedByCat = $resolvedWorkOrders
+                ->sortBy([
+                    fn($a,$b) => strcmp($a->equipmentInterval->equipment->category->name ?? '', $b->equipmentInterval->equipment->category->name ?? ''),
+                    fn($a,$b) => $a->completed_at <=> $b->completed_at,
+                ])
+                ->groupBy(fn($wo) => $wo->equipmentInterval->equipment->category->name ?? 'Uncategorized');
 
-            case 'location':
-                $activeWorkOrders = $activeWorkOrders->sortBy([
-                    fn($a, $b) => strcmp($a->equipmentInterval->equipment->location->deck->name ?? '', $b->equipmentInterval->equipment->location->deck->name ?? ''),
-                    fn($a, $b) => strcmp($a->equipmentInterval->equipment->location->name ?? '', $b->equipmentInterval->equipment->location->name ?? ''),
-                    fn($a, $b) => $a->due_date <=> $b->due_date,
-                ])->groupBy(fn($wo) => $wo->equipmentInterval->equipment->location->deck->name ?? 'Unknown Deck');
+            // 3) union all category keys (active ∪ resolved)
+            $allCats = $activeByCat->keys()->merge($resolvedByCat->keys())->unique();
 
-                $resolvedWorkOrders = $resolvedWorkOrders->sortBy([
-                    fn($a, $b) => strcmp($a->equipmentInterval->equipment->location->deck->name ?? '', $b->equipmentInterval->equipment->location->deck->name ?? ''),
-                    fn($a, $b) => strcmp($a->equipmentInterval->equipment->location->name ?? '', $b->equipmentInterval->equipment->location->name ?? ''),
-                    fn($a, $b) => $a->completed_at <=> $b->completed_at,
-                ])->groupBy(fn($wo) => $wo->equipmentInterval->equipment->location->deck->name ?? 'Unknown Deck');
+            // 4) build $groups[category] = ['active'=>..., 'resolved'=>...]
+            foreach ($allCats as $cat) {
+                $groups[$cat] = [
+                    'active'   => $activeByCat->get($cat, collect()),
+                    'resolved' => $resolvedByCat->get($cat, collect()),
+                ];
+            }
+        }
+        elseif ($group === 'location') {
+            // 1) sort & group active and resolved exactly as before
+            $act = $activeWorkOrders
+                ->sortBy([
+                    fn($a,$b) => strcmp($a->equipmentInterval->equipment->location->deck->name, $b->equipmentInterval->equipment->location->deck->name),
+                    fn($a,$b) => ($a->equipmentInterval->equipment->location->display_order ?? 0) <=> ($b->equipmentInterval->equipment->location->display_order ?? 0),
+                    fn($a,$b) => strcmp($a->equipmentInterval->equipment->location->name, $b->equipmentInterval->equipment->location->name),
+                    fn($a,$b) => $a->due_date <=> $b->due_date,
+                ])
+                ->groupBy(fn($wo) => $wo->equipmentInterval->equipment->location->deck->name)
+                ->map(fn($deckGroup) =>
+                    $deckGroup->groupBy(fn($wo) => $wo->equipmentInterval->equipment->location->name)
+                );
 
-                break;
+            $res = $resolvedWorkOrders
+                ->sortBy([
+                    fn($a,$b) => strcmp($a->equipmentInterval->equipment->location->deck->name, $b->equipmentInterval->equipment->location->deck->name),
+                    fn($a,$b) => ($a->equipmentInterval->equipment->location->display_order ?? 0) <=> ($b->equipmentInterval->equipment->location->display_order ?? 0),
+                    fn($a,$b) => strcmp($a->equipmentInterval->equipment->location->name, $b->equipmentInterval->equipment->location->name),
+                    fn($a,$b) => $a->completed_at <=> $b->completed_at,
+                ])
+                ->groupBy(fn($wo) => $wo->equipmentInterval->equipment->location->deck->name)
+                ->map(fn($deckGroup) =>
+                    $deckGroup->groupBy(fn($wo) => $wo->equipmentInterval->equipment->location->name)
+                );
 
-            case 'date':
-            default:
-                $activeWorkOrders = $activeWorkOrders->sortBy(fn($wo) => $wo->due_date);
-                $resolvedWorkOrders = $resolvedWorkOrders->sortBy(fn($wo) => $wo->completed_at);
-                break;
+            // 2) union all deck keys
+            $allDecks = $act->keys()->merge($res->keys())->unique();
+
+            foreach ($allDecks as $deck) {
+                // pull out per‐deck location groups (or empty collection)
+                $activeLocs   = $act->get($deck, collect());
+                $resolvedLocs = $res->get($deck, collect());
+
+                // union all location keys within this deck
+                $allLocs = $activeLocs->keys()->merge($resolvedLocs->keys())->unique();
+
+                // initialize the deck
+                $groups[$deck] = [];
+
+                foreach ($allLocs as $locationName) {
+                    $groups[$deck][$locationName] = [
+                        'active'   => $activeLocs->get($locationName, collect()),
+                        'resolved' => $resolvedLocs->get($locationName, collect()),
+                    ];
+                }
+            }
         }
 
         // Pass Vessel Crew into View for Assignee Drop-Down
         $availableUsers = $vessel->users()->orderBy('first_name')->get();
 
         return view('maintenance.schedule.index', compact(
-            'activeWorkOrders', 
-            'resolvedWorkOrders', 
-            'frequency', 
-            'date', 
-            'visibleFrequencies', 
-            'availableUsers', 
-            'group'
+            'frequency',
+            'date',
+            'visibleFrequencies',
+            'group',
+            'groups',
+            'activeWorkOrders',
+            'resolvedWorkOrders',
+            'availableUsers'
         ));
     }
 

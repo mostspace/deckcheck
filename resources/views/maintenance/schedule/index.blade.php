@@ -184,142 +184,191 @@
 
 
         {{-- Work Orders --}}
-        @if ($activeWorkOrders->isEmpty() && $resolvedWorkOrders->isEmpty())
-            {{-- Empty State --}}
-            <div class="border border-[#e4e7ec] rounded-lg p-8 flex flex-col items-center justify-center text-center text-sm text-[#475466] space-y-3">
-                <i class="fa-regular fa-calendar-xmark text-3xl text-[#d0d5dd]"></i>
-                <p class="font-medium text-[#344053]">No work orders scheduled for this interval</p>
-                <p class="text-xs text-[#667084] max-w-sm">
-                    You haven’t scheduled any maintenance tasks for this frequency yet.
-                    Use the "Schedule Task" button to get started.
-                </p>
-            </div>
-        @else
-            <div class="bg-white shadow rounded-lg p-6 space-y-6">
+@if ($activeWorkOrders->isEmpty() && $resolvedWorkOrders->isEmpty())
+    {{-- Empty State --}}
+    <div class="border border-[#e4e7ec] rounded-lg p-8 flex flex-col items-center justify-center text-center text-sm text-[#475466] space-y-3">
+        <i class="fa-regular fa-calendar-xmark text-3xl text-[#d0d5dd]"></i>
+        <p class="font-medium text-[#344053]">No work orders scheduled for this interval</p>
+        <p class="text-xs text-[#667084] max-w-sm">
+            You haven’t scheduled any maintenance tasks for this frequency yet.
+            Use the "Schedule Task" button to get started.
+        </p>
+    </div>
+@else
+    <div class="bg-white shadow rounded-lg p-6 space-y-6">
 
-                {{-- #Active Work Orders --}}
-                @if ($activeWorkOrders->isNotEmpty())
-                    {{-- Table Header (only for date view) --}}
-                    @if ($group === 'date')
-                        <div
-                            class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                            <div>Status / WO</div>
-                            <div>Equipment</div>
-                            <div>Due Date</div>
-                            <div>Tasks</div>
-                            <div>Assignee</div>
-                            <div></div> {{-- empty for icon alignment --}}
-                        </div>
-                        @foreach ($activeWorkOrders as $wo)
-                            @include('.components.maintenance.schedule.schedule-row')
-                        @endforeach
-                    @else
-                        @foreach ($activeWorkOrders as $groupName => $grouped)
-                            {{-- Group Header --}}
-                            @php
-                                $groupedIds = $grouped->pluck('id')->toArray();
-                                $flowUrl = route(
-                                    'flow.start',
-                                    array_merge(
-                                        [
-                                            'ids' => $groupedIds,
-                                            'frequency' => $frequency,
-                                            'date' => $date->toDateString(),
-                                            'group' => $group,
-                                            'dateRangeLabel' => $formattedRange,
-                                            'groupName' => $groupName,
-                                        ],
-                                        request('assigned') ? ['assigned' => 1] : [],
-                                    ),
-                                );
-                            @endphp
+        {{-- ─── DATE GROUPING (“All” tab) ─────────────────────────────────── --}}
+        @if ($group === 'date')
+            {{-- Active Rows --}}
+            @if ($activeWorkOrders->isNotEmpty())
+                <div class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase">
+                    <div>Status / WO</div>
+                    <div>Equipment</div>
+                    <div>Due Date</div>
+                    <div>Tasks</div>
+                    <div>Assignee</div>
+                    <div></div>
+                </div>
+                @foreach ($activeWorkOrders as $wo)
+                    @include('components.maintenance.schedule.schedule-row')
+                @endforeach
+            @endif
 
-                            <div
-                                class="px-4 py-3 bg-[#f9fafb] border border-[#e4e7ec] rounded-lg mb-2 flex items-center justify-between text-sm font-semibold text-[#344053]">
+            {{-- Resolved Section --}}
+            @if ($resolvedWorkOrders->isNotEmpty())
+                <div class="border-t border-[#e4e7ec] pt-6 space-y-4">
+                    <div class="text-sm font-semibold text-[#344053] flex items-center gap-2">
+                        <i class="fa-regular fa-circle-check text-[#667084]"></i>
+                        Resolved Work Orders
+                    </div>
+                    <div class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase">
+                        <div>Status / WO</div>
+                        <div>Equipment</div>
+                        <div>Completed Date</div>
+                        <div>Summary</div>
+                        <div>Completed By</div>
+                        <div></div>
+                    </div>
+                    @foreach ($resolvedWorkOrders as $wo)
+                        @include('components.maintenance.schedule.resolved-schedule-row')
+                    @endforeach
+                </div>
+            @endif
 
-                                <div class="flex items-center gap-2">
-                                    <i class="fa-solid {{ $group === 'category' ? 'fa-box' : 'fa-layer-group' }}"></i>
-                                    {{ $groupName }}
-                                    <span class="text-xs font-normal text-[#667084] ml-2">
-                                        ({{ $grouped->count() }} work orders)
-                                    </span>
-                                </div>
+        {{-- ─── CATEGORY GROUPING ─────────────────────────────────────────── --}}
+        @elseif ($group === 'category')
+            @foreach ($groups as $category => $data)
+                @php
+                    $openCount     = $data['active']->count();
+                    $resolvedCount = $data['resolved']->count();
+                    $ids           = $data['active']->pluck('id')->toArray();
+                @endphp
 
-                                <button onclick="launchFlow({{ Js::from($groupedIds) }}, {{ Js::from($groupName) }})">
-                                    Start Flow
-                                </button>
+                <div class="bg-white shadow rounded-lg mb-6">
+                    {{-- Header --}}
+                    <div class="px-6 py-4 flex items-center justify-between border-b">
+                        <h3 class="text-lg font-semibold flex items-center gap-2">
+                            <i class="fa-solid fa-box text-gray-600"></i>
+                            {{ $category }}
+                            <span class="text-sm text-gray-500">
+                                ({{ $openCount }} open{{ $resolvedCount ? ", {$resolvedCount} resolved" : "" }})
+                            </span>
+                        </h3>
+                        <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($category) }})"
+                                class="text-sm text-purple-600 hover:underline">
+                            Start Flow
+                        </button>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="px-6 py-4 space-y-4">
+                        {{-- Active --}}
+                        @if ($openCount)
+                            <div class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
+                                <div>Status / WO</div><div>Equipment</div><div>Due Date</div><div>Tasks</div><div>Assignee</div><div></div>
                             </div>
-
-
-                            {{-- Table Header --}}
-                            <div
-                                class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                                <div>Status / WO</div>
-                                <div>Equipment</div>
-                                <div>Due Date</div>
-                                <div>Tasks</div>
-                                <div>Assignee</div>
-                                <div></div> {{-- empty for icon alignment --}}
-                            </div>
-
-                            @foreach ($grouped as $wo)
-                                @include('.components.maintenance.schedule.schedule-row')
-                            @endforeach
-                        @endforeach
-                    @endif
-                @endif
-
-                {{-- #Resolved Work Orders --}}
-                @if ($resolvedWorkOrders->isNotEmpty())
-                    <div class="border-t border-[#e4e7ec] pt-6 space-y-4">
-                        <div class="text-sm font-semibold text-[#344053] flex items-center gap-2">
-                            <i class="fa-regular fa-circle-check text-[#667084]"></i> Resolved Work Orders
-                        </div>
-
-                        @if ($group === 'date')
-                            <div
-                                class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                                <div>Status / WO</div>
-                                <div>Equipment</div>
-                                <div>Completed Date</div>
-                                <div>Summary</div>
-                                <div>Completed By</div>
-                                <div></div> {{-- view icon --}}
-                            </div>
-
-                            @foreach ($resolvedWorkOrders as $wo)
-                                @include('.components.maintenance.schedule.resolved-schedule-row')
-                            @endforeach
-                        @else
-                            @foreach ($resolvedWorkOrders as $groupName => $grouped)
-                                {{-- Group Header --}}
-                                <div
-                                    class="px-4 py-3 bg-[#f9fafb] border border-[#e4e7ec] rounded-lg mb-2 flex items-center gap-2 text-sm font-semibold text-[#344053]">
-                                    <i class="fa-solid {{ $group === 'category' ? 'fa-box' : 'fa-layer-group' }}"></i>
-                                    {{ $groupName }}
-                                </div>
-
-                                {{-- Table Header --}}
-                                <div
-                                    class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
-                                    <div>Status / WO</div>
-                                    <div>Equipment</div>
-                                    <div>Completed Date</div>
-                                    <div>Summary</div>
-                                    <div>Completed By</div>
-                                    <div></div> {{-- view icon --}}
-                                </div>
-
-
-                                @foreach ($grouped as $wo)
-                                    @include('.components.maintenance.schedule.resolved-schedule-row')
-                                @endforeach
+                            @foreach ($data['active'] as $wo)
+                                @include('components.maintenance.schedule.schedule-row')
                             @endforeach
                         @endif
+
+                        {{-- Resolved --}}
+                        @if ($resolvedCount)
+                            <details class="border-t pt-4">
+                                <summary class="cursor-pointer text-sm font-medium text-gray-700 flex items-center gap-2">
+                                    <i class="fa-regular fa-circle-check text-green-600"></i>
+                                    Resolved ({{ $resolvedCount }})
+                                </summary>
+                                <div class="mt-4">
+                                    <div class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
+                                        <div>Status / WO</div><div>Equipment</div><div>Completed Date</div><div>Summary</div><div>Completed By</div><div></div>
+                                    </div>
+                                    @foreach ($data['resolved'] as $wo)
+                                        @include('components.maintenance.schedule.resolved-schedule-row')
+                                    @endforeach
+                                </div>
+                            </details>
+                        @endif
                     </div>
-                @endif
+                </div>
+            @endforeach
+
+        {{-- ─── LOCATION GROUPING ─────────────────────────────────────────── --}}
+@elseif ($group === 'location')
+    @foreach ($groups as $deck => $locs)
+        <div class="bg-white shadow rounded-lg mb-6">
+            {{-- Deck Header --}}
+            <div class="px-6 py-4 border-b flex items-center gap-2 text-lg font-semibold text-gray-800">
+                <i class="fa-solid fa-layer-group"></i>
+                {{ $deck }}
             </div>
-        @endif
+
+            {{-- Location Panels --}}
+            <div class="divide-y">
+                @foreach ($locs as $locationName => $data)
+                    @php
+                        $openCount     = $data['active']->count();
+                        $resolvedCount = $data['resolved']->count();
+                        $ids           = $data['active']->pluck('id')->toArray();
+                    @endphp
+
+                    <details @if($loop->first) open @endif class="group">
+                        <summary class="px-6 py-3 flex items-center justify-between cursor-pointer group-hover:bg-gray-50">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-location-dot text-gray-600"></i>
+                                <span class="font-medium">{{ $locationName }}</span>
+                                <span class="text-sm text-gray-500">
+                                    ({{ $openCount }} open{{ $resolvedCount ? ", {$resolvedCount} resolved" : "" }})
+                                </span>
+                            </div>
+                            <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($locationName) }})"
+                                    class="text-sm text-purple-600 hover:underline">
+                                Start Flow
+                            </button>
+                        </summary>
+
+                        <div class="px-6 py-4 space-y-4 bg-gray-50">
+                            {{-- Active --}}
+                            @if ($openCount)
+                                <div class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
+                                    <div>Status / WO</div><div>Equipment</div><div>Due Date</div><div>Tasks</div><div>Assignee</div><div></div>
+                                </div>
+                                @foreach ($data['active'] as $wo)
+                                    @include('components.maintenance.schedule.schedule-row')
+                                @endforeach
+                            @endif
+
+                            {{-- Resolved --}}
+                            @if ($resolvedCount)
+                                <div class="border-t pt-4">
+                                    <div class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                                        <i class="fa-regular fa-circle-check text-green-600"></i>
+                                        Resolved ({{ $resolvedCount }})
+                                    </div>
+                                    <div class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
+                                        <div>Status / WO</div><div>Equipment</div><div>Completed Date</div><div>Summary</div><div>Completed By</div><div></div>
+                                    </div>
+                                    @foreach ($data['resolved'] as $wo)
+                                        @include('components.maintenance.schedule.resolved-schedule-row')
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </details>
+                @endforeach
+            </div>
+        </div>
+    @endforeach
+@endif
+
+
+    </div>
+@endif
+
+
+
+
+
 
     @endif
 
@@ -343,40 +392,40 @@
         let currentIndex = 0;
 
         function updateFlowProgressBar() {
-    const totalSteps = workOrderIds.length;
-    const currentStep = currentIndex + 1;
+            const totalSteps = workOrderIds.length;
+            const currentStep = currentIndex + 1;
 
-    // Update step number
-    const stepNumEl = document.getElementById('flow-step-num');
-    if (stepNumEl) {
-        stepNumEl.textContent = currentStep;
-    }
+            // Update step number
+            const stepNumEl = document.getElementById('flow-step-num');
+            if (stepNumEl) {
+                stepNumEl.textContent = currentStep;
+            }
 
-    // Update progress bar width
-    const progressBarEl = document.getElementById('flow-progress-bar');
-    if (progressBarEl) {
-        const percentage = Math.round((currentStep / totalSteps) * 100);
-        progressBarEl.style.width = `${percentage}%`;
-    }
+            // Update progress bar width
+            const progressBarEl = document.getElementById('flow-progress-bar');
+            if (progressBarEl) {
+                const percentage = Math.round((currentStep / totalSteps) * 100);
+                progressBarEl.style.width = `${percentage}%`;
+            }
 
-    // Enable/disable Prev and Next buttons
-    const prevButton = document.getElementById('prev-button');
-    const nextButton = document.getElementById('next-button');
+            // Enable/disable Prev and Next buttons
+            const prevButton = document.getElementById('prev-button');
+            const nextButton = document.getElementById('next-button');
 
-    if (prevButton) {
-        const atFirst = currentIndex === 0;
-        prevButton.disabled = atFirst;
-        prevButton.classList.toggle('opacity-50', atFirst);
-        prevButton.classList.toggle('cursor-not-allowed', atFirst);
-    }
+            if (prevButton) {
+                const atFirst = currentIndex === 0;
+                prevButton.disabled = atFirst;
+                prevButton.classList.toggle('opacity-50', atFirst);
+                prevButton.classList.toggle('cursor-not-allowed', atFirst);
+            }
 
-    if (nextButton) {
-        const atLast = currentIndex === totalSteps - 1;
-        nextButton.disabled = atLast;
-        nextButton.classList.toggle('opacity-50', atLast);
-        nextButton.classList.toggle('cursor-not-allowed', atLast);
-    }
-}
+            if (nextButton) {
+                const atLast = currentIndex === totalSteps - 1;
+                nextButton.disabled = atLast;
+                nextButton.classList.toggle('opacity-50', atLast);
+                nextButton.classList.toggle('cursor-not-allowed', atLast);
+            }
+        }
 
 
 
@@ -453,19 +502,19 @@
                     currentIndex = index;
                     const container = document.getElementById('work-order-container');
 
-container.classList.add('opacity-0', 'transition-opacity', 'duration-200');
+                    container.classList.add('opacity-0', 'transition-opacity', 'duration-200');
 
-setTimeout(() => {
-    container.innerHTML = html;
-    bindCompletionForm();
-    checkWorkOrderCompletable();
-    updateFlowProgressBar();
+                    setTimeout(() => {
+                        container.innerHTML = html;
+                        bindCompletionForm();
+                        checkWorkOrderCompletable();
+                        updateFlowProgressBar();
 
-    // Fade in after small delay
-    setTimeout(() => {
-        container.classList.remove('opacity-0');
-    }, 10);
-}, 200);
+                        // Fade in after small delay
+                        setTimeout(() => {
+                            container.classList.remove('opacity-0');
+                        }, 10);
+                    }, 200);
 
                     updateFlowProgressBar();
                     bindCompletionForm();
