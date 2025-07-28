@@ -5,11 +5,12 @@
     $interval = $wo->equipmentInterval;
 @endphp
 
-<div class="group grid grid-cols-1 lg:grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-4 border border-[#e4e7ec] rounded-xl shadow-sm mb-4 bg-white items-center transition-shadow hover:shadow-md">
+<div
+    class="group grid grid-cols-1 lg:grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-4 border border-[#e4e7ec] rounded-xl shadow-sm mb-4 bg-white items-center transition-shadow hover:shadow-md">
 
     {{-- Status + WO ID + Description --}}
     <div class="flex flex-col justify-center">
-        
+
         {{-- #Status & ID --}}
         <div class="flex items-center gap-2 text-xs text-gray-500">
             {!! status_badge($wo->status) !!}
@@ -18,7 +19,7 @@
 
         {{-- #Description --}}
         <div class="text-sm font-semibold text-gray-800 my-1 leading-tight">
-                {{ $interval->description }}
+            {{ $interval->description }}
         </div>
     </div>
 
@@ -107,12 +108,15 @@
         </div>
     </div>
 
-    {{-- CTA Icon Link 
-    <div class="flex items-center justify-end h-full">
-        <a href="{{ route('schedule.flow', ['workOrder' => $wo->id, 'frequency' => $frequency, 'date' => $date->toDateString()]) }}"
-            class="text-purple-600 hover:text-purple-800 transition-colors duration-150"
-            title="View Work Order Flow">
-            <i class="fa-solid fa-arrow-up-right-from-square text-s group-hover:scale-110 transition-transform duration-150"></i>
-        </a>
-    </div> --}}
+
+    @if (!empty($showFlowCta))
+        <div class="flex items-center justify-end h-full">
+            <button onclick="launchFlow([{{ $wo->id }}], '{{ addslashes($wo->equipmentInterval->equipment->name ?? 'Work Order') }}')"
+                class="text-purple-600 hover:text-purple-800 transition-colors duration-150" title="Open Work Order Flow">
+                <i class="fa-solid fa-arrow-up-right-from-square text-s group-hover:scale-110 transition-transform duration-150"></i>
+            </button>
+        </div>
+    @endif
+
+
 </div>

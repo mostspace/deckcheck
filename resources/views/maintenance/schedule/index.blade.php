@@ -218,8 +218,9 @@
 
                         {{-- #Active Work Order Rows --}}
                         @foreach ($activeWorkOrders as $wo)
-                            @include('components.maintenance.schedule.schedule-row')
+                            @include('components.maintenance.schedule.schedule-row', ['showFlowCta' => true])
                         @endforeach
+
 
                     @endif
 
@@ -276,10 +277,16 @@
                                 </h3>
 
                                 {{-- ###Launch Flow --}}
-                                <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($category) }})"
-                                    class="text-sm text-purple-600 hover:underline">
-                                    Start Flow
-                                </button>
+                                @if ($openCount)
+                                    <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($category) }})"
+                                        class="text-sm text-purple-600 hover:underline flex items-center gap-1.5">
+                                        <i class="fa-solid fa-circle-play"></i> Start Flow
+                                    </button>
+                                @elseif ($resolvedCount)
+                                    <span class="text-sm text-gray-400 italic flex items-center gap-1.5">
+                                        <i class="fa-regular fa-circle-check"></i> Complete
+                                    </span>
+                                @endif
                             </div>
 
                             {{-- ##Body --}}
@@ -372,10 +379,18 @@
                                             </div>
 
                                             {{-- ####Launch Flow --}}
-                                            <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($locationName) }})"
-                                                class="text-sm text-purple-600 hover:underline">
-                                                Start Flow
-                                            </button>
+                                            @if ($openCount)
+                                                <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($locationName) }})"
+                                                    class="text-sm text-purple-600 hover:underline flex items-center gap-1.5">
+                                                    <i class="fa-solid fa-circle-play"></i> Start Flow
+                                                </button>
+                                            @elseif ($resolvedCount)
+                                                <span class="text-sm text-gray-400 italic flex items-center gap-1.5">
+                                                    <i class="fa-regular fa-circle-check"></i> Complete
+                                                </span>
+                                            @endif
+
+
                                         </summary>
 
                                         {{-- ###Body --}}
@@ -588,9 +603,9 @@
                     setTimeout(() => {
                         container.innerHTML = html;
                         const newStatus = container.querySelector('[data-status]')?.getAttribute('data-status');
-if (newStatus) {
-    container.setAttribute('data-status', newStatus);
-}
+                        if (newStatus) {
+                            container.setAttribute('data-status', newStatus);
+                        }
                         bindCompletionForm();
                         checkWorkOrderCompletable();
                         updateFlowProgressBar();
@@ -665,33 +680,33 @@ if (newStatus) {
                 });
         }
 
-      function checkWorkOrderCompletable() {
-    const taskButtons = document.querySelectorAll('[data-task-id]');
-    const completeButton = document.getElementById('complete-work-order-button');
-    const container = document.getElementById('work-order-container');
+        function checkWorkOrderCompletable() {
+            const taskButtons = document.querySelectorAll('[data-task-id]');
+            const completeButton = document.getElementById('complete-work-order-button');
+            const container = document.getElementById('work-order-container');
 
-    if (!completeButton || !container) return;
+            if (!completeButton || !container) return;
 
-    const statusEl = container.querySelector('[data-status]');
-    const status = statusEl?.getAttribute('data-status') || '';
+            const statusEl = container.querySelector('[data-status]');
+            const status = statusEl?.getAttribute('data-status') || '';
 
-    const allResolved = Array.from(taskButtons).every(btn => {
-        const row = btn.closest('.flex');
-        return row.querySelector('button[disabled]');
-    });
+            const allResolved = Array.from(taskButtons).every(btn => {
+                const row = btn.closest('.flex');
+                return row.querySelector('button[disabled]');
+            });
 
-    const shouldEnable = allResolved && status !== 'scheduled';
+            const shouldEnable = allResolved && status !== 'scheduled';
 
-    if (shouldEnable) {
-        completeButton.disabled = false;
-        completeButton.classList.remove('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
-        completeButton.classList.add('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
-    } else {
-        completeButton.disabled = true;
-        completeButton.classList.add('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
-        completeButton.classList.remove('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
-    }
-}
+            if (shouldEnable) {
+                completeButton.disabled = false;
+                completeButton.classList.remove('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
+                completeButton.classList.add('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
+            } else {
+                completeButton.disabled = true;
+                completeButton.classList.add('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
+                completeButton.classList.remove('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
+            }
+        }
 
 
 

@@ -8,7 +8,8 @@
     $flaggedTasks = $wo->tasks()->where('status', 'flagged')->count();
 @endphp
 
-<div class="group grid grid-cols-1 lg:grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-4 border border-[#e4e7ec] rounded-xl shadow-sm mb-4 bg-white items-center transition-shadow hover:shadow-md">
+<div
+    class="group grid grid-cols-1 lg:grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-4 border border-[#e4e7ec] rounded-xl shadow-sm mb-4 bg-white items-center transition-shadow hover:shadow-md">
 
     {{-- Status + WO ID + Description --}}
     <div class="flex flex-col justify-center">
@@ -64,10 +65,22 @@
     </div>
 
     {{-- Task Summary --}}
-    <div class="flex flex-col justify-center text-sm text-gray-700">
-        <span class="text-gray-700">{{ $completedTasks }} completed</span>
-        <span class="text-red-500">{{ $flaggedTasks }} flagged</span>
+    <div class="flex items-center gap-2 text-sm min-h-[1.5rem]">
+        {{-- Completed Tasks --}}
+        <span class="flex items-center text-green-600 font-medium">
+            <i class="fa-regular fa-circle-check mr-1"></i> {{ $completedTasks }}
+        </span>
+
+        {{-- Separator --}}
+        <span class="text-gray-400 font-medium">/</span>
+
+        {{-- Flagged Tasks --}}
+        <span class="flex items-center {{ $flaggedTasks == 0 ? 'text-gray-400' : 'text-red-500' }} font-medium">
+            {{ $flaggedTasks }} <i class="fa-solid fa-flag ml-1"></i>
+        </span>
     </div>
+
+
 
     {{-- Completed By --}}
     <div class="flex items-center text-sm text-gray-700">
@@ -82,8 +95,7 @@
 
     {{-- View Work Order Link --}}
     <div class="flex items-center justify-end h-full">
-        <a href="{{ route('work-orders.show', $wo) }}"
-            class="text-gray-500 hover:text-gray-800 transition-colors duration-150"
+        <a href="{{ route('work-orders.show', $wo) }}" class="text-gray-500 hover:text-gray-800 transition-colors duration-150"
             title="View Work Order">
             <i class="fa-solid fa-eye text-s group-hover:scale-110 transition-transform duration-150"></i>
         </a>
