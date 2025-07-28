@@ -765,6 +765,39 @@
 
             completeForm.onsubmit = function(e) {
                 e.preventDefault();
+
+                const notes = completeForm.querySelector('textarea[name="notes"]');
+                const taskButtons = document.querySelectorAll('[data-task-id]');
+                const hasFlaggedTasks = Array.from(taskButtons).some(btn => {
+                    const container = btn.closest('.flex');
+                    const flaggedBtn = container.querySelector('button[data-status="flagged"]');
+                    return flaggedBtn && flaggedBtn.disabled;
+                });
+
+                // Clear any previous error state
+                if (notes) {
+                    notes.classList.remove('border-red-500');
+                    const error = completeForm.querySelector('#notes-error');
+                    if (error) error.remove();
+                }
+
+                // Require notes if flagged tasks exist
+                if (hasFlaggedTasks && notes && notes.value.trim() === '') {
+                    notes.classList.add('border-red-500');
+
+                    // Insert inline error
+                    if (!document.getElementById('notes-error')) {
+                        const errorEl = document.createElement('p');
+                        errorEl.id = 'notes-error';
+                        errorEl.className = 'text-red-600 text-sm mt-1';
+                        errorEl.textContent = 'Notes are required when completing a work order with flagged tasks.';
+                        notes.parentNode.appendChild(errorEl);
+                    }
+
+                    return;
+                }
+
+                // Submit if valid
                 const formData = new FormData(completeForm);
 
                 fetch(completeForm.action, {
@@ -789,6 +822,7 @@
                     });
             };
         }
+
 
         // For initial render - preloaded modal
         document.addEventListener('DOMContentLoaded', () => {
