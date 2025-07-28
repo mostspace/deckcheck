@@ -1,0 +1,147 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+
+use App\Models\User;
+use App\Models\Boarding;
+use App\Models\Invitation;
+use App\Models\Vessel;
+
+use App\Mail\InviteUserMail;
+
+class InviteUserController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $vessel = currentVessel();
+
+        // Ensure inviter has permission
+        $boarding = currentUserBoarding();
+        if (!in_array($boarding?->access_level, ['owner', 'admin'])) {
+            abort(403, 'You do not have permission to invite users to this vessel.');
+        }
+
+        // Validate request
+        $validated = $request->validate([
+            'first_name'    => 'required|string|max:255',
+            'last_name'     => 'required|string|max:255',
+            'email'         => 'required|email|max:255',
+            'phone'         => 'required|string|max:20',
+            'department'    => 'required|string|max:255',
+            'role'          => 'required|string|max:255',
+            'access_level'  => 'required|in:admin,crew,viewer',
+        ]);
+
+        // Check if user already exists
+        $user = User::where('email', $validated['email'])->first();
+
+        // If not, create a stub user record
+        if (! $user) {
+            $user = User::create([
+                'first_name' => $validated['first_name'],
+                'last_name'  => $validated['last_name'],
+                'email'      => $validated['email'],
+                'phone'      => $validated['phone'],
+                'password'   => Hash::make(Str::random(32)), // Temporary password
+            ]);
+        }
+
+        // Create or update the boarding record
+        $boarding = Boarding::updateOrCreate(
+            [
+                'user_id'    => $user->id,
+                'vessel_id'  => $vessel->id,
+            ],
+            [
+                'access_level' => $validated['access_level'],
+                'department'   => $validated['department'],
+                'role'         => $validated['role'],
+                'status'       => 'invited',
+            ]
+        );
+
+        // Generate secure token
+        $token = Str::uuid()->toString();
+
+        // Create invitation record
+        Invitation::create([
+            'boarding_id' => $boarding->id,
+            'email'       => $validated['email'],
+            'token'       => $token,
+            'expires_at'  => now()->addDays(7),
+            'invited_by'  => auth()->id(),
+        ]);
+
+        Mail::to($user->email)->send(new InviteUserMail($invitation));
+
+        return redirect()->route('vessel.crew')->with('success', 'Invitation sent successfully.');
+    }
+
+    public function accept(Request $request)
+    {
+        $token = $request->query('token');
+
+        $invitation = Invitation::where('token', $token)
+            ->whereNull('accepted_at')
+            ->where('expires_at', '>=', now())
+            ->firstOrFail();
+
+        // Proceed to show registration flow, or auto-login if desired
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Invitation $invitation)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Invitation $invitation)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Invitation $invitation)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Invitation $invitation)
+    {
+        //
+    }
+}

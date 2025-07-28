@@ -113,7 +113,7 @@
         <div class="flex items-center justify-end h-full">
             <button onclick="launchFlow([{{ $wo->id }}], '{{ addslashes($wo->equipmentInterval->equipment->name ?? 'Work Order') }}')"
                 class="text-purple-600 hover:text-purple-800 transition-colors duration-150" title="Open Work Order Flow">
-                <i class="fa-solid fa-arrow-up-right-from-square text-s group-hover:scale-110 transition-transform duration-150"></i>
+                <i class="fa-solid fa-circle-play text-xl group-hover:scale-110 transition-transform duration-150"></i>
             </button>
         </div>
     @endif

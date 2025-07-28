@@ -7,6 +7,14 @@ function currentVessel() {
     return auth()->user()?->activeVessel();
 }
 
+function currentUserBoarding() {
+    $user = auth()->user();
+    $vessel = currentVessel();
+
+    return $user?->boardings()->where('vessel_id', $vessel?->id)->first();
+}
+
+
 if (!function_exists('frequency_label_class')) {
     function frequency_label_class(?string $frequency): string
     {

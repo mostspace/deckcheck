@@ -280,7 +280,7 @@
                                 @if ($openCount)
                                     <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($category) }})"
                                         class="text-sm text-purple-600 hover:underline flex items-center gap-1.5">
-                                        <i class="fa-solid fa-circle-play"></i> Start Flow
+                                        <i class="fa-solid fa-circle-play"></i> Start
                                     </button>
                                 @elseif ($resolvedCount)
                                     <span class="text-sm text-gray-400 italic flex items-center gap-1.5">
@@ -382,7 +382,7 @@
                                             @if ($openCount)
                                                 <button onclick="launchFlow({{ Js::from($ids) }}, {{ Js::from($locationName) }})"
                                                     class="text-sm text-purple-600 hover:underline flex items-center gap-1.5">
-                                                    <i class="fa-solid fa-circle-play"></i> Start Flow
+                                                    <i class="fa-solid fa-circle-play"></i> Start
                                                 </button>
                                             @elseif ($resolvedCount)
                                                 <span class="text-sm text-gray-400 italic flex items-center gap-1.5">
@@ -708,10 +708,6 @@
             }
         }
 
-
-
-
-
         function toggleAssigneeDropdown(id = null) {
             const dropdown = id ?
                 document.getElementById(`assignee-options-${id}`) :
@@ -792,8 +788,6 @@
                     alert('Failed to assign user.');
                 });
         }
-
-
 
 
         function bindCompletionForm() {

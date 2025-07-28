@@ -87,7 +87,7 @@
         @if ($completedBy)
             <img src="{{ $completedBy->profile_pic ? Storage::url($completedBy->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
                 class="w-5 h-5 rounded-full mr-2" alt="Avatar">
-            {{ $completedBy->first_name }}
+            {{ $completedBy->first_name }} {{ $completedBy->last_name }}
         @else
             <span class="text-gray-400 italic">Unknown</span>
         @endif

@@ -16,6 +16,7 @@ use App\Http\Controllers\DeficiencyController;
 use App\Http\Controllers\VesselSwitchController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\WorkOrderFlowController;
+use App\Http\Controllers\InviteUserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -67,7 +68,22 @@ Route::middleware('auth')->group(function(){
          ->name('vessel.deckplan');
 });
 
+// Invitation & User Management
+Route::middleware('auth')->group(function () { 
+
+    // Invite User to Vessel
+    Route::post('/vessel/invitations', [InviteUserController::class, 'store'])
+    ->name('vessel.invitations.store');
+
     
+
+});
+   
+    // Invitation Acceptance
+    Route::get('/invitations/accept', [InviteUserController::class, 'accept'])
+        ->name('invitations.accept');
+
+
 
 
 // Deck & Locations
@@ -330,12 +346,6 @@ Route::middleware('auth')->group(function () {
 
 
 });
-
-
-
-
-
-
 
 
 

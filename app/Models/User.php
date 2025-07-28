@@ -10,6 +10,7 @@ use App\Models\Vessel;
 use App\Models\WorkOrder;
 use App\Models\Deficiency;
 use App\Models\DeficiencyUpdate;
+use App\Models\Invitation;
 
 class User extends Authenticatable
 {
@@ -117,6 +118,11 @@ class User extends Authenticatable
     public function hasSystemAccess(string $level): bool
     {
         return $this->system_role === $level;
+    }
+
+    public function sentInvitations()
+    {
+        return $this->hasMany(Invitation::class, 'invited_by');
     }
 
 }

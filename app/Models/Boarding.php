@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Vessel;
+use App\Models\User;
+use App\Models\Invitation;
 
 class Boarding extends Model
 {
@@ -29,6 +32,11 @@ class Boarding extends Model
     public function vessel()
     {
         return $this->belongsTo(Vessel::class);
+    }
+
+    public function invitation()
+    {
+        return $this->hasOne(Invitation::class);
     }
 
 }
