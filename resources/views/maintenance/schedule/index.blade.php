@@ -486,19 +486,27 @@
             // Enable/disable Prev and Next buttons
             const prevButton = document.getElementById('prev-button');
             const nextButton = document.getElementById('next-button');
+            const completeButton = document.getElementById('complete-work-order-button');
+
+            const atFirst = currentIndex === 0;
+            const atLast = currentIndex === totalSteps - 1;
 
             if (prevButton) {
-                const atFirst = currentIndex === 0;
                 prevButton.disabled = atFirst;
                 prevButton.classList.toggle('opacity-50', atFirst);
                 prevButton.classList.toggle('cursor-not-allowed', atFirst);
             }
 
             if (nextButton) {
-                const atLast = currentIndex === totalSteps - 1;
                 nextButton.disabled = atLast;
                 nextButton.classList.toggle('opacity-50', atLast);
                 nextButton.classList.toggle('cursor-not-allowed', atLast);
+            }
+
+            // Update Complete button label and behavior
+            if (completeButton) {
+                completeButton.textContent = atLast ? 'Complete & Close' : 'Complete & Next';
+                completeButton.setAttribute('data-action', atLast ? 'close' : 'next');
             }
         }
 
@@ -579,6 +587,10 @@
 
                     setTimeout(() => {
                         container.innerHTML = html;
+                        const newStatus = container.querySelector('[data-status]')?.getAttribute('data-status');
+if (newStatus) {
+    container.setAttribute('data-status', newStatus);
+}
                         bindCompletionForm();
                         checkWorkOrderCompletable();
                         updateFlowProgressBar();
@@ -653,27 +665,37 @@
                 });
         }
 
-        function checkWorkOrderCompletable() {
-            const taskButtons = document.querySelectorAll('[data-task-id]');
-            const completeButton = document.getElementById('complete-work-order-button');
+      function checkWorkOrderCompletable() {
+    const taskButtons = document.querySelectorAll('[data-task-id]');
+    const completeButton = document.getElementById('complete-work-order-button');
+    const container = document.getElementById('work-order-container');
 
-            const allResolved = Array.from(taskButtons).every(btn => {
-                const container = btn.closest('.flex');
-                return container.querySelector('button[disabled]');
-            });
+    if (!completeButton || !container) return;
 
-            if (completeButton) {
-                if (allResolved) {
-                    completeButton.disabled = false;
-                    completeButton.classList.remove('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
-                    completeButton.classList.add('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
-                } else {
-                    completeButton.disabled = true;
-                    completeButton.classList.add('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
-                    completeButton.classList.remove('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
-                }
-            }
-        }
+    const statusEl = container.querySelector('[data-status]');
+    const status = statusEl?.getAttribute('data-status') || '';
+
+    const allResolved = Array.from(taskButtons).every(btn => {
+        const row = btn.closest('.flex');
+        return row.querySelector('button[disabled]');
+    });
+
+    const shouldEnable = allResolved && status !== 'scheduled';
+
+    if (shouldEnable) {
+        completeButton.disabled = false;
+        completeButton.classList.remove('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
+        completeButton.classList.add('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
+    } else {
+        completeButton.disabled = true;
+        completeButton.classList.add('bg-[#e4e7ec]', 'text-[#667085]', 'cursor-not-allowed');
+        completeButton.classList.remove('bg-[#6840c6]', 'text-white', 'hover:bg-[#5a35a8]', 'cursor-pointer');
+    }
+}
+
+
+
+
 
         function toggleAssigneeDropdown(id = null) {
             const dropdown = id ?
@@ -811,7 +833,18 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            loadNextWorkOrder();
+                            const completeButton = document.getElementById('complete-work-order-button');
+                            const action = completeButton?.getAttribute('data-action');
+
+                            if (action === 'close') {
+                                closeFlowModal();
+
+                                // Refresh the index view while preserving query string
+                                const currentUrl = new URL(window.location.href);
+                                window.location.href = currentUrl.pathname + currentUrl.search;
+                            } else {
+                                loadNextWorkOrder();
+                            }
                         } else {
                             alert('There was an error completing this work order.');
                         }
@@ -822,6 +855,40 @@
                     });
             };
         }
+
+        function openScheduledWorkOrder(workOrderId) {
+            fetch(`/work-orders/${workOrderId}/open`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to update status');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // If modal is open, refresh current work order
+                        const flowPanel = document.getElementById('flow-slideout-panel');
+                        if (flowPanel && !flowPanel.classList.contains('translate-x-full')) {
+                            loadWorkOrderAt(currentIndex);
+                        } else {
+                            // Fallback to full reload
+                            window.location.reload();
+                        }
+                    } else {
+                        alert('Failed to open work order.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('There was a problem updating the work order.');
+                });
+        }
+
 
 
         // For initial render - preloaded modal

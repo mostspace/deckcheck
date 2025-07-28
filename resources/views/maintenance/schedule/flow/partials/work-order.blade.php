@@ -11,7 +11,7 @@
 @endif
 
 {{-- Tasks and Completion --}}
-<div class=" bg-white rounded-lg border border-[#e4e7ec] shadow-sm">
+<div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm" data-status="{{ $workOrder->status }}">
 
     @include('components.maintenance.work-order-summary', [
         'workOrder' => $workOrder,
@@ -42,7 +42,7 @@
                             Next <i class="fa-solid fa-chevron-right ml-2"></i>
                         </button>
 
-                        <button type="submit" id="complete-work-order-button"
+                        <button type="submit" id="complete-work-order-button" data-action="next"
                             class="px-4 py-2 ml-4 rounded-lg text-sm font-semibold bg-[#6840c6] text-white hover:bg-[#5a35a8] cursor-pointer"
                             disabled>
                             <i class="fa-solid fa-check mr-2"></i> Complete & Next
