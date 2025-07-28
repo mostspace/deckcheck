@@ -105,7 +105,7 @@ class WorkOrderController extends Controller
             'user' => [
                 'first_name' => $workOrder->assignee?->first_name,
                 'last_name' => $workOrder->assignee?->last_name,
-                'avatar_url' => $workOrder->assignee?->avatar_url ?? '/images/default-avatar.png',
+                'avatar_url' => $workOrder->assignee?->profile_pic,
             ],
         ]);
     }

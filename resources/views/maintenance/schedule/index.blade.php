@@ -74,9 +74,8 @@
             </a>
         </div>
 
-    {{-- Regular Content --}}
+        {{-- Regular Content --}}
     @else
-
         {{-- Interval Navigation --}}
         <div class="bg-white rounded-lg border border-[#e4e7ec] mb-6">
 
@@ -197,17 +196,15 @@
                     Use the "Schedule Task" button to get started.
                 </p>
             </div>
-
         @else
-
             <div class="bg-white shadow rounded-lg p-6 space-y-6">
 
                 {{-- ─── DATE GROUPING (“All” tab) ─────────────────────────────────── --}}
                 @if ($group === 'date')
-   
+
                     {{-- Active Work Orders Container --}}
                     @if ($activeWorkOrders->isNotEmpty())
-                        
+
                         {{-- #Active Column Headers --}}
                         <div
                             class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 px-6 py-2 text-xs font-semibold text-gray-500 uppercase">
@@ -250,15 +247,13 @@
                             @foreach ($resolvedWorkOrders as $wo)
                                 @include('components.maintenance.schedule.resolved-schedule-row')
                             @endforeach
-                            
+
                         </div>
                     @endif
 
-                {{-- ─── CATEGORY GROUPING ─────────────────────────────────────────── --}}
+                    {{-- ─── CATEGORY GROUPING ─────────────────────────────────────────── --}}
                 @elseif ($group === 'category')
-
                     @foreach ($groups as $category => $data)
-
                         @php
                             $openCount = $data['active']->count();
                             $resolvedCount = $data['resolved']->count();
@@ -267,13 +262,13 @@
 
                         {{-- #Outer Container --}}
                         <div class="bg-white shadow rounded-lg mb-6">
-                            
+
                             {{-- ##Header --}}
                             <div class="px-6 py-4 flex items-center justify-between border-b">
                                 <h3 class="text-lg font-semibold flex items-center gap-2">
                                     <i class="fa-solid fa-box text-gray-600"></i>
                                     {{ $category }}
-                                    
+
                                     {{-- ###Group Summary --}}
                                     <span class="text-sm text-gray-500">
                                         ({{ $openCount }} open{{ $resolvedCount ? ", {$resolvedCount} resolved" : '' }})
@@ -289,10 +284,9 @@
 
                             {{-- ##Body --}}
                             <div class="px-6 py-4 space-y-4">
-                                
+
                                 {{-- Active Work Orders Container --}}
                                 @if ($openCount)
-
                                     {{-- ###Active Column Headers --}}
                                     <div
                                         class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
@@ -308,19 +302,17 @@
                                     @foreach ($data['active'] as $wo)
                                         @include('components.maintenance.schedule.schedule-row')
                                     @endforeach
-
                                 @endif
 
                                 {{-- Resolved Work Orders Container --}}
                                 @if ($resolvedCount)
-
                                     <details class="border-t pt-4">
                                         <summary class="cursor-pointer text-sm font-medium text-gray-700 flex items-center gap-2">
                                             <i class="fa-regular fa-circle-check text-green-600"></i>
                                             Resolved ({{ $resolvedCount }})
                                         </summary>
                                         <div class="mt-4">
-                                            
+
                                             {{-- ###Resolved Column Headers --}}
                                             <div
                                                 class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
@@ -339,22 +331,18 @@
 
                                         </div>
                                     </details>
-
                                 @endif
 
                             </div>
                         </div>
-
                     @endforeach
 
-                {{-- ─── LOCATION GROUPING ─────────────────────────────────────────── --}}
+                    {{-- ─── LOCATION GROUPING ─────────────────────────────────────────── --}}
                 @elseif ($group === 'location')
-
                     @foreach ($groups as $deck => $locs)
-
                         {{-- #Outer Container --}}
                         <div class="bg-white shadow rounded-lg mb-6">
-                            
+
                             {{-- ##Deck Header --}}
                             <div class="px-6 py-4 border-b flex items-center gap-2 text-lg font-semibold text-gray-800">
                                 <i class="fa-solid fa-layer-group"></i>
@@ -363,9 +351,8 @@
 
                             {{-- ##Location Containers --}}
                             <div class="divide-y">
-                                
-                                @foreach ($locs as $locationName => $data)
 
+                                @foreach ($locs as $locationName => $data)
                                     @php
                                         $openCount = $data['active']->count();
                                         $resolvedCount = $data['resolved']->count();
@@ -373,7 +360,7 @@
                                     @endphp
 
                                     <details @if ($loop->first) open @endif class="group">
-                                        
+
                                         {{-- ###Location Summary --}}
                                         <summary class="px-6 py-3 flex items-center justify-between cursor-pointer group-hover:bg-gray-50">
                                             <div class="flex items-center gap-2">
@@ -396,7 +383,6 @@
 
                                             {{-- Active Work Orders Container --}}
                                             @if ($openCount)
-
                                                 {{-- ####Active Column Headers --}}
                                                 <div
                                                     class="hidden lg:grid grid-cols-[1.25fr_2fr_1fr_1fr_1.5fr_40px] gap-4 text-xs font-semibold text-gray-500 uppercase">
@@ -412,12 +398,10 @@
                                                 @foreach ($data['active'] as $wo)
                                                     @include('components.maintenance.schedule.schedule-row')
                                                 @endforeach
-
                                             @endif
 
                                             {{-- Resolved Work Orders Container --}}
                                             @if ($resolvedCount)
-
                                                 <div class="border-t pt-4">
                                                     <div class="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                                                         <i class="fa-regular fa-circle-check text-green-600"></i>
@@ -441,24 +425,21 @@
                                                     @endforeach
 
                                                 </div>
-
                                             @endif
 
                                         </div>
                                     </details>
-
                                 @endforeach
 
                             </div>
                         </div>
-
                     @endforeach
 
                 @endif
                 {{-- ─── END LOCATION GROUPING ─────────────────────────────────────────── --}}
 
             </div>
-        
+
         @endif
         {{-- ─── END WORK ORDER CONDITIONAL FOR SELECTED INTERVAL ──────────────────────── --}}
 
@@ -702,6 +683,17 @@
             if (dropdown) dropdown.classList.toggle('hidden');
         }
 
+        function toggleIndexAssigneeDropdown(id = null) {
+            document.querySelectorAll('[id^="assignee-options-"]').forEach(el => {
+                if (el.id !== `assignee-options-${id}`) {
+                    el.classList.add('hidden');
+                }
+            });
+
+            const dropdown = document.getElementById(`assignee-options-${id}`);
+            if (dropdown) dropdown.classList.toggle('hidden');
+        }
+
         function assignUser(workOrderId, userId) {
             fetch(`/work-orders/${workOrderId}/assign`, {
                     method: 'POST',
@@ -718,12 +710,54 @@
                     if (!response.ok) throw new Error('Network response was not ok');
                     return response.json();
                 })
-                .then(() => loadWorkOrderAt(currentIndex))
+                .then(data => {
+                    if (!data.success) throw new Error('Assignment failed');
+
+                    const dropdown = document.getElementById(`assignee-dropdown-${workOrderId}`);
+                    const options = document.getElementById(`assignee-options-${workOrderId}`);
+                    if (!dropdown || !options) return;
+
+                    const button = dropdown.querySelector('button');
+
+                    let rawPath = data.user?.avatar_url || '';
+                    let avatar;
+
+                    // If it's already a full URL (starts with http), use as-is
+                    if (/^https?:\/\//.test(rawPath)) {
+                        avatar = rawPath;
+                    }
+                    // If it's a relative path, assume it's a file from storage/app/public
+                    else if (rawPath) {
+                        avatar = `/storage/${rawPath}`;
+                    } else {
+                        avatar = '{{ Storage::url('profile_pictures/placeholder.svg.hi.png') }}';
+                    }
+
+                    const name = data.user?.first_name || 'Unassigned';
+
+                    button.innerHTML = `
+            <img src="${avatar}" class="w-5 h-5 rounded-full" alt="Avatar"
+                onerror="this.onerror=null;this.src='{{ Storage::url('profile_pictures/placeholder.svg.hi.png') }}'">
+            ${name}
+            <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
+        `;
+
+                    options.classList.add('hidden');
+
+                    // Refresh modal if open
+                    const flowPanel = document.getElementById('flow-slideout-panel');
+                    if (flowPanel && !flowPanel.classList.contains('translate-x-full')) {
+                        loadWorkOrderAt(currentIndex);
+                    }
+                })
                 .catch(error => {
                     console.error('Error assigning user:', error);
                     alert('Failed to assign user.');
                 });
         }
+
+
+
 
         function bindCompletionForm() {
             const completeForm = document.getElementById('complete-form');

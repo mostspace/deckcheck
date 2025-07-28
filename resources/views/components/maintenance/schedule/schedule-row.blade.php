@@ -71,7 +71,7 @@
 
     {{-- Assignee --}}
     <div class="text-sm relative inline-block text-left" id="assignee-dropdown-{{ $wo->id }}">
-        <button onclick="toggleAssigneeDropdown({{ $wo->id }})"
+        <button onclick="toggleIndexAssigneeDropdown({{ $wo->id }})"
             class="inline-flex items-center gap-2 px-3 py-2 border border-[#e4e7ec] rounded-lg shadow-sm bg-white text-sm font-medium text-[#344053]">
             @if ($wo->assignee)
                 <img src="{{ $wo->assignee->profile_pic ? Storage::url($wo->assignee->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"

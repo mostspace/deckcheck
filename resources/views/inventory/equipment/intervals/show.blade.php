@@ -395,7 +395,7 @@
                 })
                 .then(response => {
                     if (!response.ok) throw new Error('Failed to assign user.');
-                    location.reload(); // or update UI dynamically
+                    location.reload();
                 })
                 .catch(error => {
                     console.error(error);
