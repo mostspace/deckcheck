@@ -88,7 +88,7 @@ class InviteUserController extends Controller
         $token = Str::uuid()->toString();
 
         // Create invitation record
-        Invitation::create([
+        $invitation = Invitation::create([
             'boarding_id' => $boarding->id,
             'email'       => $validated['email'],
             'token'       => $token,
