@@ -44,4 +44,10 @@ class EquipmentInterval extends Model
     {
         return $this->hasMany(WorkOrder::class);
     }
+
+    public function workOrdersChronological()
+    {
+        return $this->hasMany(WorkOrder::class)->orderBy('due_date');
+    }
+
 }
