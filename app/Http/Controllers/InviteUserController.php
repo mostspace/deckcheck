@@ -220,14 +220,14 @@ class InviteUserController extends Controller
 
         // Update user onboarding status
         $user->update([
-            'is_beta_user' = true,
-            'has_completed_onboarding' => true,
-            'accepts_marketing' => true,
-            'accepts_updates' => true,
-            'agreed_at' => now(),
-            'agreed_ip' => $request->ip(),
-            'agreed_user_agent' => $request->userAgent(),
-            'terms_version' => '1.0',
+            'is_beta_user'              => true,
+            'has_completed_onboarding'  => true,
+            'accepts_marketing'         => true,
+            'accepts_updates'           => true,
+            'agreed_at'                 => now(),
+            'agreed_ip'                 => $request->ip(),
+            'agreed_user_agent'         => $request->userAgent(),
+            'terms_version'             => '1.0',
         ]);
 
         $user->save();
