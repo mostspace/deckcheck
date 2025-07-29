@@ -220,7 +220,7 @@ class InviteUserController extends Controller
 
         // Update user onboarding status
         $user->update([
-            'is_beta_user' = true;
+            'is_beta_user' = true,
             'has_completed_onboarding' => true,
             'accepts_marketing' => true,
             'accepts_updates' => true,
