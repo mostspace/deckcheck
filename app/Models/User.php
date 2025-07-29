@@ -28,10 +28,20 @@ class User extends Authenticatable
         'last_name',
         'profile_pic',
         'email',
+        'email_verified_at',
         'password',
         'phone',
         'date_of_birth',
         'nationality',
+        'is_beta_user',
+        'has_completed_onboarding',
+        'accepts_marketing',
+        'accepts_updates',
+        'agreed_at',
+        'agreed_ip',
+        'agreed_user_agent',
+        'terms_version',
+    
     ];
 
     /**
