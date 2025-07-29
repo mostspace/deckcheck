@@ -21,7 +21,7 @@
 
             <div class="flex items-center gap-6">
                 <div class="w-24 h-24 rounded-full bg-[#f2f3f6] flex items-center justify-center overflow-hidden">
-                    <img src="{{ $user->profile_pic ? asset('storage/' . $user->profile_pic) : 'https://via.placeholder.com/300' }}" alt="Profile"
+                    <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/placeholder.png') }}" alt="Profile"
                         class="w-full h-full object-cover">
                 </div>
 
