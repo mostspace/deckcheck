@@ -67,7 +67,7 @@ class WorkOrderFlowController extends Controller
 
         $availableUsers = $workOrder->equipmentInterval->equipment->vessel
             ->users()
-            ->orderBy('name')
+            ->orderBy('first_name')
             ->get();
 
         return view('maintenance.schedule.flow.partials.work-order', compact('workOrder', 'availableUsers'));
