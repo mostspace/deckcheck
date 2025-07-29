@@ -50,7 +50,7 @@ class WorkOrderController extends Controller
 
         $availableUsers = $workOrder->equipmentInterval->equipment->vessel
             ->users()
-            ->orderBy('name')
+            ->orderBy('first_name')
             ->get();
 
         return view('inventory.equipment.intervals.work-orders.show', compact('workOrder', 'availableUsers'));
