@@ -145,6 +145,7 @@ class InviteUserController extends Controller
         // Update password
         $user->update([
             'password' => Hash::make($validated['password']),
+            'email_verified_at' => now(),
         ]);
 
         // Store token in session to persist between steps
