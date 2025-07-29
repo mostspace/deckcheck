@@ -20,7 +20,7 @@
             <div class="p-6">
                 <div class="flex items-start gap-6">
                     <div class="flex-shrink-0">
-                        <img src="{{ Storage::url($user->profile_pic) }}" alt="Profile picture" class="w-24 h-24 rounded-full border-4 border-white shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03)]">
+                        <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/default-avatar.png') }}" alt="Profile picture" class="w-24 h-24 rounded-full border-4 border-white shadow-[0px_4px_6px_-2px_rgba(16,24,40,0.03)]">
                     </div>
                     <div class="flex-1">
                         <div class="flex items-start justify-between">

@@ -28,7 +28,7 @@
 
         {{-- #Hero Photo --}}
         <div class="w-12 h-12 rounded-lg border border-[#e4e7ec] bg-[#f8f9fb] flex items-center justify-center overflow-hidden">
-            <img src="{{ $equipment->hero_photo ? Storage::url($equipment->hero_photo) : asset('storage/hero_photos/placeholder.png') }}"
+            <img src="{{ $equipment->hero_photo ? Storage::url($equipment->hero_photo) : asset('images/placeholders/placeholder.png') }}"
                 class="object-cover w-full h-full" alt="Equipment">
         </div>
 

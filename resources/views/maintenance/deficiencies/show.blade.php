@@ -57,7 +57,7 @@
                             style="min-width:300px; max-width:100%;">
                             {{-- Hero Image --}}
                             <div class="w-20 h-20 flex-shrink-0 rounded-md overflow-hidden border border-[#e4e7ec] bg-white">
-                                <img src="{{ $deficiency->equipment->hero_photo ? Storage::url($deficiency->equipment->hero_photo) : asset('storage/hero_photos/placeholder.webp') }}"
+                                <img src="{{ $deficiency->equipment->hero_photo ? Storage::url($deficiency->equipment->hero_photo) : asset('images/placeholders/placeholder.png') }}"
                                     class="object-cover w-full h-full" alt="Equipment">
                             </div>
                             {{-- Info --}}
