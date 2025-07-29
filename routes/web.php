@@ -86,6 +86,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/invitations/accept/password', [InviteUserController::class, 'storePassword'])
         ->name('invitations.accept.password');
 
+    Route::get('/invitations/accept/avatar/{token}', [InviteUserController::class, 'showAvatarForm'])
+        ->name('invitations.accept.avatar');
+
+    Route::post('/invitations/accept/avatar', [InviteUserController::class, 'storeAvatar'])
+        ->name('invitations.accept.avatar.store');
+
+    Route::get('/invitations/accept/terms/{token}', [InviteUserController::class, 'showTermsForm'])
+        ->name('invitations.accept.terms');
+
+    Route::post('/invitations/accept/terms', [InviteUserController::class, 'storeTerms'])
+        ->name('invitations.accept.terms.store');
+
 
 
 

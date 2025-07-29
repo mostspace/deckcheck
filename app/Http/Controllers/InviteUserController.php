@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Models\User;
 use App\Models\Boarding;
@@ -148,8 +150,94 @@ class InviteUserController extends Controller
         // Store token in session to persist between steps
         session(['invitation_token' => $validated['token']]);
 
-        return redirect()->route('invitations.accept.profile');
+        return redirect()->route('invitations.accept.avatar',  ['token' => $invitation->token]);
     }
+
+    public function showAvatarForm($token)
+    {
+        $invitation = Invitation::with('boarding.user')->where('token', $token)->firstOrFail();
+
+        $user = $invitation->boarding->user;
+
+        // Only allow if onboarding is not complete
+        if ($user->has_completed_onboarding) {
+            return redirect()->route('login');
+        }
+
+        return view('auth.invite.accept-avatar', compact('invitation', 'token'));
+    }
+
+
+    public function storeAvatar(Request $request)
+    {
+        $request->validate([
+            'token' => ['required', 'exists:invitations,token'],
+            'avatar' => ['required', 'image', 'max:2048'], // Max 2MB
+        ]);
+
+        $invitation = Invitation::where('token', $request->token)->firstOrFail();
+        $user = $invitation->boarding->user;
+
+        // Upload to S3
+        $path = $request->file('avatar')->store('profile_pictures', 's3_public');
+
+        // Save the S3 path to the profile_pic column
+        $user->profile_pic = $path;
+        $user->save();
+
+        // Optionally make the file publicly accessible (if you're serving avatars directly from S3)
+        // Storage::disk('s3')->setVisibility($path, 'public');
+
+        return redirect()->route('invitations.accept.terms', ['token' => $invitation->token]);
+
+    }
+
+    public function showTermsForm($token)
+    {
+        $invitation = Invitation::with('boarding.user')->where('token', $token)->firstOrFail();
+        $user = $invitation->boarding->user;
+
+        if ($user->has_completed_onboarding) {
+            return redirect()->route('login');
+        }
+
+        return view('auth.invite.accept-terms', compact('invitation', 'token'));
+    }
+
+    public function storeTerms(Request $request)
+    {
+        $validated = $request->validate([
+            'token'   => 'required|exists:invitations,token',
+            'accept'  => 'accepted', // ensures the checkbox is checked
+        ]);
+
+        $invitation = Invitation::where('token', $validated['token'])
+            ->with('boarding.user')
+            ->firstOrFail();
+
+        $user = $invitation->boarding->user;
+
+        // ✅ Update user onboarding status + timestamp
+        $user->has_completed_onboarding = true;
+        $user->agreed_at = now(); // assumes you have this column in your `users` table
+        $user->save();
+
+        // ✅ Update the invitation to mark it as accepted
+        $invitation->accepted_at = now();
+        $invitation->save();
+
+        // ✅ Set the boarding relationship as primary
+        $invitation->boarding->is_primary = true;
+        $invitation->boarding->save();
+
+        // ✅ Log the user in and redirect to dashboard
+        Auth::login($user);
+
+        return redirect()->route('dashboard')->with('success', 'Welcome aboard! Your account has been set up.');
+    }
+
+
+
 
 
 
