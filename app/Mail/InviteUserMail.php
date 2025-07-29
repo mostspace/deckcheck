@@ -11,9 +11,9 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\Invitation;
 
-class InviteUserMail extends Mailable implements ShouldQueue
+class InviteUserMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use SerializesModels;
 
     public Invitation $invitation;
     public string $acceptUrl;
