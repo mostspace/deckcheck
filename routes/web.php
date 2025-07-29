@@ -79,9 +79,13 @@ Route::middleware('auth')->group(function () {
 
 });
    
-    // Invitation Acceptance
-    Route::get('/invitations/accept', [InviteUserController::class, 'accept'])
+    // Invitation Accept Flow
+    Route::get('/invitations/accept', [InviteUserController::class, 'showAcceptForm'])
         ->name('invitations.accept');
+    
+    Route::post('/invitations/accept/password', [InviteUserController::class, 'storePassword'])
+        ->name('invitations.accept.password');
+
 
 
 

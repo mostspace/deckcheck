@@ -101,17 +101,57 @@ class InviteUserController extends Controller
         return redirect()->route('vessel.crew')->with('success', 'Invitation sent successfully.');
     }
 
-    public function accept(Request $request)
+
+    public function showAcceptForm(Request $request)
     {
         $token = $request->query('token');
 
         $invitation = Invitation::where('token', $token)
             ->whereNull('accepted_at')
             ->where('expires_at', '>=', now())
+            ->with('boarding.user', 'boarding.vessel')
             ->firstOrFail();
 
-        // Proceed to show registration flow, or auto-login if desired
+        $user = $invitation->boarding->user;
+
+        // If user already has a password, redirect to login (they’re already onboarded)
+        if ($user->has_completed_onboarding) {
+            return redirect()->route('login')->with('info', 'You already have an account. Please log in to access your new vessel.');
+        }
+
+        return view('auth.invite.accept-password', [
+            'invitation' => $invitation,
+            'token' => $token,
+        ]);
     }
+
+    public function storePassword(Request $request)
+    {
+        $validated = $request->validate([
+            'token'    => 'required|string|exists:invitations,token',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $invitation = Invitation::where('token', $validated['token'])
+            ->whereNull('accepted_at')
+            ->where('expires_at', '>=', now())
+            ->with('boarding.user')
+            ->firstOrFail();
+
+        $user = $invitation->boarding->user;
+
+        // Update password
+        $user->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        // Store token in session to persist between steps
+        session(['invitation_token' => $validated['token']]);
+
+        return redirect()->route('invitations.accept.profile');
+    }
+
+
 
     /**
      * Display the specified resource.
