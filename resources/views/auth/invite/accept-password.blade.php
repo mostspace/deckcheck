@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.guest')
 
-<head>
-    <meta charset="UTF-8">
-    <title>Complete Your Registration</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <script src="https://kit.fontawesome.com/YOUR_FONT_AWESOME_KIT.js" crossorigin="anonymous"></script>
-</head>
+@section('title', 'Welcome | Step 1: Personal Information')
 
-<body class="bg-[#f3f4f6] p-8">
+@section('content')
+
 
     <!-- Registration Container -->
     <div class="max-w-3xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
@@ -131,6 +126,4 @@
         </div>
     </div>
 
-</body>
-
-</html>
+@endsection
