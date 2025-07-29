@@ -217,20 +217,31 @@ class InviteUserController extends Controller
 
         $user = $invitation->boarding->user;
 
-        // ✅ Update user onboarding status + timestamp
-        $user->has_completed_onboarding = true;
-        $user->agreed_at = now(); // assumes you have this column in your `users` table
+        // Update user onboarding status
+        $user->update([
+            'is_beta_user' = true;
+            'has_completed_onboarding' => true,
+            'accepts_marketing' => true,
+            'accepts_updates' => true,
+            'agreed_at' => now(),
+            'agreed_ip' => $request->ip(),
+            'agreed_user_agent' => $request->userAgent(),
+            'terms_version' => '1.0',
+        ]);
+
         $user->save();
 
-        // ✅ Update the invitation to mark it as accepted
+        // Update the invitation to mark it as accepted
         $invitation->accepted_at = now();
         $invitation->save();
 
-        // ✅ Set the boarding relationship as primary
+        // Update boarding & set primary
         $invitation->boarding->is_primary = true;
+        $invitation->boarding->joined_at = now();
+        $invitation->boarding->status = 'active';
         $invitation->boarding->save();
 
-        // ✅ Log the user in and redirect to dashboard
+        // Log the user in and redirect to dashboard
         Auth::login($user);
 
         return redirect()->route('dashboard')->with('success', 'Welcome aboard! Your account has been set up.');
