@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            @include('components.registration.inviting-vessel-summary')
+           {{-- @include('components.registration.inviting-vessel-summary') --}}
 
             <!-- Form Content -->
             <div class="p-6">
