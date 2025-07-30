@@ -34,6 +34,7 @@ class User extends Authenticatable
         'date_of_birth',
         'nationality',
         'is_beta_user',
+        'is_test_user',
         'has_completed_onboarding',
         'accepts_marketing',
         'accepts_updates',

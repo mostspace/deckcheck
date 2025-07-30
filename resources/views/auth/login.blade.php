@@ -60,6 +60,7 @@
                 </div>
             </form>
 
+            {{--
             <!-- Divider -->
             <div class="flex items-center my-6">
                 <div class="flex-1 h-px bg-[#e4e7ec]"></div>
@@ -71,7 +72,7 @@
             <div class="text-center text-sm text-[#475466]">
                 Don't have an account?
                 <a href="{{ route('register') }}" class="text-[#6840c6] hover:text-[#7e56d8] font-medium">Sign up</a>
-            </div>
+            </div>--}}
         </div>
 
         <!-- Support Links -->
@@ -86,7 +87,7 @@
 
         <!-- Footer -->
         <div class="text-center mt-6 text-xs text-[#667084]">
-            © 2024 DeckCheck. All rights reserved.
+            © {{ now()->year }} DeckCheck. All rights reserved.
         </div>
     </div>
 </div>

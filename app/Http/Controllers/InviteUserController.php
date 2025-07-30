@@ -56,6 +56,7 @@ class InviteUserController extends Controller
             'department'    => 'required|string|max:255',
             'role'          => 'required|string|max:255',
             'access_level'  => 'required|in:admin,crew,viewer',
+
         ]);
 
         // Check if user already exists
@@ -63,12 +64,16 @@ class InviteUserController extends Controller
 
         // If not, create a stub user record
         if (! $user) {
+
+            $isTestUser = auth()->user()->can('is-superadmin') && $request->boolean('is_test_user', false);
+
             $user = User::create([
-                'first_name' => $validated['first_name'],
-                'last_name'  => $validated['last_name'],
-                'email'      => $validated['email'],
-                'phone'      => $validated['phone'],
-                'password'   => Hash::make(Str::random(32)), // Temporary password
+                'first_name'    => $validated['first_name'],
+                'last_name'     => $validated['last_name'],
+                'email'         => $validated['email'],
+                'phone'         => $validated['phone'],
+                'password'      => Hash::make(Str::random(32)), // Temporary password
+                'is_test_user'  => $isTestUser,
             ]);
         }
 

@@ -75,7 +75,7 @@
 
                         <button type="submit" id="submitButton" disabled
                             class="px-[18px] py-2.5 bg-[#7e56d8] rounded-lg border border-[#7e56d8] text-white font-medium flex items-center gap-2 opacity-50 cursor-not-allowed">
-                            Complete Setup
+                            Join Vessel
                             <i class="fa-solid fa-check text-white"></i>
                         </button>
                     </div>

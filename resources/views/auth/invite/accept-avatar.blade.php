@@ -24,6 +24,8 @@
                 </div>
             </div>
 
+            @include('components.registration.inviting-vessel-summary')
+
             <!-- Form Content -->
             <div class="p-6">
 
@@ -58,11 +60,12 @@
                             </div>
                         </a>
 
-                        <button type="submit" id="submitButton"
-                            class="px-[18px] py-2.5 bg-[#7e56d8] rounded-lg border border-[#7e56d8] text-white font-medium flex items-center gap-2">
-                            Complete Profile
-                            <i class="fa-solid fa-check text-white"></i>
+                        <button type="submit" id="submitButton" disabled
+                            class="px-[18px] py-2.5 bg-[#7e56d8] rounded-lg border border-[#7e56d8] text-white font-medium flex items-center gap-2 opacity-50 cursor-not-allowed">
+                            Continue
+                            <i class="fa-solid fa-arrow-right text-white"></i>
                         </button>
+
                     </div>
                 </form>
 
@@ -96,11 +99,27 @@
             }
         });
 
+        const submitButton = document.getElementById('submitButton');
+
         fileInput.addEventListener('change', () => {
             if (fileInput.files[0]) {
                 previewImage(fileInput.files[0]);
+                enableSubmit();
+            } else {
+                disableSubmit();
             }
         });
+
+        function enableSubmit() {
+            submitButton.disabled = false;
+            submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function disableSubmit() {
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+
 
         function previewImage(file) {
             const reader = new FileReader();

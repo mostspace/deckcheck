@@ -83,6 +83,16 @@
                     </select>
                 </div>
 
+                @can('is-superadmin')
+                    <div class="mt-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" name="is_test_user" class="form-checkbox text-indigo-600">
+                            <span class="ml-2 text-sm text-gray-700">Mark as Test User</span>
+                        </label>
+                    </div>
+                @endcan
+
+
             </div>
         </div>
 
