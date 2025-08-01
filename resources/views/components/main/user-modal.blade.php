@@ -54,7 +54,6 @@
                                 @endif
                             </button>
                         </form>
-
                     @endforeach
 
                 </div>
@@ -62,6 +61,15 @@
 
             <!-- Quick Actions -->
             <div class="space-y-2">
+
+                @if (in_array($user->system_role, ['superadmin', 'staff']))
+                    <a href="{{ route('admin.test') }}"
+                        class="w-full flex items-center px-4 py-3 text-sm text-[#344053] hover:bg-[#f8f9fb] rounded-lg cursor-pointer">
+                        <i class="fa-solid fa-shield-halved w-4 h-4 mr-3 text-[#667084]"></i>
+                        Admin Center
+                    </a>
+                @endif
+
                 <a href="{{ route('profile.edit') }}"
                     class="w-full flex items-center px-4 py-3 text-sm text-[#344053] hover:bg-[#f8f9fb] rounded-lg cursor-pointer">
                     <i class="fa-solid fa-user w-4 h-4 mr-3 text-[#667084]"></i>
