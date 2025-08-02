@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Admin Panel') | DeckCheck</title>
@@ -7,8 +8,14 @@
 
     {{-- Tailwind & Fonts --}}
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
     <script>
-        window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };
+        window.FontAwesomeConfig = {
+            autoReplaceSvg: 'nest'
+        };
         tailwind.config = {
             theme: {
                 extend: {
@@ -43,13 +50,24 @@
     <script src="https://code.highcharts.com/modules/export-data.js" defer></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif !important; }
-        ::-webkit-scrollbar { display: none; }
-        .fa, .fas, .far, .fal, .fab {
+        body {
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        .fa,
+        .fas,
+        .far,
+        .fal,
+        .fab {
             font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
         }
     </style>
 </head>
+
 <body class="bg-dark-900 text-gray-100 flex h-screen overflow-hidden font-sans">
     {{-- Sidebar --}}
     <div class="w-64 bg-dark-800 h-screen flex flex-col border-r border-dark-600">
@@ -61,12 +79,12 @@
         </div>
 
         <div class="flex-1 overflow-y-auto py-4 px-4 space-y-6">
-            {{-- Replace with Blade nav components or routes --}}
             <div>
                 <div class="text-xs uppercase text-gray-500 font-semibold mb-2 px-1">Management</div>
                 <x-admin.nav-link icon="fa-users" label="Staff" />
                 <x-admin.nav-link icon="fa-user-gear" label="User Management" />
                 <x-admin.nav-link icon="fa-database" label="Data Management" />
+                <x-admin.nav-link icon="fa-file-pen" label="Content Management" />
                 <x-admin.nav-link icon="fa-headset" label="Support" />
             </div>
             <div>
@@ -85,7 +103,8 @@
 
         <div class="p-4 border-t border-dark-600">
             <div class="flex items-center">
-                <img src="{{ auth()->user()->profile_pic_url ?? 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' }}" class="w-10 h-10 rounded-full border-2 border-accent-primary" />
+                <img src="{{ auth()->user()->profile_pic_url ?? 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' }}"
+                    class="w-10 h-10 rounded-full border-2 border-accent-primary" />
                 <div class="ml-3">
                     <div class="font-medium">{{ auth()->user()->name }}</div>
                     <div class="text-xs text-gray-400">{{ auth()->user()->system_role }}</div>
@@ -101,7 +120,8 @@
             <h1 class="text-xl font-semibold">@yield('title', 'Dashboard')</h1>
             <div class="flex items-center space-x-4">
                 <div class="relative">
-                    <input type="text" placeholder="Search..." class="bg-dark-700 text-sm rounded-md px-4 py-2 pl-9 w-64 focus:outline-none focus:ring focus:ring-accent-primary">
+                    <input type="text" placeholder="Search..."
+                        class="bg-dark-700 text-sm rounded-md px-4 py-2 pl-9 w-64 focus:outline-none focus:ring focus:ring-accent-primary">
                     <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
                 </div>
                 <i class="fa-solid fa-bell text-gray-400 hover:text-white"></i>
@@ -114,5 +134,7 @@
             @yield('content')
         </div>
     </div>
+@yield('scripts')
 </body>
+
 </html>

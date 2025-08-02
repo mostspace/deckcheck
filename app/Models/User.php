@@ -121,6 +121,11 @@ class User extends Authenticatable
         return $this->boardings()->where('is_primary', true)->first();
     }
 
+    public function allActiveBoardings()
+    {
+        return $this->boardings()->where('status', 'active');
+    }
+
     public function activeVessel()
     {
         return $this->activeBoarding()?->vessel;
@@ -134,6 +139,11 @@ class User extends Authenticatable
     public function sentInvitations()
     {
         return $this->hasMany(Invitation::class, 'invited_by');
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 
 }

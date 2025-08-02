@@ -16,12 +16,10 @@ class Vessel extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /*
-    public function users()
+    public function owner()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class, 'account_owner');
     }
-    */
 
     public function decks()
     {
@@ -65,6 +63,13 @@ class Vessel extends Model
             ])
             ->withTimestamps();
     }
+
+    public function activeUsers()
+    {
+        return $this->belongsToMany(User::class, 'boardings')
+            ->where('status', 'active');
+    }
+
 
 }
 
