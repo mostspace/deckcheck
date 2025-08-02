@@ -209,7 +209,7 @@
                     </h2>
                     <div class="space-y-3">
                         <div class="flex items-center">
-                            <img src="{{ Storage::url($vessel->owner->profile_pic) }}}" class="w-12 h-12 rounded-full mr-3" alt="{{ $vessel->owner->name }}">
+                            <img src="{{ Storage::url($vessel->owner->profile_pic) }}}" class="w-12 h-12 rounded-full mr-3" alt="{{ $vessel->owner->full_name }}">
                             <div>
                                 <p class="font-medium text-white">{{ $vessel->owner->full_name }}</p>
                                 <p class="text-sm text-gray-400">**Role**</p>
