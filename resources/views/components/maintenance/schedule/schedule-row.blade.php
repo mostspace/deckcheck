@@ -75,11 +75,11 @@
         <button onclick="toggleIndexAssigneeDropdown({{ $wo->id }})"
             class="inline-flex items-center gap-2 px-3 py-2 border border-[#e4e7ec] rounded-lg shadow-sm bg-white text-sm font-medium text-[#344053]">
             @if ($wo->assignee)
-                <img src="{{ $wo->assignee->profile_pic ? Storage::url($wo->assignee->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                <img src="{{ $wo->assignee->profile_pic ? Storage::url($wo->assignee->profile_pic) : asset('images/placeholders/user.png') }}"
                     class="w-5 h-5 rounded-full" alt="Avatar">
                 {{ $wo->assignee->first_name }}
             @else
-                <img src="{{ Storage::url('profile_pictures/placeholder.svg.hi.png') }}" class="w-5 h-5 rounded-full" alt="Avatar">
+                <img src="{{ asset('images/placeholders/user.png') }}" class="w-5 h-5 rounded-full" alt="Avatar">
                 Unassigned
             @endif
             <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
@@ -92,7 +92,7 @@
                     <li>
                         <button onclick="assignUser({{ $wo->id }}, {{ $user->id }})"
                             class="flex items-center w-full px-4 py-2 text-sm text-[#344053] hover:bg-[#f9fafb]">
-                            <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                            <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
                                 class="w-5 h-5 rounded-full mr-2" alt="Avatar">
                             {{ $user->first_name }} {{ $user->last_name }}
                         </button>
