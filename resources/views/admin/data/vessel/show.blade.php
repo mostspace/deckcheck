@@ -4,6 +4,13 @@
 
 @section('content')
 
+@dd([
+  'owner'        => $vessel->owner,
+  'raw_profile'  => $vessel->owner->getAttributes()['profile_pic'] ?? null,
+  'eloquent_prop'=> $vessel->owner->profile_pic,
+])
+
+
 
     <div id="vessel-detail-content" class="p-6">
         <div id="vessel-hero" class="relative bg-[#243b53] rounded-lg border border-[#334e68] overflow-hidden mb-6">
