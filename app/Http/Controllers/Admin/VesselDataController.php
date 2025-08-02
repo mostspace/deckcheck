@@ -76,7 +76,7 @@ class VesselDataController extends Controller
     public function show(Vessel $vessel)
     {
         $vessel->load([
-            'owner:id,first_name,last_name,email',
+            'owner:id,first_name,last_name,email,profile_pic',
             'boardings' => function ($query) {
                 $query->whereIn('status', ['active', 'invited'])
                     ->orderBy('crew_number')
