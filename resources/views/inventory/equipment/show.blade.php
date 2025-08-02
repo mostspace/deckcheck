@@ -67,14 +67,8 @@
         {{-- #Hero Photo --}}
         <div class="flex-shrink-0">
             <div class="w-48 h-[149.8px] bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] flex items-center justify-center overflow-hidden">
-                @if ($equipment->hero_photo)
-                    <img src="{{ $equipment->hero_photo ? Storage::url($equipment->hero_photo) : asset('images/placeholders/placeholder.png') }}" alt="Hero Photo for {{ $equipment->name }}"
-                        class="w-full h-full object-cover">
-                @else
-                    <img class="w-full h-full object-cover border border-[#6840c6] rounded-lg" src="/storage/hero_photos/placeholder.webp"
-                        alt="yacht life raft equipment Viking orange safety device">
-                @endif
-
+                <img src="{{ $equipment->hero_photo ? Storage::url($equipment->hero_photo) : asset('images/placeholders/placeholder.png') }}"
+                    alt="Hero Photo for {{ $equipment->name }}" class="w-full h-full object-cover">
             </div>
         </div>
 

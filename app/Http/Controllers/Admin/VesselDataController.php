@@ -76,7 +76,7 @@ class VesselDataController extends Controller
     public function show(Vessel $vessel)
     {
         $vessel->load([
-            'owner:id,first_name,last_name,email,profile_pic',
+            'owner:id,first_name,last_name,email,phone,profile_pic',
             'boardings' => function ($query) {
                 $query->whereIn('status', ['active', 'invited'])
                     ->orderBy('crew_number')
@@ -84,7 +84,12 @@ class VesselDataController extends Controller
             }
         ]);
 
-        return view('admin.data.vessel.show', compact('vessel'));
+        $ownerBoarding = $vessel
+            ->boardings
+            ->firstWhere('user_id', $vessel->owner->id);
+
+
+        return view('admin.data.vessel.show', compact('vessel','ownerBoarding'));
     }
 
 

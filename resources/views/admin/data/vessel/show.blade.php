@@ -7,22 +7,32 @@
     <div id="vessel-detail-content" class="p-6">
         <div id="vessel-hero" class="relative bg-[#243b53] rounded-lg border border-[#334e68] overflow-hidden mb-6">
             <div class="relative h-64">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f9731b3dca-1d79086e877da256afd7.png" alt="{{ $vessel->name }}">
+                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f9731b3dca-1d79086e877da256afd7.png"
+                    alt="{{ $vessel->name }}">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-6 left-6 right-6">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <span class="text-4xl mr-4">{{ $vessel->flag_emoji }}</span>
                             <div>
-                                <h1 class="text-3xl font-bold text-white mb-1">{{ $vessel->name }}</h1>
+                                <div class="flex items-center text-xl">
+                                    @php
+                                        $countryCode = strtolower($vessel->flag);
+                                    @endphp
+
+                                    <img src="https://flagcdn.com/h20/{{ $countryCode }}.png" alt="{{ $vessel->flag }}"
+                                        class="w-5 h-4 object-cover rounded-sm mr-2" onerror="this.style.display='none'">
+
+                                    <span class="font-medium text-white">{{ $vessel->type }} {{ $vessel->name }}</span>
+                                </div>
                                 <p class="text-gray-400 text-sm">
-                                    {{ $vessel->type }} • IMO: {{ $vessel->imo_number }}
+                                    Created: {{ $vessel->created_at->format('F j, Y') }}
                                 </p>
                             </div>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <span class="px-3 py-1 backdrop-blur-sm text-sm rounded-full {{ $vessel->is_active ? 'bg-green-600/90' : 'bg-red-600/90' }}">
-                                {{ $vessel->is_active ? 'Active' : 'Inactive' }}
+                            <span class="px-3 py-1 backdrop-blur-sm text-sm rounded-full bg-green-600/90">
+                                Active
                             </span>
                             @if ($vessel->subscription)
                                 <span class="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-sm rounded-full">
@@ -177,8 +187,8 @@
                                 @foreach ($vessel->boardings as $boarding)
                                     <tr>
                                         <td class="py-3 flex items-center">
-                                            <img src="{{ Storage::url($boarding->user->profile_pic) }}" class="w-8 h-8 rounded-full mr-3"
-                                                alt="{{ $boarding->user->full_name }}">
+                                            <img src="{{ $boarding->user->profile_pic ? Storage::url($boarding->user->profile_pic) : asset('images/placeholders/placeholder.png') }}"
+                                                class="w-8 h-8 rounded-full mr-3" alt="{{ $boarding->user->full_name }}">
                                             {{ $boarding->user->full_name }}
                                         </td>
                                         <td class="py-3">{{ $boarding->department ?? '—' }}</td>
@@ -187,7 +197,7 @@
                                         <td class="py-3">Placeholder</td>
                                         <td class="py-3">
                                             <span
-                                                class="px-2 py-1 text-xs rounded-full capitalize {{ $boarding->status === 'active' ? 'bg-green-600' : 'bg-gray-600' }}">
+                                                class="px-2 py-1 text-xs rounded-full capitalize {{ $boarding->status === 'active' ? 'bg-green-600' : 'bg-yellow-600' }}">
                                                 {{ $boarding->status ?? '—' }}
                                             </span>
                                         </td>
@@ -208,10 +218,11 @@
                     </h2>
                     <div class="space-y-3">
                         <div class="flex items-center">
-                            <img src="{{ Storage::url($vessel->owner->profile_pic) }}" class="w-12 h-12 rounded-full mr-3" alt="{{ $vessel->owner->full_name }}">
+                            <img src="{{ Storage::url($vessel->owner->profile_pic) }}" class="w-12 h-12 rounded-full mr-3"
+                                alt="{{ $vessel->owner->full_name }}">
                             <div>
                                 <p class="font-medium text-white">{{ $vessel->owner->full_name }}</p>
-                                <p class="text-sm text-gray-400">**Role**</p>
+                                <p class="text-sm text-gray-400">{{ $ownerBoarding->role }}</p>
                             </div>
                         </div>
                         <div>
