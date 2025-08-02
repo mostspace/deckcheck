@@ -187,7 +187,7 @@
                                 @foreach ($vessel->boardings as $boarding)
                                     <tr>
                                         <td class="py-3 flex items-center">
-                                            <img src="{{ $boarding->user->profile_pic ? Storage::url($boarding->user->profile_pic) : asset('images/placeholders/placeholder.png') }}"
+                                            <img src="{{ $boarding->user->profile_pic ? Storage::url($boarding->user->profile_pic) : asset('images/placeholders/user.png') }}"
                                                 class="w-8 h-8 rounded-full mr-3" alt="{{ $boarding->user->full_name }}">
                                             {{ $boarding->user->full_name }}
                                         </td>

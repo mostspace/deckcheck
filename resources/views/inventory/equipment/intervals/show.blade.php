@@ -38,14 +38,8 @@
         {{-- #Hero Photo --}}
         <div class="flex-shrink-0">
             <div class="w-48 h-[149.8px] bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] flex items-center justify-center overflow-hidden">
-                @if ($interval->equipment->hero_photo)
-                    <img src="{{ Storage::url($interval->equipment->hero_photo) }}" alt="Hero Photo for {{ $interval->equipment->name }}"
-                        class="w-full h-full object-cover">
-                @else
-                    <img class="w-full h-full object-cover border border-[#6840c6] rounded-lg" src="/storage/hero_photos/placeholder.webp"
-                        alt="yacht life raft equipment Viking orange safety device">
-                @endif
-
+                <img src="{{ $interval->equipment->hero_photo ? Storage::url($interval->equipment->hero_photo) : asset('images/placeholders/placeholder.png') }}"
+                    alt="Hero Photo for {{ $interval->equipment->name }}" class="w-full h-full object-cover">
             </div>
         </div>
 
@@ -276,11 +270,11 @@
                                         <button onclick="toggleAssigneeDropdown({{ $workOrder->id }})"
                                             class="flex items-center gap-2 px-3 py-2 border border-[#e4e7ec] rounded-lg shadow-sm bg-white text-sm font-medium text-[#344053]">
                                             @if ($workOrder->assignee)
-                                                <img src="{{ $workOrder->assignee->profile_pic ? Storage::url($workOrder->assignee->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                                                <img src="{{ $workOrder->assignee->profile_pic ? Storage::url($workOrder->assignee->profile_pic) : asset('images/placeholders/user.png') }}"
                                                     class="w-5 h-5 rounded-full" alt="Avatar">
                                                 {{ $workOrder->assignee->first_name }} {{ $workOrder->assignee->last_name }}
                                             @else
-                                                <img src="{{ Storage::url('profile_pictures/placeholder.svg.hi.png') }}" class="w-5 h-5 rounded-full"
+                                                <img src="{{ asset('images/placeholders/user.png') }}" class="w-5 h-5 rounded-full"
                                                     alt="Avatar">
                                                 Unassigned
                                             @endif
@@ -295,7 +289,7 @@
                                                     <li>
                                                         <button onclick="assignUser({{ $workOrder->id }}, {{ $user->id }})"
                                                             class="flex items-center w-full px-4 py-2 text-sm text-[#344053] hover:bg-[#f9fafb]">
-                                                            <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                                                            <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
                                                                 class="w-5 h-5 rounded-full mr-2" alt="Avatar">
                                                             {{ $user->first_name }} {{ $user->last_name }}
                                                         </button>

@@ -105,7 +105,7 @@
                         <tr class="hover:bg-[#f8f9fb] transition-colors">
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
-                                    <img class="w-10 h-10 rounded-full" src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/placeholder.png') }}"
+                                    <img class="w-10 h-10 rounded-full" src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
                                         alt="Hero Photo for {{ $user->first_name }}">
                                     <div class="ml-4">
                                         <div class="text-sm font-medium text-[#0f1728] name" data-name="{{ strtolower($user->name) }}">{{ $user->first_name }} {{ $user->last_name }}
