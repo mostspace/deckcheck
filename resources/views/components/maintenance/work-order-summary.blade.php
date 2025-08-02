@@ -44,11 +44,11 @@
             <button onclick="toggleAssigneeDropdown()"
                 class="flex items-center gap-2 px-4 py-2 border border-[#e4e7ec] rounded-lg shadow-sm hover:shadow-md bg-white text-sm font-medium text-[#344053]">
                 @if ($assignedUser)
-                    <img src="{{ $assignedUser->profile_pic ? Storage::url($assignedUser->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                    <img src="{{ $assignedUser->profile_pic ? Storage::url($assignedUser->profile_pic) : asset('images/placeholders/user.png') }}"
                         class="w-6 h-6 rounded-full" alt="Avatar">
                     {{ $assignedUser->first_name }} {{ $assignedUser->last_name }}
                 @else
-                    <img src="{{ Storage::url('profile_pictures/placeholder.svg.hi.png') }}" class="w-6 h-6 rounded-full" alt="Avatar">
+                    <img src="{{ asset('images/placeholders/user.png') }}" class="w-6 h-6 rounded-full" alt="Avatar">
                     Unassigned
                 @endif
 
@@ -62,7 +62,7 @@
                         <li>
                             <button onclick="assignUser({{ $workOrder->id }}, {{ $user->id }})"
                                 class="flex items-center w-full px-4 py-2 text-sm text-[#344053] hover:bg-[#f9fafb]">
-                                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
                                     class="w-6 h-6 rounded-full mr-3" alt="Avatar">
                                 {{ $user->first_name }} {{ $user->last_name }}
                             </button>
@@ -165,7 +165,7 @@
                                             @if ($task->completedBy)
                                                 <div class="flex items-center gap-2 text-xs">
                                                     <strong>By:</strong>
-                                                    <img src="{{ $task->completedBy->profile_pic ? Storage::url($task->completedBy->profile_pic) : Storage::url('profile_pictures/placeholder.svg.hi.png') }}"
+                                                    <img src="{{ $task->completedBy->profile_pic ? Storage::url($task->completedBy->profile_pic) : asset('images/placeholders/user.png') }}"
                                                         alt="Avatar" class="w-5 h-5 rounded-full">
                                                     <span class="text-[#6941c6]">
                                                         {{ $task->completedBy->first_name }} {{ $task->completedBy->last_name }}
