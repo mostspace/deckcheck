@@ -54,10 +54,10 @@
                             </button>
                         </div>
                         <div class="flex gap-2">
-                            <button class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm transition-colors">
+                            <a href="{{ route('admin.vessels.create') }}" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm transition-colors text-white">
                                 <i class="fa-solid fa-plus mr-1"></i>
                                 New Vessel
-                            </button>
+                            </a>
                             <button class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-sm transition-colors">
                                 <i class="fa-solid fa-download mr-1"></i>
                                 Export

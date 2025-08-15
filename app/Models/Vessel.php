@@ -11,6 +11,32 @@ use App\Models\Equipment;
 
 class Vessel extends Model
 {
+    protected $fillable = [
+        'name',
+        'type',
+        'flag',
+        'registry_port',
+        'build_year',
+        'vessel_make',
+        'vessel_size',
+        'vessel_loa',
+        'vessel_lwl',
+        'vessel_beam',
+        'vessel_draft',
+        'vessel_gt',
+        'official_number',
+        'mmsi_number',
+        'imo_number',
+        'callsign',
+        'hero_photo',
+        'dpa_name',
+        'dpa_phone',
+        'dpa_email',
+        'vessel_phone',
+        'vessel_email',
+        'account_owner',
+    ];
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'user_id');

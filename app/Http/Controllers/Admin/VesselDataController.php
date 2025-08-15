@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Vessel;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class VesselDataController extends Controller
 {
@@ -73,6 +76,51 @@ class VesselDataController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $users = User::where('system_role', '!=', 'user')->get();
+        return view('admin.data.vessel.create', compact('users'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => ['required', Rule::in(['MY', 'SY', 'MV', 'SV', 'FV', 'RV'])],
+            'flag' => 'nullable|string|max:255',
+            'registry_port' => 'nullable|string|max:255',
+            'build_year' => 'nullable|string|max:4',
+            'vessel_make' => 'nullable|string|max:255',
+            'vessel_size' => 'nullable|integer|min:1',
+            'vessel_loa' => 'nullable|integer|min:1',
+            'vessel_lwl' => 'nullable|integer|min:1',
+            'vessel_beam' => 'nullable|integer|min:1',
+            'vessel_draft' => 'nullable|integer|min:1',
+            'vessel_gt' => 'nullable|integer|min:1',
+            'official_number' => 'nullable|string|max:255',
+            'mmsi_number' => 'nullable|string|max:255',
+            'imo_number' => 'nullable|string|max:255',
+            'callsign' => 'nullable|string|max:255',
+            'hero_photo' => 'nullable|string|max:255',
+            'dpa_name' => 'nullable|string|max:255',
+            'dpa_phone' => 'nullable|string|max:255',
+            'dpa_email' => 'nullable|email|max:255',
+            'vessel_phone' => 'nullable|string|max:255',
+            'vessel_email' => 'nullable|email|max:255',
+            'account_owner' => 'nullable|exists:users,id',
+        ]);
+
+        // If no account owner is specified, set it to the authenticated user (admin)
+        if (empty($validated['account_owner'])) {
+            $validated['account_owner'] = auth()->id();
+        }
+
+        $vessel = Vessel::create($validated);
+
+        return redirect()->route('admin.vessels.show', $vessel)
+            ->with('success', 'Vessel created successfully!');
+    }
+
     public function show(Vessel $vessel)
     {
         $vessel->load([
@@ -84,10 +132,13 @@ class VesselDataController extends Controller
             }
         ]);
 
-        $ownerBoarding = $vessel
-            ->boardings
-            ->firstWhere('user_id', $vessel->owner->id);
-
+        // Safely get owner boarding only if owner exists
+        $ownerBoarding = null;
+        if ($vessel->owner) {
+            $ownerBoarding = $vessel
+                ->boardings
+                ->firstWhere('user_id', $vessel->owner->id);
+        }
 
         return view('admin.data.vessel.show', compact('vessel','ownerBoarding'));
     }

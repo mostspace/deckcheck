@@ -3,6 +3,14 @@
 @section('title', $vessel->name)
 
 @section('content')
+    @if(session('success'))
+        <div class="mb-6 bg-green-600 border border-green-500 text-white px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    @endif
 
     <div id="vessel-detail-content" class="p-6">
         <div id="vessel-hero" class="relative bg-[#243b53] rounded-lg border border-[#334e68] overflow-hidden mb-6">
@@ -216,28 +224,38 @@
                         <i class="fa-solid fa-user mr-2 text-green-400"></i>
                         Owner Information
                     </h2>
-                    <div class="space-y-3">
-                        <div class="flex items-center">
-                            <img src="{{ Storage::url($vessel->owner->profile_pic) }}" class="w-12 h-12 rounded-full mr-3"
-                                alt="{{ $vessel->owner->full_name }}">
-                            <div>
-                                <p class="font-medium text-white">{{ $vessel->owner->full_name }}</p>
-                                <p class="text-sm text-gray-400">{{ $ownerBoarding->role }}</p>
+                    @if($vessel->owner)
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <img src="{{ $vessel->owner->profile_pic ? Storage::url($vessel->owner->profile_pic) : asset('images/placeholders/user.png') }}" class="w-12 h-12 rounded-full mr-3"
+                                    alt="{{ $vessel->owner->full_name }}">
+                                <div>
+                                    <p class="font-medium text-white">{{ $vessel->owner->full_name }}</p>
+                                    <p class="text-sm text-gray-400">{{ $ownerBoarding->role ?? 'Owner' }}</p>
+                                </div>
                             </div>
+                            <div>
+                                <label class="block text-gray-400 text-sm font-medium mb-1">Email</label>
+                                <p class="text-white text-sm">{{ $vessel->owner->email }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-sm font-medium mb-1">Phone</label>
+                                <p class="text-white text-sm">{{ $vessel->owner->phone ?? '—' }}</p>
+                            </div>
+                            <button class="w-full bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm text-white transition-colors mt-4">
+                                <i class="fa-solid fa-envelope mr-2"></i>
+                                Contact Owner
+                            </button>
                         </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm font-medium mb-1">Email</label>
-                            <p class="text-white text-sm">{{ $vessel->owner->email }}</p>
+                    @else
+                        <div class="text-center py-4">
+                            <p class="text-gray-400 mb-3">No owner assigned to this vessel</p>
+                            <button class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm text-white transition-colors">
+                                <i class="fa-solid fa-user-plus mr-2"></i>
+                                Assign Owner
+                            </button>
                         </div>
-                        <div>
-                            <label class="block text-gray-400 text-sm font-medium mb-1">Phone</label>
-                            <p class="text-white text-sm">{{ $vessel->owner->phone }}</p>
-                        </div>
-                        <button class="w-full bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm text-white transition-colors mt-4">
-                            <i class="fa-solid fa-envelope mr-2"></i>
-                            Contact Owner
-                        </button>
-                    </div>
+                    @endif
                 </div>
 
 

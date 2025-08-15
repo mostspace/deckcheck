@@ -82,8 +82,14 @@
             <div>
                 <div class="text-xs uppercase text-gray-500 font-semibold mb-2 px-1">Management</div>
                 <x-admin.nav-link icon="fa-users" label="Staff" />
-                <x-admin.nav-link icon="fa-user-gear" label="User Management" />
-                <x-admin.nav-link icon="fa-database" label="Data Management" />
+                <x-admin.nav-link icon="fa-user-gear" label="User Management" route="admin.users.index" />
+                <x-admin.nav-link 
+                    icon="fa-database" 
+                    label="Data Management"
+                    :subItems="[
+                        ['label' => 'Vessel', 'route' => 'admin.vessels.index']
+                    ]"
+                />
                 <x-admin.nav-link icon="fa-file-pen" label="Content Management" />
                 <x-admin.nav-link icon="fa-headset" label="Support" />
             </div>
