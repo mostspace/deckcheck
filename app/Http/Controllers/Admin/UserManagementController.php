@@ -13,8 +13,7 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::where('system_role', 'user')
-            ->with(['boardings.vessel'])
+        $query = User::where('system_role', 'user')->with(['boardings.vessel'])
             ->withCount(['boardings as active_boardings_count' => function ($query) {
                 $query->where('status', 'active');
             }])
@@ -30,10 +29,6 @@ class UserManagementController extends Controller
             } elseif ($status === 'inactive') {
                 $query->whereDoesntHave('boardings', function ($q) {
                     $q->where('status', 'active');
-                });
-            } elseif ($status === 'primary') {
-                $query->whereHas('boardings', function ($q) {
-                    $q->where('is_primary', true);
                 });
             } elseif ($status === 'crew') {
                 $query->whereHas('boardings', function ($q) {
@@ -70,18 +65,14 @@ class UserManagementController extends Controller
             'all' => 'All Users',
             'active' => 'Active Users',
             'inactive' => 'Inactive Users',
-            'primary' => 'Primary Vessel Users',
             'crew' => 'Crew Members Only'
         ];
 
-        // Get additional statistics (only for users with system_role 'user')
+        // Get additional statistics
         $stats = [
             'total_users' => User::where('system_role', 'user')->count(),
             'active_users' => User::where('system_role', 'user')->whereHas('boardings', function ($q) {
                 $q->where('status', 'active');
-            })->count(),
-            'primary_users' => User::where('system_role', 'user')->whereHas('boardings', function ($q) {
-                $q->where('is_primary', true);
             })->count(),
             'crew_users' => User::where('system_role', 'user')->whereHas('boardings', function ($q) {
                 $q->where('is_crew', true);

@@ -48,18 +48,6 @@
 
         <div class="bg-dark-800 rounded-lg p-6 border border-dark-600">
             <div class="flex items-center">
-                <div class="p-2 bg-purple-500/10 rounded-lg">
-                    <i class="fa-solid fa-crown text-purple-500 text-xl"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-400">Primary Vessel Users</p>
-                    <p class="text-2xl font-bold text-white">{{ number_format($stats['primary_users']) }}</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="bg-dark-800 rounded-lg p-6 border border-dark-600">
-            <div class="flex items-center">
                 <div class="p-2 bg-orange-500/10 rounded-lg">
                     <i class="fa-solid fa-user-tie text-orange-500 text-xl"></i>
                 </div>
@@ -186,9 +174,6 @@
                                         <div class="flex items-center text-sm">
                                             <span class="w-2 h-2 rounded-full {{ $boarding->status === 'active' ? 'bg-green-400' : 'bg-gray-400' }} mr-2"></span>
                                             <span class="text-white">{{ $boarding->vessel->name ?? 'Unknown Vessel' }}</span>
-                                            @if($boarding->is_primary)
-                                                <span class="ml-2 text-xs bg-accent-primary text-white px-2 py-0.5 rounded">Primary</span>
-                                            @endif
                                         </div>
                                     @empty
                                         <span class="text-gray-500 text-sm">No vessels</span>
