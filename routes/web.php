@@ -28,11 +28,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Switch Between Vessels
+Route::middleware('auth')->group(function () {
+    // Switch Between Vessels
     Route::post('/switch-vessel', [VesselSwitchController::class, 'switch'])
         ->name('vessel.switch');
 
-Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -108,51 +108,69 @@ Route::middleware('auth')->group(function () {
 
     // Deck Create & Store
     Route::get('/vessel/decks/create', [VesselController::class, 'createDeck'])
-        ->name('vessel.decks.create');
+        ->name('vessel.decks.create')
+        ->middleware('vessel.access');
 
     Route::post('/vessel/decks', [VesselController::class, 'storeDeck'])
-        ->name('vessel.decks.store');
+        ->name('vessel.decks.store')
+        ->middleware('vessel.access');
 
     // Deck Delete
     Route::delete('/vessel/decks/{deck}', [DeckController::class, 'destroy'])
-        ->name('vessel.decks.destroy');
+        ->name('vessel.decks.destroy')
+        ->middleware('vessel.access');
 
     // Deck Edit & Update
     Route::get('/vessel/decks/{deck}/edit', [DeckController::class, 'edit'])
-        ->name('vessel.decks.edit');
+        ->name('vessel.decks.edit')
+        ->middleware('vessel.access');
 
     Route::put('/vessel/decks/{deck}', [DeckController::class, 'update'])
-        ->name('vessel.decks.update');
+        ->name('vessel.decks.update')
+        ->middleware('vessel.access');
 
     // Show one deck
     Route::get('/vessel/decks/{deck}', [VesselController::class, 'showDeck'])
-        ->name('vessel.decks.show');
+        ->name('vessel.decks.show')
+        ->middleware('vessel.access');
 
     // Re-Order Locations         
     Route::post('/decks/{deck}/locations/reorder', [App\Http\Controllers\LocationController::class, 'reorder'])
-        ->name('locations.reorder');
+        ->name('locations.reorder')
+        ->middleware('vessel.access');
 
     // Location Create & Store
     Route::get('vessel/decks/{deck}/locations/create', [LocationController::class, 'create'])
-         ->name('vessel.decks.locations.create');
+         ->name('vessel.decks.locations.create')
+         ->middleware('vessel.access');
 
     Route::post('decks/{deck}/locations', [LocationController::class, 'store'])
-         ->name('decks.locations.store');
+         ->name('decks.locations.store')
+         ->middleware('vessel.access');
 
     // Location Delete
     Route::delete('locations/{location}', [LocationController::class, 'destroy'])
-        ->name('locations.destroy');
+        ->name('locations.destroy')
+        ->middleware('vessel.access');
 
     // Location Edit & Update
     Route::get('vessel/decks/locations/{location}/edit', [LocationController::class, 'edit'])
-        ->name('locations.edit');
+        ->name('locations.edit')
+        ->middleware('vessel.access');
 
     Route::put('locations/{location}', [LocationController::class, 'update'])
-        ->name('locations.update');
+        ->name('locations.update')
+        ->middleware('vessel.access');
 
     // AJAX: create a new location without redirect
     Route::post('/inventory/decks/{deck}/locations/ajax', [LocationController::class, 'ajaxStore'])
-        ->name('decks.locations.ajax-store');
+        ->name('decks.locations.ajax-store')
+        ->middleware('vessel.access');
+
+    // For AJAX location lookup
+    Route::get('/inventory/decks/{deck}/locations', [DeckController::class, 'locations'])
+        ->name('decks.locations')
+        ->middleware('vessel.access');
 
 });
 
@@ -189,10 +207,12 @@ Route::middleware('auth')->group(function () {
 
     // Category Edit & Update
     Route::get('/maintenance/category/{category}/edit', [VesselController::class, 'editCategory'])
-        ->name('maintenance.edit');
+        ->name('maintenance.edit')
+        ->middleware('vessel.access');
 
     Route::put('/maintenance/category/{category}', [VesselController::class, 'updateCategory'])
-        ->name('maintenance.update');
+        ->name('maintenance.update')
+        ->middleware('vessel.access');
 
     // Category Index Page 
     Route::get('/maintenance', [VesselController::class, 'categories'])
@@ -200,55 +220,69 @@ Route::middleware('auth')->group(function () {
 
     // Category Detail Page
     Route::get('/maintenance/{category}', [VesselController::class, 'showCategory'])
-        ->name('maintenance.show');
+        ->name('maintenance.show')
+        ->middleware('vessel.access');
 
     // Interval Create & Store
     Route::get('/maintenance/categories/{category}/intervals/create', [CategoryController::class, 'createInterval'])
-        ->name('maintenance.intervals.create');
+        ->name('maintenance.intervals.create')
+        ->middleware('vessel.access');
 
     Route::post('/maintenance/categories/{category}/intervals', [CategoryController::class, 'storeInterval'])
-        ->name('maintenance.intervals.store');
+        ->name('maintenance.intervals.store')
+        ->middleware('vessel.access');
     
     // Show Interval
     Route::get('/maintenance/categories/{category}/intervals/{interval}', [CategoryController::class, 'showInterval'])
-        ->name('maintenance.intervals.show');
+        ->name('maintenance.intervals.show')
+        ->middleware('vessel.access');
 
     // Delete Interval
     Route::delete('/maintenance/categories/{category}/intervals/{interval}', [CategoryController::class, 'destroyInterval'])
-        ->name('maintenance.intervals.destroy');
+        ->name('maintenance.intervals.destroy')
+        ->middleware('vessel.access');
 
     // Edit & Update Interval
     Route::get('/maintenance/categories/{category}/intervals/{interval}/edit', [CategoryController::class, 'editInterval'])
-        ->name('intervals.edit');
+        ->name('intervals.edit')
+        ->middleware('vessel.access');
 
     Route::put('/maintenance/categories/{category}/intervals/{interval}', [CategoryController::class, 'updateInterval'])
-        ->name('intervals.update');
+        ->name('intervals.update')
+        ->middleware('vessel.access');
 
     // Task Create & Store
     Route::get('/intervals/{interval}/tasks/create', [IntervalController::class, 'createTask'])
-        ->name('maintenance.intervals.tasks.create');
+        ->name('maintenance.intervals.tasks.create')
+        ->middleware('vessel.access');
 
     Route::post('/maintenance/categories/{category}/intervals/{interval}/tasks', [IntervalController::class, 'storeTask'])
-        ->name('maintenance.intervals.tasks.store');
+        ->name('maintenance.intervals.tasks.store')
+        ->middleware('vessel.access');
 
     // Show Task
     Route::get('/maintenance/categories/{category}/intervals/{interval}/tasks/{task}', [IntervalController::class, 'showTask'])
-        ->name('maintenance.intervals.tasks.show');
+        ->name('maintenance.intervals.tasks.show')
+        ->middleware('vessel.access');
 
     // Delete Task
     Route::delete('/maintenance/categories/{category}/intervals/{interval}/tasks/{task}', [IntervalController::class, 'destroyTask'])
-    ->name('maintenance.intervals.tasks.destroy');
+    ->name('maintenance.intervals.tasks.destroy')
+    ->middleware('vessel.access');
 
     // Re-Order Tasks         
     Route::post('/intervals/{interval}/tasks/reorder', [App\Http\Controllers\TaskController::class, 'reorder'])
-        ->name('tasks.reorder');
+        ->name('tasks.reorder')
+        ->middleware('vessel.access');
 
     // Edit & Update Task
     Route::get('/maintenance/categories/{category}/intervals/{interval}/tasks/{task}/edit', [IntervalController::class, 'editTask'])
-        ->name('maintenance.intervals.tasks.edit');
+        ->name('maintenance.intervals.tasks.edit')
+        ->middleware('vessel.access');
 
     Route::put('/maintenance/categories/{category}/intervals/{interval}/tasks/{task}', [IntervalController::class, 'updateTask'])
-        ->name('maintenance.intervals.tasks.update');
+        ->name('maintenance.intervals.tasks.update')
+        ->middleware('vessel.access');
 });
 
 // Equipment
@@ -256,10 +290,12 @@ Route::middleware('auth')->group(function () {
 
     // Equipment Create & Store
     Route::get('/inventory/equipment/create', [EquipmentController::class, 'create'])
-        ->name('equipment.create');
+        ->name('equipment.create')
+        ->middleware('vessel.access');
 
     Route::post('/inventory/equipment', [EquipmentController::class, 'store'])
-        ->name('equipment.store');
+        ->name('equipment.store')
+        ->middleware('vessel.access');
 
     // For AJAX location lookup
     Route::get('/inventory/decks/{deck}/locations', [DeckController::class, 'locations'])
@@ -267,7 +303,8 @@ Route::middleware('auth')->group(function () {
 
     // Show Equipment
     Route::get('/inventory/equipment/{equipment}', [EquipmentController::class, 'show'])
-        ->name('equipment.show');
+        ->name('equipment.show')
+        ->middleware('vessel.access');
 
     // Equipment Index
     Route::get('/inventory/equipment', [EquipmentController::class, 'index'])
@@ -275,35 +312,43 @@ Route::middleware('auth')->group(function () {
 
     // Update Equipment Basic Info
     Route::put('/equipment/{equipment}/basic', [EquipmentController::class, 'updateBasic'])
-        ->name('equipment.updateBasic');
+        ->name('equipment.updateBasic')
+        ->middleware('vessel.access');
 
     // Update Equipment Attributes
     Route::put('/equipment/{equipment}/attributes', [EquipmentController::class, 'updateAttributes'])
-        ->name('equipment.attributes.update');
+        ->name('equipment.attributes.update')
+        ->middleware('vessel.access');
 
     // Update Equipment Data
     Route::put('/equipment/{equipment}/data',[EquipmentController::class, 'updateData'])
-        ->name('equipment.updateData');
+        ->name('equipment.updateData')
+        ->middleware('vessel.access');
     
     // Edit Index Table Columns
     Route::post('/equipment/columns', [EquipmentController::class, 'updateVisibleColumns'])
-        ->name('equipment.columns.update');
+        ->name('equipment.columns.update')
+        ->middleware('vessel.access');
 
     // Show Equipment Interval Detail
     Route::get('/equipment-intervals/{interval}', [EquipmentIntervalController::class, 'show'])
-        ->name('equipment-intervals.show');
+        ->name('equipment-intervals.show')
+        ->middleware('vessel.access');
 
     // Show Work Order Detail
     Route::get('/equipment/intervals/work-orders/{workOrder}', [WorkOrderController::class, 'show'])
-        ->name('work-orders.show');
+        ->name('work-orders.show')
+        ->middleware('vessel.access');
 
     
     // Bulk Create & Store
     Route::post('/equipment/bulk-store', [EquipmentController::class, 'bulkStore'])
-        ->name('equipment.bulk-store');
+        ->name('equipment.bulk-store')
+        ->middleware('vessel.access');
 
     Route::get('/equipment/bulk-row', [EquipmentController::class, 'getBulkRow'])
-        ->name('equipment.bulk-row.partial');
+        ->name('equipment.bulk-row.partial')
+        ->middleware('vessel.access');
 
 
 });
@@ -312,31 +357,25 @@ Route::middleware('auth')->group(function () {
 // Work Orders & Work Order Tasks
 Route::middleware('auth')->group(function () {
 
-    // Show Equipment Interval Detail
-    Route::get('/equipment-intervals/{interval}', [EquipmentIntervalController::class, 'show'])
-        ->name('equipment-intervals.show');
-
-    // Show Work Order Detail
-    Route::get('/equipment/intervals/work-orders/{workOrder}', [WorkOrderController::class, 'show'])
-        ->name('work-orders.show');
-
     // Assign Work Order
     Route::post('/work-orders/{workOrder}/assign', [WorkOrderController::class, 'assign'])
-        ->name('work-orders.assign');
+        ->name('work-orders.assign')
+        ->middleware('vessel.access');
     
-    // Update Work Order Task
-    Route::put('/work-orders/tasks/{task}', [WorkOrderTaskController::class, 'updateStatus'])
-        ->name('work-orders.tasks.update');
-
+    // Open Work Order
+    Route::post('/work-orders/{workOrder}/open', [WorkOrderController::class, 'open'])
+        ->name('work-orders.open')
+        ->middleware('vessel.access');
+    
     // Complete Work Order
     Route::post('/work-orders/{workOrder}/complete', [WorkOrderController::class, 'complete'])
-        ->name('work-orders.complete');
+        ->name('work-orders.complete')
+        ->middleware('vessel.access');
 
-    // Open Scheduled Work Order
-    Route::post('/work-orders/{workOrder}/open', [WorkOrderController::class, 'open'])
-        ->name('work-orders.open');
-
-
+    // Update Work Order Task Status
+    Route::put('/work-orders/tasks/{task}', [WorkOrderTaskController::class, 'updateStatus'])
+        ->name('work-orders.tasks.update-status')
+        ->middleware('vessel.access');
 });
 
 // Deficiencies

@@ -4,14 +4,70 @@ use Illuminate\Support\Carbon;
 
 // Global Auth Scoping for User's Active Vessel
 function currentVessel() {
-    return auth()->user()?->activeVessel();
+    $user = auth()->user();
+    if (!$user) return null;
+    
+    // For system users, try to get from session or return first accessible vessel
+    if (in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
+        // Check if there's a vessel in session (for when they switch to a specific vessel)
+        if (session()->has('active_vessel_id')) {
+            $vessel = \App\Models\Vessel::find(session('active_vessel_id'));
+            if ($vessel && $user->hasSystemAccessToVessel($vessel)) {
+                \Log::info('System user vessel from session', [
+                    'user_id' => $user->id,
+                    'vessel_id' => $vessel->id,
+                    'session_vessel_id' => session('active_vessel_id')
+                ]);
+                return $vessel;
+            }
+        }
+        
+        // Return first accessible vessel for system users
+        $accessibleVessels = $user->getAccessibleVessels();
+        if ($accessibleVessels && $accessibleVessels->count() > 0) {
+            $firstVessel = $accessibleVessels->first();
+            \Log::info('System user vessel from accessible vessels', [
+                'user_id' => $user->id,
+                'vessel_id' => $firstVessel->id,
+                'total_accessible' => $accessibleVessels->count()
+            ]);
+            return $firstVessel;
+        }
+        
+        \Log::info('System user no accessible vessels', [
+            'user_id' => $user->id,
+            'accessible_vessels_count' => $accessibleVessels ? $accessibleVessels->count() : 0
+        ]);
+        return null;
+    }
+    
+    // Regular users get their active vessel
+    return $user->activeVessel();
 }
 
 function currentUserBoarding() {
     $user = auth()->user();
     $vessel = currentVessel();
-
-    return $user?->boardings()->where('vessel_id', $vessel?->id)->first();
+    
+    if (!$user || !$vessel) return null;
+    
+    // For system users without explicit boarding, return a mock boarding object
+    if (in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
+        $boarding = $user->boardings()->where('vessel_id', $vessel->id)->first();
+        if (!$boarding) {
+            // Create a temporary boarding object for system users
+            $boarding = new \App\Models\Boarding();
+            $boarding->vessel_id = $vessel->id;
+            $boarding->user_id = $user->id;
+            $boarding->status = 'active';
+            $boarding->access_level = 'admin';
+            $boarding->is_primary = true;
+        }
+        return $boarding;
+    }
+    
+    // Regular users get their actual boarding
+    return $user->boardings()->where('vessel_id', $vessel?->id)->first();
 }
 
 

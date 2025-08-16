@@ -12,6 +12,24 @@
         </div>
     @endif
 
+    @if(session('info'))
+        <div class="mb-6 bg-blue-600 border border-blue-500 text-white px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('info') }}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-6 bg-red-600 border border-red-500 text-white px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    @endif
+
     <div id="vessel-detail-content" class="p-6">
         <div id="vessel-hero" class="relative bg-[#243b53] rounded-lg border border-[#334e68] overflow-hidden mb-6">
             <div class="relative h-64">
@@ -55,7 +73,17 @@
         </div>
 
         {{-- Action Buttons --}}
-        <div class="mb-6 flex justify-end">
+        <div class="mb-6 flex justify-end space-x-3">
+            @if (in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev']))
+                <form action="{{ route('vessel.switch') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
+                    <button type="submit" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                        <i class="fa-solid fa-sign-in-alt mr-1"></i> Enter Vessel
+                    </button>
+                </form>
+            @endif
+            
             <a href="{{ route('admin.vessels.edit', $vessel) }}" 
                class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-md text-white font-medium transition-colors">
                 <i class="fa-solid fa-edit mr-2"></i>

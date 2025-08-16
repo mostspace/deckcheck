@@ -12,6 +12,11 @@ class TaskController extends Controller
 
     public function reorder(Request $request, Interval $interval)
     {
+        // Check if user has access to this interval's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+            abort(403, 'Access denied to this interval');
+        }
+
         // validate shape
         $data = $request->validate([
             'order' => 'required|array',

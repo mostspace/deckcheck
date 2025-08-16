@@ -165,8 +165,8 @@ class DeficiencyController extends Controller
 
     protected function authorizeAccess(Deficiency $deficiency)
     {
-        if ($deficiency->equipment->vessel_id !== currentVessel()?->id) {
-        abort(403);
+        if (!auth()->user()->hasSystemAccessToVessel($deficiency->equipment->vessel)) {
+            abort(403, 'Access denied to this vessel');
         }
     }
     

@@ -45,7 +45,10 @@ class DeckController extends Controller
      */
     public function edit(Deck $deck)
     {
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
         return view('vessel.decks.edit', compact('deck'));
     }
 
@@ -54,7 +57,10 @@ class DeckController extends Controller
      */
     public function update(Request $request, Deck $deck)
     {
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -70,24 +76,22 @@ class DeckController extends Controller
      */
     public function destroy(Deck $deck)
     {
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
 
         $deck->delete();
 
         return redirect()->route('vessel.deckplan')->with('success', 'Deck deleted.');
     }
 
-    private function authorizeDeck(Deck $deck)
-    {
-        if ($deck->vessel_id !== currentVessel()?->id) {
-            abort(404);
-        }
-    }
-
     public function locations(Deck $deck)
     {
-        // Optional: lock this down as well
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
 
         return response()->json(
             $deck->locations()->select('id', 'name')->get()

@@ -41,6 +41,11 @@ class InviteUserController extends Controller
     {
         $vessel = currentVessel();
 
+        // Ensure user has access to this vessel
+        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+            abort(403, 'Access denied to this vessel');
+        }
+
         // Ensure inviter has permission
         $boarding = currentUserBoarding();
         if (!in_array($boarding?->access_level, ['owner', 'admin'])) {

@@ -8,6 +8,9 @@
 @section('form')
     <form action="{{ route('maintenance.store') }}" method="POST" class="space-y-6">
         @csrf
+        
+        {{-- Hidden Vessel ID --}}
+        <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
 
         {{-- Location Name --}}
         <div>

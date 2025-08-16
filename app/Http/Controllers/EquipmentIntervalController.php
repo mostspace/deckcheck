@@ -36,14 +36,13 @@ class EquipmentIntervalController extends Controller
      */
     public function show(EquipmentInterval $interval)
     {
-        $vessel = currentVessel();
-
-        if ($interval->equipment->vessel_id !== $vessel->id) {
-            abort(403);
+        // Check if user has access to this equipment's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($interval->equipment->vessel)) {
+            abort(403, 'Access denied to this equipment interval');
         }
 
         // Load all users on the same vessel
-        $users = $vessel->users()->get();
+        $users = $interval->equipment->vessel->users()->get();
 
         // Optional: eager load assignees on the work orders to avoid N+1
         $interval->load('workOrders.assignee');

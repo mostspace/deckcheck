@@ -21,9 +21,9 @@ class IntervalController extends Controller
             abort(404);
         }
 
-        // Confirm the user current vessel
-        if ($interval->category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        // Confirm the user has access to this vessel
+        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+            abort(403, 'Access denied to this interval');
         }
 
         //$interval->load('instructions'); // or whatever relations you want
@@ -33,8 +33,8 @@ class IntervalController extends Controller
 
     public function createTask(Interval $interval)
     {
-        if ($interval->category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+            abort(403, 'Access denied to this interval');
         }
 
         $equipmentInCategory = $interval->category->equipment;
@@ -84,8 +84,12 @@ class IntervalController extends Controller
 
     public function storeTask(Request $request, Category $category, Interval $interval)
     {
-        if ($interval->category_id !== $category->id || $interval->category->vessel_id !== currentVessel()?->id) {
+        if ($interval->category_id !== $category->id) {
             abort(404);
+        }
+
+        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+            abort(403, 'Access denied to this interval');
         }
 
         // Validation rules
@@ -239,10 +243,13 @@ class IntervalController extends Controller
     {
         if (
             $interval->category_id !== $category->id ||
-            $interval->category->vessel_id !== currentVessel()?->id ||
             $task->interval_id !== $interval->id
         ) {
             abort(404);
+        }
+
+        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+            abort(403, 'Access denied to this interval');
         }
 
         $rules = [

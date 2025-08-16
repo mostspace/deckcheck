@@ -37,14 +37,20 @@ class LocationController extends Controller
     // Create & Store Location
     public function create(Deck $deck)
     {
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
 
         return view('vessel.decks.locations.create', compact('deck'));
     }
 
     public function store(Request $request, Deck $deck)
     {
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
 
         $data = $request->validate([
         'name'          => 'required|string|max:255',
@@ -63,7 +69,10 @@ class LocationController extends Controller
     // Store for Inline New Location on Equipment Create
     public function ajaxStore(Request $request, Deck $deck)
     {
-        $this->authorizeDeck($deck);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
+        }
 
         $data = $request->validate([
             'name' => 'required|string|max:255',
@@ -90,7 +99,10 @@ class LocationController extends Controller
     // Edit & Update Location
     public function edit(Location $location)
     {
-        $this->authorizeLocation($location);
+        // Check if user has access to this location's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($location->deck->vessel)) {
+            abort(403, 'Access denied to this location');
+        }
 
         return view('vessel.decks.locations.edit', compact('location'));
     }
@@ -100,7 +112,10 @@ class LocationController extends Controller
      */
     public function update(Request $request, Location $location)
     {
-        $this->authorizeLocation($location);
+        // Check if user has access to this location's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($location->deck->vessel)) {
+            abort(403, 'Access denied to this location');
+        }
 
         $data = $request->validate([
         'name' => 'required|string|max:255',
@@ -119,7 +134,10 @@ class LocationController extends Controller
      */
     public function destroy(Location $location)
     {
-        $this->authorizeLocation($location);
+        // Check if user has access to this location's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($location->deck->vessel)) {
+            abort(403, 'Access denied to this location');
+        }
         
             $deckId = $location->deck_id;
             $location->delete();
@@ -128,19 +146,4 @@ class LocationController extends Controller
                 ->route('vessel.decks.show', $deckId)
                 ->with('success', 'Location deleted.');
     }
-
-    private function authorizeDeck(Deck $deck)
-    {
-        if ($deck->vessel_id !== currentVessel()?->id) {
-            abort(403);
-        }
-    }
-
-    private function authorizeLocation(Location $location)
-    {
-        if ($location->deck->vessel_id !== currentVessel()?->id) {
-            abort(403);
-        }
-    }
-
 }

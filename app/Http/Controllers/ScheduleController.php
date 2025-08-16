@@ -23,6 +23,11 @@ class ScheduleController extends Controller
             abort(404, 'No active vessel selected.');
         }
 
+        // Ensure user has access to this vessel
+        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+            abort(403, 'Access denied to this vessel');
+        }
+
         // Loop Work Orders, Pass Used Frequencies into Array for Dynamic Display
         $rawFrequencies = WorkOrder::with('equipmentInterval')
             ->whereHas('equipmentInterval.equipment', fn($q) => $q->where('vessel_id', $vessel->id))

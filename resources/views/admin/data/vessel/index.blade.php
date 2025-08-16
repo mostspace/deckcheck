@@ -15,6 +15,34 @@
             <p class="text-navy-300">Monitor and manage all vessels in the system</p>
         </div>
 
+        <!-- Flash Messages -->
+        @if(session('success'))
+            <div class="mb-6 bg-green-600 border border-green-500 text-white px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="mb-6 bg-blue-600 border border-blue-500 text-white px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('info') }}</span>
+                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 bg-red-600 border border-red-500 text-white px-4 py-3 rounded relative" role="alert">
+                <span class="block sm:inline">{{ session('error') }}</span>
+                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+        @endif
+
         <!-- Charts -->
         <div id="vessel-analytics" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             <div class="bg-dark-800 p-6 rounded-lg border border-dark-700">
@@ -102,10 +130,22 @@
                                     <span class="px-2 py-1 text-xs rounded bg-green-900/30 text-green-400">Active</span>
                                 </td>
                                 <td class="p-4">
-                                    <a href="{{ route('admin.vessels.show', $vessel) }}"
-                                        class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs transition-colors text-white">
-                                        View Vessel
-                                    </a>
+                                    <div class="flex space-x-2">
+                                        <a href="{{ route('admin.vessels.show', $vessel) }}"
+                                            class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs transition-colors text-white">
+                                            View Vessel
+                                        </a>
+                                        
+                                        @if (in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev']))
+                                            <form action="{{ route('vessel.switch') }}" method="POST" class="inline">
+                                                @csrf
+                                                <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
+                                                <button type="submit" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                                                    <i class="fa-solid fa-sign-in-alt mr-1"></i> Enter Vessel
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
                                 </td>
 
                             </tr>

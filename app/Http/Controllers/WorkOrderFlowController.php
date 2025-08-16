@@ -32,7 +32,9 @@ class WorkOrderFlowController extends Controller
                 'tasks.completedBy',
             ])
             ->get()
-            ->filter(fn($wo) => $wo->equipmentInterval->equipment->vessel_id === $vessel->id)
+            ->filter(function($wo) use ($vessel) {
+                return auth()->user()->hasSystemAccessToVessel($wo->equipmentInterval->equipment->vessel);
+            })
             ->sortBy(fn($wo) => array_search($wo->id, $workOrderIds))
             ->values();
 
@@ -78,8 +80,8 @@ class WorkOrderFlowController extends Controller
      */
     private function authorizeFlow(WorkOrder $workOrder)
     {
-        if ($workOrder->equipmentInterval->equipment->vessel_id !== currentVessel()?->id) {
-            abort(403);
+        if (!auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
+            abort(403, 'Access denied to this vessel');
         }
     }
 

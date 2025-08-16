@@ -26,6 +26,16 @@ class VesselController extends Controller
     public function index()
     {
         $vessel = currentVessel();
+        
+        // If no vessel is selected and user is a system user, redirect to dashboard
+        if (!$vessel && auth()->user() && in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev'])) {
+            return redirect()->route('dashboard')->with('info', 'No vessel selected. Use the user modal or admin vessel list to select a vessel to view.');
+        }
+        
+        // If no vessel is selected for regular users, show an error
+        if (!$vessel) {
+            abort(404, 'No vessel assigned.');
+        }
 
         return view('vessel.index', compact('vessel'));
     }
@@ -87,9 +97,9 @@ class VesselController extends Controller
     // Maintenance Category Show
     public function showCategory(Category $category)
     {
-        // make sure this category really belongs to the logged-in user's vessel
-        if ($category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        // Check if user has access to this category's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $category->loadCount('equipment')->load([
@@ -109,7 +119,7 @@ class VesselController extends Controller
             },
     ]);
 
-        $decks = Deck::where('vessel_id', currentVessel()->id)->orderBy('name')->get();
+        $decks = Deck::where('vessel_id', $category->vessel_id)->orderBy('name')->get();
 
         return view('maintenance.show', compact('category', 'decks'));
     }
@@ -129,7 +139,12 @@ class VesselController extends Controller
             ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
             : [];
 
-        return view('maintenance.create', compact('types', 'icons'));
+        $vessel = currentVessel();
+        if (!$vessel) {
+            abort(404, 'No vessel assigned.');
+        }
+
+        return view('maintenance.create', compact('types', 'icons', 'vessel'));
     }
 
 
@@ -149,16 +164,14 @@ class VesselController extends Controller
         'name' => 'required|string|max:255',
         'type' => 'required|in:LSA,FFE,FFS,Radio & Nav,Deck,Other',
         'icon' => ['required', Rule::in($iconOptions)],
+        'vessel_id' => 'required|exists:vessels,id',
     ]);
 
-    // Get the user's assigned vessel
-    $vessel = currentVessel();
-
-    if (! $vessel) {
-        abort(404, 'No vessel assigned.');
+    // Check if user has access to the specified vessel
+    $vessel = Vessel::findOrFail($data['vessel_id']);
+    if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+        abort(403, 'Access denied to this vessel');
     }
-
-    $data['vessel_id'] = $vessel->id;
 
     // Create the new category
     $category = Category::create($data);
@@ -169,8 +182,8 @@ class VesselController extends Controller
     // Edit & Update Category
     public function editCategory(Category $category)
     {
-        if ($category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $types = ['LSA', 'FFE', 'FFS', 'Radio & Nav', 'Deck', 'Other'];
@@ -186,8 +199,8 @@ class VesselController extends Controller
 
     public function updateCategory(Request $request, Category $category)
     {
-        if ($category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $enumRaw = DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'icon'")->Type;
@@ -212,9 +225,9 @@ class VesselController extends Controller
     // Display Deck Details
     public function showDeck(Deck $deck)
     {
-        // make sure this deck really belongs to the logged-in user's vessel
-        if ($deck->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        // Check if user has access to this deck's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+            abort(403, 'Access denied to this deck');
         }
 
         // eager-load locations if you need them on the detail page
@@ -226,7 +239,17 @@ class VesselController extends Controller
    // Create & Store New Deck
     public function createDeck()
     {
-        return view('vessel.decks.create');
+        $vessel = currentVessel();
+        if (!$vessel) {
+            abort(404, 'No vessel assigned.');
+        }
+
+        // Check if user has access to this vessel
+        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+            abort(403, 'Access denied to this vessel');
+        }
+
+        return view('vessel.decks.create', compact('vessel'));
     }
 
     public function storeDeck(Request $request)
@@ -239,6 +262,11 @@ class VesselController extends Controller
 
         if (! $vessel) {
             abort(404, 'No vessel assigned.');
+        }
+
+        // Check if user has access to this vessel
+        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+            abort(403, 'Access denied to this vessel');
         }
 
         $data['vessel_id'] = $vessel->id;

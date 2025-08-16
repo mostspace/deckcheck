@@ -17,8 +17,8 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        if ($category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $interval->load(['tasks' => function ($query) {
@@ -30,8 +30,8 @@ class CategoryController extends Controller
 
     public function createInterval(Category $category)
     {
-        if ($category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         return view('maintenance.intervals.create', compact('category'));
@@ -39,8 +39,8 @@ class CategoryController extends Controller
 
     public function storeInterval(Request $request, Category $category)
     {
-        if ($category->vessel_id !== currentVessel()?->id) {
-            abort(404);
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $data = $request->validate([
@@ -60,8 +60,12 @@ class CategoryController extends Controller
 
     public function destroyInterval(Category $category, Interval $interval): RedirectResponse
     {
-        if ($interval->category_id !== $category->id || $category->vessel_id !== currentVessel()?->id) {
+        if ($interval->category_id !== $category->id) {
             abort(404);
+        }
+
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $affectedCount = app(IntervalInheritanceService::class)
@@ -76,8 +80,12 @@ class CategoryController extends Controller
 
     public function editInterval(Category $category, Interval $interval)
     {
-        if ($interval->category_id !== $category->id || $category->vessel_id !== currentVessel()?->id) {
+        if ($interval->category_id !== $category->id) {
             abort(404);
+        }
+
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         return view('maintenance.intervals.edit', compact('interval', 'category'));
@@ -85,8 +93,12 @@ class CategoryController extends Controller
 
     public function updateInterval(Request $request, Category $category, Interval $interval)
     {
-        if ($interval->category_id !== $category->id || $category->vessel_id !== currentVessel()?->id) {
+        if ($interval->category_id !== $category->id) {
             abort(404);
+        }
+
+        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+            abort(403, 'Access denied to this category');
         }
 
         $data = $request->validate([

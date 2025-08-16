@@ -7,13 +7,6 @@ use Illuminate\Http\Request;
 
 class DeficiencyUpdateController extends Controller
 {
-
-    public function assignee()
-    {
-        return $this->belongsTo(User::class, 'new_assignee')->where('vessel_id', auth()->user()->vessel_id);
-    }
-
-
     /**
      * Display a listing of the resource.
      */
@@ -43,7 +36,10 @@ class DeficiencyUpdateController extends Controller
      */
     public function show(DeficiencyUpdate $deficiencyUpdate)
     {
-        //
+        // TODO: Add vessel access validation when implementing
+        // if (!auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
+        //     abort(403, 'Access denied to this vessel');
+        // }
     }
 
     /**
@@ -51,7 +47,10 @@ class DeficiencyUpdateController extends Controller
      */
     public function edit(DeficiencyUpdate $deficiencyUpdate)
     {
-        //
+        // TODO: Add vessel access validation when implementing
+        // if (!auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
+        //     abort(403, 'Access denied to this vessel');
+        // }
     }
 
     /**
@@ -59,7 +58,10 @@ class DeficiencyUpdateController extends Controller
      */
     public function update(Request $request, DeficiencyUpdate $deficiencyUpdate)
     {
-        //
+        // TODO: Add vessel access validation when implementing
+        // if (!auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
+        //     abort(403, 'Access denied to this vessel');
+        // }
     }
 
     /**
@@ -67,6 +69,19 @@ class DeficiencyUpdateController extends Controller
      */
     public function destroy(DeficiencyUpdate $deficiencyUpdate)
     {
-        //
+        // TODO: Add vessel access validation when implementing
+        // if (!auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
+        //     abort(403, 'Access denied to this vessel');
+        // }
+    }
+
+    /**
+     * Helper method to validate vessel access for deficiency updates
+     */
+    protected function authorizeDeficiencyUpdate(DeficiencyUpdate $deficiencyUpdate)
+    {
+        if (!auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
+            abort(403, 'Access denied to this vessel');
+        }
     }
 }

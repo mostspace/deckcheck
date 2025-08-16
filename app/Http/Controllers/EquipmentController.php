@@ -142,15 +142,16 @@ class EquipmentController extends Controller
     // Equipment Detail Page
     public function show(Equipment $equipment)
     {
-        $vessel = currentVessel();
-        $this->authorizeEquipment($equipment);
-        
+        // Check if user has access to this equipment's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+            abort(403, 'Access denied to this equipment');
+        }
 
-        $categories = Category::where('vessel_id', $vessel->id)
+        $categories = Category::where('vessel_id', $equipment->vessel_id)
                             ->orderBy('name')
                             ->get();
 
-        $decks = Deck::where('vessel_id', $vessel->id)
+        $decks = Deck::where('vessel_id', $equipment->vessel_id)
                     ->orderBy('name')
                     ->get();
 
@@ -178,7 +179,10 @@ class EquipmentController extends Controller
     // Update Equipment Basic Info
     public function updateBasic(Request $request, Equipment $equipment)
     {
-        $this->authorizeEquipment($equipment);
+        // Check if user has access to this equipment's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+            abort(403, 'Access denied to this equipment');
+        }
 
         $data = $request->validate([
             'name'        => 'required|string|max:255',
@@ -204,7 +208,10 @@ class EquipmentController extends Controller
     // Update Equipment Data
     public function updateData(Request $request, Equipment $equipment)
     {
-        $this->authorizeEquipment($equipment);
+        // Check if user has access to this equipment's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+            abort(403, 'Access denied to this equipment');
+        }
 
         // 1. Validate only the fields in your modal
         $validated = $request->validate([
@@ -231,7 +238,10 @@ class EquipmentController extends Controller
     // Update Equipment Attributes
     public function updateAttributes(Request $request, Equipment $equipment)
     {
-        $this->authorizeEquipment($equipment);
+        // Check if user has access to this equipment's vessel
+        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+            abort(403, 'Access denied to this equipment');
+        }
 
         $data = $request->validate([
             'attributes_json'   => 'nullable|array',
@@ -245,13 +255,6 @@ class EquipmentController extends Controller
         return redirect()
             ->route('equipment.show', $equipment)
             ->with('success', 'Attributes updated successfully.');
-    }
-
-    private function authorizeEquipment(Equipment $equipment)
-    {
-        if ($equipment->vessel_id !== currentVessel()?->id) {
-            abort(403);
-        }
     }
 
     public function bulkStore(Request $request)

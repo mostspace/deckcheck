@@ -136,6 +136,57 @@ class User extends Authenticatable
         return $this->system_role === $level;
     }
 
+    public function hasSystemAccessToVessel(Vessel $vessel): bool
+    {
+        // System admins/staff have access to all vessels
+        if (in_array($this->system_role, ['superadmin', 'staff', 'dev'])) {
+            \Log::info('System user vessel access granted', [
+                'user_id' => $this->id,
+                'user_role' => $this->system_role,
+                'vessel_id' => $vessel->id
+            ]);
+            return true;
+        }
+        
+        // Regular users need explicit boarding records
+        $hasAccess = $this->boardings()
+            ->where('vessel_id', $vessel->id)
+            ->where('status', 'active')
+            ->exists();
+            
+        \Log::info('Regular user vessel access check', [
+            'user_id' => $this->id,
+            'user_role' => $this->system_role,
+            'vessel_id' => $vessel->id,
+            'has_access' => $hasAccess
+        ]);
+        
+        return $hasAccess;
+    }
+
+    public function getAccessibleVessels()
+    {
+        if (in_array($this->system_role, ['superadmin', 'staff', 'dev'])) {
+            // System users can access all vessels
+            $vessels = Vessel::all();
+            \Log::info('System user accessible vessels', [
+                'user_id' => $this->id,
+                'user_role' => $this->system_role,
+                'vessels_count' => $vessels->count()
+            ]);
+            return $vessels;
+        }
+        
+        // Regular users only get vessels they're boarded on
+        $vessels = $this->vessels()->where('status', 'active')->get();
+        \Log::info('Regular user accessible vessels', [
+            'user_id' => $this->id,
+            'user_role' => $this->system_role,
+            'vessels_count' => $vessels->count()
+        ]);
+        return $vessels;
+    }
+
     public function sentInvitations()
     {
         return $this->hasMany(Invitation::class, 'invited_by');

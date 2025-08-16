@@ -68,6 +68,11 @@ class WorkOrderTaskController extends Controller
     // Update Task Status
     public function updateStatus(Request $request, WorkOrderTask $task)
     {
+        // Ensure user has access to the vessel this task belongs to
+        if (!auth()->user()->hasSystemAccessToVessel($task->workOrder->equipmentInterval->equipment->vessel)) {
+            abort(403, 'Access denied to this vessel');
+        }
+
         $validated = $request->validate([
             'status' => ['required', Rule::in(['completed', 'flagged'])],
         ]);

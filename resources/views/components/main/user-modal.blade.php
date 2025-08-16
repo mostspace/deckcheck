@@ -27,34 +27,64 @@
                 <h4 class="text-sm font-medium text-[#344053] mb-3">Switch Vessel Account</h4>
                 <div class="space-y-2">
 
+                    @if (in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev']))
+                        {{-- System Users: Show all vessels --}}
+                        @foreach (auth()->user()->getAccessibleVessels() as $vessel)
+                            @php
+                                $isActive = session('active_vessel_id') == $vessel->id || 
+                                           (!session('active_vessel_id') && $loop->first);
+                            @endphp
 
-                    {{-- Loop Through Active Boardings --}}
-                    @foreach (auth()->user()->vessels as $vessel)
-                        @php
-                            $b = $vessel->pivot;
-                        @endphp
+                            <form method="POST" action="{{ route('vessel.switch') }}">
+                                @csrf
+                                <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
 
-                        <form method="POST" action="{{ route('vessel.switch') }}">
-                            @csrf
-                            <input type="hidden" name="boarding_id" value="{{ $b->id }}">
+                                <button type="submit"
+                                    class="flex items-center w-full p-3 rounded-lg border 
+                                    {{ $isActive ? 'bg-[#f8f9fb] border-[#6840c6]' : 'border-[#e4e7ec] hover:bg-[#f9f5ff]' }}">
+                                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/09fb5435f6-45bae26d661aa26fc2fe.png"
+                                        class="w-8 h-8 rounded-full mr-3" />
 
-                            <button type="submit"
-                                class="flex items-center w-full p-3 rounded-lg border 
-                                {{ $b->is_primary ? 'bg-[#f8f9fb] border-[#6840c6]' : 'border-[#e4e7ec] hover:bg-[#f9f5ff]' }}">
-                                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/09fb5435f6-45bae26d661aa26fc2fe.png"
-                                    class="w-8 h-8 rounded-full mr-3" />
+                                    <div class="flex-1 text-left">
+                                        <p class="text-sm font-medium text-[#0f1728]">{{ $vessel->name }}</p>
+                                        <p class="text-xs text-[#475466]">System Access</p>
+                                    </div>
 
-                                <div class="flex-1 text-left">
-                                    <p class="text-sm font-medium text-[#0f1728]">{{ $vessel->name }}</p>
-                                    <p class="text-xs text-[#475466]">{{ $b->role }}</p>
-                                </div>
+                                    @if ($isActive)
+                                        <div class="w-3 h-3 bg-[#12b669] rounded-full"></div>
+                                    @endif
+                                </button>
+                            </form>
+                        @endforeach
+                    @else
+                        {{-- Regular Users: Show only boarded vessels --}}
+                        @foreach (auth()->user()->vessels as $vessel)
+                            @php
+                                $b = $vessel->pivot;
+                            @endphp
 
-                                @if ($b->is_primary)
-                                    <div class="w-3 h-3 bg-[#12b669] rounded-full"></div>
-                                @endif
-                            </button>
-                        </form>
-                    @endforeach
+                            <form method="POST" action="{{ route('vessel.switch') }}">
+                                @csrf
+                                <input type="hidden" name="boarding_id" value="{{ $b->id }}">
+
+                                <button type="submit"
+                                    class="flex items-center w-full p-3 rounded-lg border 
+                                    {{ $b->is_primary ? 'bg-[#f8f9fb] border-[#6840c6]' : 'border-[#e4e7ec] hover:bg-[#f9f5ff]' }}">
+                                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/09fb5435f6-45bae26d661aa26fc2fe.png"
+                                        class="w-8 h-8 rounded-full mr-3" />
+
+                                    <div class="flex-1 text-left">
+                                        <p class="text-sm font-medium text-[#0f1728]">{{ $vessel->name }}</p>
+                                        <p class="text-xs text-[#475466]">{{ $b->role }}</p>
+                                    </div>
+
+                                    @if ($b->is_primary)
+                                        <div class="w-3 h-3 bg-[#12b669] rounded-full"></div>
+                                    @endif
+                                </button>
+                            </form>
+                        @endforeach
+                    @endif
 
                 </div>
             </div>
