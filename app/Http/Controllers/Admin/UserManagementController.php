@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Vessel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserManagementController extends Controller
 {
@@ -112,6 +113,16 @@ class UserManagementController extends Controller
                       ->orderBy('joined_at', 'desc');
             }
         ]);
+
+        // Ensure all date fields are properly cast
+        $user->boardings->each(function ($boarding) {
+            if ($boarding->joined_at && !($boarding->joined_at instanceof \Carbon\Carbon)) {
+                $boarding->joined_at = \Carbon\Carbon::parse($boarding->joined_at);
+            }
+            if ($boarding->terminated_at && !($boarding->terminated_at instanceof \Carbon\Carbon)) {
+                $boarding->terminated_at = \Carbon\Carbon::parse($boarding->terminated_at);
+            }
+        });
 
         return view('admin.users.show', compact('user'));
     }

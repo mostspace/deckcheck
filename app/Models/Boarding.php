@@ -23,6 +23,13 @@ class Boarding extends Model
         'terminated_at',
     ];
 
+    protected $casts = [
+        'joined_at' => 'datetime',
+        'terminated_at' => 'datetime',
+        'is_primary' => 'boolean',
+        'is_crew' => 'boolean',
+    ];
+
     // Relationships
     public function user()
     {

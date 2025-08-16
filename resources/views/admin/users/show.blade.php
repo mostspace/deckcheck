@@ -53,7 +53,7 @@
                     @if($user->date_of_birth)
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400">Date of Birth</span>
-                            <span class="text-white">{{ $user->date_of_birth->format('M j, Y') }}</span>
+                            <span class="text-white">{{ $user->date_of_birth instanceof \Carbon\Carbon ? $user->date_of_birth->format('M j, Y') : $user->date_of_birth }}</span>
                         </div>
                     @endif
 
@@ -72,7 +72,7 @@
                     @if($user->email_verified_at)
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400">Email Verified</span>
-                            <span class="text-green-400 text-sm">{{ $user->email_verified_at->format('M j, Y') }}</span>
+                            <span class="text-green-400 text-sm">{{ $user->email_verified_at instanceof \Carbon\Carbon ? $user->email_verified_at->format('M j, Y') : $user->email_verified_at }}</span>
                         </div>
                     @endif
                 </div>
@@ -121,8 +121,10 @@
                                 </div>
                             </div>
                             <div class="text-right text-sm text-gray-400">
-                                @if($boarding->joined_at)
+                                @if($boarding->joined_at && $boarding->joined_at instanceof \Carbon\Carbon)
                                     <div>Joined: {{ $boarding->joined_at->format('M j, Y') }}</div>
+                                @elseif($boarding->joined_at)
+                                    <div>Joined: {{ $boarding->joined_at }}</div>
                                 @endif
                                 @if($boarding->access_level)
                                     <div>Access: {{ ucfirst($boarding->access_level) }}</div>

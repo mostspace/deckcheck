@@ -34,7 +34,7 @@
                                     <span class="font-medium text-white">{{ $vessel->type }} {{ $vessel->name }}</span>
                                 </div>
                                 <p class="text-gray-400 text-sm">
-                                    Created: {{ $vessel->created_at->format('F j, Y') }}
+                                    Created: {{ $vessel->created_at ? $vessel->created_at->format('F j, Y') : 'Unknown' }}
                                 </p>
                             </div>
                         </div>
