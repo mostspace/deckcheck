@@ -8,7 +8,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-white">User Management</h1>
-            <p class="text-gray-400 mt-1">Manage all users across all vessels</p>
+            <p class="text-gray-400 mt-1">Manage regular users across all vessels</p>
         </div>
         <div class="flex items-center space-x-3">
             <button class="bg-accent-primary hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors duration-200">
@@ -28,7 +28,7 @@
                     <i class="fa-solid fa-users text-blue-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-400">Total Users</p>
+                    <p class="text-sm font-medium text-gray-400">Total Regular Users</p>
                     <p class="text-2xl font-bold text-white">{{ number_format($stats['total_users']) }}</p>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                     <i class="fa-solid fa-user-check text-green-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-400">Active Users</p>
+                    <p class="text-sm font-medium text-gray-400">Active Regular Users</p>
                     <p class="text-2xl font-bold text-white">{{ number_format($stats['active_users']) }}</p>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <i class="fa-solid fa-crown text-purple-500 text-xl"></i>
                 </div>
                 <div class="ml-4">
-                    <p class="text-sm font-medium text-gray-400">Primary Users</p>
+                    <p class="text-sm font-medium text-gray-400">Primary Vessel Users</p>
                     <p class="text-2xl font-bold text-white">{{ number_format($stats['primary_users']) }}</p>
                 </div>
             </div>
@@ -74,7 +74,7 @@
     {{-- Filters --}}
     <div class="bg-dark-800 rounded-lg p-6 border border-dark-600">
         <form method="GET" action="{{ route('admin.users.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {{-- Search --}}
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Search</label>
@@ -108,18 +108,6 @@
                     </select>
                 </div>
 
-                {{-- Role Filter --}}
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">System Role</label>
-                    <select name="role" class="w-full bg-dark-700 border border-dark-600 text-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent-primary">
-                        <option value="">All Roles</option>
-                        @foreach($systemRoles as $role)
-                            <option value="{{ $role }}" {{ request('role') == $role ? 'selected' : '' }}>
-                                {{ ucfirst($role) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
             </div>
 
             <div class="flex items-center justify-between">
@@ -127,7 +115,7 @@
                     <i class="fa-solid fa-filter mr-2"></i>Apply Filters
                 </button>
                 
-                @if(request()->hasAny(['search', 'status', 'vessel', 'role']))
+                @if(request()->hasAny(['search', 'status', 'vessel']))
                     <a href="{{ route('admin.users.index') }}" class="text-gray-400 hover:text-white transition-colors duration-200">
                         <i class="fa-solid fa-times mr-2"></i>Clear Filters
                     </a>
@@ -139,14 +127,14 @@
     {{-- Results Summary --}}
     <div class="flex items-center justify-between text-sm text-gray-400">
         <div>
-            Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} users
+            Showing {{ $users->firstItem() ?? 0 }} to {{ $users->lastItem() ?? 0 }} of {{ $users->total() }} regular users
         </div>
         <div>
-            @if(request()->hasAny(['search', 'status', 'vessel', 'role']))
-                <span class="bg-accent-primary text-white px-2 py-1 rounded text-xs">
-                    {{ $users->total() }} results
-                </span>
-            @endif
+                            @if(request()->hasAny(['search', 'status', 'vessel']))
+                    <span class="bg-accent-primary text-white px-2 py-1 rounded text-xs">
+                        {{ $users->total() }} results
+                    </span>
+                @endif
         </div>
     </div>
 
@@ -159,7 +147,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">User</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Vessels</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">System Role</th>
+
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Joined</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -212,15 +200,6 @@
                                         </div>
                                     @endif
                                 </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                @if($user->system_role)
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        {{ ucfirst($user->system_role) }}
-                                    </span>
-                                @else
-                                    <span class="text-gray-500 text-sm">-</span>
-                                @endif
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-300">
                                 {{ $user->created_at ? $user->created_at->format('M j, Y') : 'Unknown' }}

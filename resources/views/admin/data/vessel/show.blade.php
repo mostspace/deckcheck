@@ -15,8 +15,9 @@
     <div id="vessel-detail-content" class="p-6">
         <div id="vessel-hero" class="relative bg-[#243b53] rounded-lg border border-[#334e68] overflow-hidden mb-6">
             <div class="relative h-64">
-                <img class="w-full h-full object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/f9731b3dca-1d79086e877da256afd7.png"
-                    alt="{{ $vessel->name }}">
+                <img class="w-full h-full object-cover" 
+                     src="{{ $vessel->hero_photo ? Storage::url($vessel->hero_photo) : asset('images/placeholders/placeholder.png') }}"
+                     alt="{{ $vessel->name }}">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                 <div class="absolute bottom-6 left-6 right-6">
                     <div class="flex items-center justify-between">
@@ -51,6 +52,15 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        {{-- Action Buttons --}}
+        <div class="mb-6 flex justify-end">
+            <a href="{{ route('admin.vessels.edit', $vessel) }}" 
+               class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-md text-white font-medium transition-colors">
+                <i class="fa-solid fa-edit mr-2"></i>
+                Edit Vessel
+            </a>
         </div>
 
         {{-- Stats --}}
@@ -175,10 +185,17 @@
 
                 {{-- Active Users Table --}}
                 <div id="users-table-section" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
-                    <h2 class="text-lg font-semibold mb-4 flex items-center">
-                        <i class="fa-solid fa-users mr-2 text-green-400"></i>
-                        Active Users
-                    </h2>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold flex items-center text-white">
+                            <i class="fa-solid fa-users mr-2 text-green-400"></i>
+                            Active Users ({{ $vessel->boardings->count() }})
+                        </h2>
+                        <a href="{{ route('admin.vessels.add-user', $vessel) }}" 
+                           class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-md text-white text-sm font-medium transition-colors">
+                            <i class="fa-solid fa-user-plus mr-2"></i>
+                            Add User
+                        </a>
+                    </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead>
@@ -189,6 +206,7 @@
                                     <th class="text-left py-2 text-gray-400">Permissions</th>
                                     <th class="text-left py-2 text-gray-400">Last Active</th>
                                     <th class="text-left py-2 text-gray-400">Status</th>
+                                    <th class="text-left py-2 text-gray-400">Actions</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-[#334e68]">
@@ -208,6 +226,13 @@
                                                 class="px-2 py-1 text-xs rounded-full capitalize {{ $boarding->status === 'active' ? 'bg-green-600' : 'bg-yellow-600' }}">
                                                 {{ $boarding->status ?? '—' }}
                                             </span>
+                                        </td>
+                                        <td class="py-3">
+                                            <a href="{{ route('admin.users.show', $boarding->user) }}" 
+                                               class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs transition-colors text-white">
+                                                <i class="fa-solid fa-eye mr-1"></i>
+                                                View User
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -246,6 +271,14 @@
                                 <i class="fa-solid fa-envelope mr-2"></i>
                                 Contact Owner
                             </button>
+                            
+                            <div class="border-t border-[#334e68] pt-4 mt-4">
+                                <a href="{{ route('admin.vessels.transfer-ownership', $vessel) }}" 
+                                   class="w-full bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded text-sm text-white transition-colors block text-center">
+                                    <i class="fa-solid fa-exchange-alt mr-2"></i>
+                                    Transfer Ownership
+                                </a>
+                            </div>
                         </div>
                     @else
                         <div class="text-center py-4">

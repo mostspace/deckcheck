@@ -13,7 +13,8 @@ class UserManagementController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with(['boardings.vessel'])
+        $query = User::where('system_role', 'user')
+            ->with(['boardings.vessel'])
             ->withCount(['boardings as active_boardings_count' => function ($query) {
                 $query->where('status', 'active');
             }])
@@ -49,11 +50,6 @@ class UserManagementController extends Controller
             });
         }
 
-        // Filter by system role
-        if ($request->filled('role')) {
-            $query->where('system_role', $request->role);
-        }
-
         // Search by name or email
         if ($request->filled('search')) {
             $search = $request->search;
@@ -69,9 +65,6 @@ class UserManagementController extends Controller
         // Get vessels for filter dropdown
         $vessels = Vessel::orderBy('name')->get();
 
-        // Get system roles for filter dropdown
-        $systemRoles = User::distinct()->pluck('system_role')->filter()->sort()->values();
-
         // Get status options
         $statusOptions = [
             'all' => 'All Users',
@@ -81,16 +74,16 @@ class UserManagementController extends Controller
             'crew' => 'Crew Members Only'
         ];
 
-        // Get additional statistics
+        // Get additional statistics (only for users with system_role 'user')
         $stats = [
-            'total_users' => User::count(),
-            'active_users' => User::whereHas('boardings', function ($q) {
+            'total_users' => User::where('system_role', 'user')->count(),
+            'active_users' => User::where('system_role', 'user')->whereHas('boardings', function ($q) {
                 $q->where('status', 'active');
             })->count(),
-            'primary_users' => User::whereHas('boardings', function ($q) {
+            'primary_users' => User::where('system_role', 'user')->whereHas('boardings', function ($q) {
                 $q->where('is_primary', true);
             })->count(),
-            'crew_users' => User::whereHas('boardings', function ($q) {
+            'crew_users' => User::where('system_role', 'user')->whereHas('boardings', function ($q) {
                 $q->where('is_crew', true);
             })->count(),
         ];
@@ -98,7 +91,6 @@ class UserManagementController extends Controller
         return view('admin.users.index', compact(
             'users',
             'vessels',
-            'systemRoles',
             'statusOptions',
             'stats'
         ));

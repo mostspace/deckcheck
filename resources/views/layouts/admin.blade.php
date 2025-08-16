@@ -81,7 +81,7 @@
         <div class="flex-1 overflow-y-auto py-4 px-4 space-y-6">
             <div>
                 <div class="text-xs uppercase text-gray-500 font-semibold mb-2 px-1">Management</div>
-                <x-admin.nav-link icon="fa-users" label="Staff" />
+                <x-admin.nav-link icon="fa-users" label="Staff" route="admin.staff.index" />
                 <x-admin.nav-link icon="fa-user-gear" label="User Management" route="admin.users.index" />
                 <x-admin.nav-link 
                     icon="fa-database" 

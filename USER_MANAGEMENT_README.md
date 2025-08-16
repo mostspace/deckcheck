@@ -1,7 +1,7 @@
 # User Management System - Admin Panel
 
 ## Overview
-The User Management system provides administrators with comprehensive tools to view, filter, and manage users across all vessels in the DeckCheck system.
+The User Management system provides administrators with comprehensive tools to view, filter, and manage regular users (system_role: 'user') across all vessels in the DeckCheck system. Staff members (superadmin, staff, dev) are managed separately in the Staff management area.
 
 ## Features
 
@@ -27,7 +27,6 @@ The User Management system provides administrators with comprehensive tools to v
 
 ### Additional Filters
 - **Vessel**: Filter users by specific vessel
-- **System Role**: Filter by user's system role (admin, user, etc.)
 - **Search**: Search by name or email address
 
 ## Navigation
@@ -57,20 +56,20 @@ The system leverages the following relationships:
 - **View**: Navigate to user details page
 - **Edit**: Edit user information (placeholder)
 - **Manage Access**: Manage user permissions (placeholder)
-- **Suspend**: Suspend user access (placeholder, admin users excluded)
+- **Suspend**: Suspend user access (placeholder)
 
 ### Statistics Cards
-- **Total Users**: Count of all registered users
-- **Active Users**: Users with active vessel access
-- **Primary Users**: Users who own vessels
-- **Crew Members**: Users with crew member status
+- **Total Regular Users**: Count of all registered regular users
+- **Active Regular Users**: Regular users with active vessel access
+- **Primary Vessel Users**: Regular users who own vessels
+- **Crew Members**: Regular users with crew member status
 
 ## Technical Implementation
 
 ### Controller
 - **File**: `app/Http/Controllers/Admin/UserManagementController.php`
 - **Methods**: `index()`, `show()`
-- **Features**: Eager loading, relationship counting, advanced filtering
+- **Features**: Eager loading, relationship counting, advanced filtering, user role restriction (system_role: 'user')
 
 ### Views
 - **Index**: `resources/views/admin/users/index.blade.php`
