@@ -44,37 +44,37 @@
     }
 @endphp
 
-<div class="space-y-8">
+<div class="space-y-6 md:space-y-8">
     {{-- Welcome Header --}}
     <div class="relative overflow-hidden bg-gradient-to-r from-dark-800 to-dark-900 rounded-xl border border-subtle shadow-subtle">
         <div class="absolute inset-0 bg-gradient-to-r from-accent-primary/5 to-accent-secondary/5"></div>
-        <div class="relative p-8">
-            <div class="flex items-center justify-between">
+        <div class="relative p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
                 <div>
-                    <h1 class="text-3xl font-bold text-white mb-2">Welcome back, {{ auth()->user()->first_name ?? auth()->user()->name }}!</h1>
-                    <p class="text-gray-300 text-lg">Here's what's happening across your fleet today</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">Welcome back, {{ auth()->user()->first_name ?? auth()->user()->name }}!</h1>
+                    <p class="text-gray-300 text-base md:text-lg">Here's what's happening across your fleet today</p>
                 </div>
-                <div class="text-right">
-                    <div class="text-4xl font-bold text-white font-mono">{{ now()->format('M j') }}</div>
+                <div class="text-center md:text-right">
+                    <div class="text-3xl md:text-4xl font-bold text-white font-mono">{{ now()->format('M j') }}</div>
                     <div class="text-gray-300 font-medium">{{ now()->format('l') }}</div>
                 </div>
             </div>
         </div>
         {{-- Geometric accent --}}
-        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent-primary/20 to-transparent rounded-full -translate-y-16 translate-x-16"></div>
+        <div class="absolute top-0 right-0 w-24 md:w-32 h-24 md:h-32 bg-gradient-to-br from-accent-primary/20 to-transparent rounded-full -translate-y-12 md:-translate-y-16 translate-x-12 md:translate-x-16"></div>
     </div>
 
     {{-- Key Metrics Grid --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {{-- Total Users --}}
-        <div class="group bg-dark-900 rounded-xl border border-subtle p-6 hover-lift">
+        <div class="group bg-dark-900 rounded-xl border border-subtle p-4 md:p-6 hover-lift">
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <p class="text-gray-400 text-sm font-medium uppercase tracking-wider">Total Users</p>
-                    <p class="text-3xl font-bold text-white mt-1">{{ number_format($totalUsers) }}</p>
+                    <p class="text-2xl md:text-3xl font-bold text-white mt-1">{{ number_format($totalUsers) }}</p>
                 </div>
-                <div class="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center group-hover:bg-blue-500/20 transition-colors duration-200">
-                    <i class="fa-solid fa-users text-blue-400 text-xl"></i>
+                <div class="w-10 md:w-12 h-10 md:h-12 bg-blue-500/10 rounded-xl flex items-center justify-center group-hover:bg-blue-500/20 transition-colors duration-200">
+                    <i class="fa-solid fa-users text-blue-400 text-lg md:text-xl"></i>
                 </div>
             </div>
             <div class="pt-4 border-t border-subtle">

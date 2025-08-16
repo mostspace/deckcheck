@@ -279,12 +279,197 @@
             border-style: solid;
             border-color: transparent #1E293B transparent transparent;
         }
+
+        /* Mobile-first responsive design */
+        @media (max-width: 768px) {
+            .sidebar-desktop {
+                display: none !important;
+            }
+            
+            .mobile-menu-toggle {
+                display: flex !important;
+            }
+            
+            .main-panel-mobile {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            
+            .top-bar-mobile {
+                padding: 1rem !important;
+            }
+            
+            .content-mobile {
+                padding: 1rem !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .sidebar-desktop {
+                display: flex !important;
+            }
+            
+            .mobile-menu-toggle {
+                display: none !important;
+            }
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 280px;
+            height: 100vh;
+            background: #0F172A;
+            z-index: 2001;
+            transition: left 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.active {
+            left: 0;
+        }
+
+        /* Mobile menu toggle button */
+        .mobile-menu-toggle {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            color: #3B82F6;
+            transition: all 0.2s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        /* Mobile search */
+        .mobile-search {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-search {
+                display: block !important;
+            }
+            
+            .desktop-search {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body class="bg-dark-950 text-gray-100 flex h-screen overflow-hidden font-sans antialiased">
-    {{-- Sidebar --}}
-    <div id="sidebar" class="sidebar-transition sidebar-expanded bg-dark-900 h-screen flex flex-col border-r border-subtle shadow-subtle">
+    {{-- Mobile Menu Overlay --}}
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+    
+    {{-- Mobile Menu --}}
+    <div id="mobile-menu" class="mobile-menu">
+        {{-- Mobile Menu Header --}}
+        <div class="p-4 border-b border-subtle">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <div class="w-8 h-8 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-ship text-white text-lg"></i>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-accent-secondary rounded-full border-2 border-dark-900"></div>
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg text-white">DeckCheck</span>
+                        <div class="text-xs text-gray-400 font-mono">ADMIN</div>
+                    </div>
+                </div>
+                <button id="mobile-menu-close" class="p-2 text-gray-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors duration-200">
+                    <i class="fa-solid fa-times text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        {{-- Mobile Navigation --}}
+        <div class="py-4 px-3 space-y-2">
+            <x-admin.nav-link icon="fa-tachometer-alt" label="Dashboard" route="admin.dashboard" />
+            
+            <div class="pt-4">
+                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider">Management</div>
+                <div class="space-y-1">
+                    <x-admin.nav-link icon="fa-users" label="Staff" route="admin.staff.index" />
+                    <x-admin.nav-link icon="fa-user-gear" label="User Management" route="admin.users.index" />
+                    <x-admin.nav-link 
+                        icon="fa-database" 
+                        label="Data Management"
+                        :subItems="[
+                            ['label' => 'Vessel', 'route' => 'admin.vessels.index']
+                        ]"
+                    />
+                    <x-admin.nav-link icon="fa-file-pen" label="Content Management" />
+                    <x-admin.nav-link icon="fa-headset" label="Support" />
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider">System</div>
+                <div class="space-y-1">
+                    <x-admin.nav-link icon="fa-shield-halved" label="Security" />
+                    <x-admin.nav-link icon="fa-toolbox" label="Utilities" />
+                    <x-admin.nav-link icon="fa-code" label="APIs" />
+                </div>
+            </div>
+
+            <div class="pt-4">
+                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider">Business</div>
+                <div class="space-y-1">
+                    <x-admin.nav-link icon="fa-money-bill-wave" label="Revenue" />
+                    <x-admin.nav-link icon="fa-chart-line" label="Analytics" />
+                    <x-admin.nav-link icon="fa-file-lines" label="Reports" />
+                </div>
+            </div>
+        </div>
+
+        {{-- Mobile User Profile --}}
+        <div class="p-4 border-t border-subtle mt-auto">
+            <div class="flex items-center space-x-3">
+                <div class="relative">
+                    <img src="{{ auth()->user()->profile_pic_url ?? 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' }}"
+                        class="w-8 h-8 rounded-lg border-2 border-accent-primary object-cover" />
+                    <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-dark-900"></div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-medium text-white truncate text-sm">{{ auth()->user()->name }}</div>
+                    <div class="text-xs text-gray-400 font-mono">{{ auth()->user()->system_role }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Desktop Sidebar --}}
+    <div id="sidebar" class="sidebar-desktop sidebar-transition sidebar-expanded bg-dark-900 h-screen flex flex-col border-r border-subtle shadow-subtle">
         {{-- Logo Section --}}
         <div class="p-4">
             <div class="flex items-center space-x-3" id="logo-content">
@@ -369,10 +554,15 @@
     </button>
 
     {{-- Main Panel --}}
-    <div class="flex-1 overflow-hidden flex flex-col content-transition content-expanded">
+    <div class="flex-1 overflow-hidden flex flex-col content-transition content-expanded main-panel-mobile">
         {{-- Top Bar --}}
-        <div class="py-6 px-8 flex items-center justify-between">
+        <div class="py-6 px-8 top-bar-mobile flex items-center justify-between">
             <div class="flex items-center space-x-4">
+                {{-- Mobile Menu Toggle --}}
+                <button id="mobile-menu-toggle" class="mobile-menu-toggle">
+                    <i class="fa-solid fa-bars text-sm"></i>
+                </button>
+                
                 <a href="{{ route('admin.dashboard') }}" class="text-accent-primary hover:text-accent-secondary transition-colors duration-200 p-2 rounded-lg hover:bg-dark-800">
                     <i class="fa-solid fa-home"></i>
                 </a>
@@ -380,10 +570,17 @@
             </div>
             
             <div class="flex items-center space-x-4">
-                {{-- Search --}}
-                <div class="relative">
+                {{-- Desktop Search --}}
+                <div class="relative desktop-search">
                     <input type="text" placeholder="Search..."
                         class="bg-dark-800 text-sm rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent border border-subtle">
+                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                </div>
+                
+                {{-- Mobile Search --}}
+                <div class="relative mobile-search">
+                    <input type="text" placeholder="Search..."
+                        class="bg-dark-800 text-sm rounded-lg px-4 py-2 pl-10 w-48 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent border border-subtle">
                     <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
                 </div>
                 
@@ -401,7 +598,7 @@
         </div>
 
         {{-- Page Content --}}
-        <div class="flex-1 overflow-y-auto bg-dark-950">
+        <div class="flex-1 overflow-y-auto bg-dark-950 content-mobile">
             <div class="p-8">
                 @yield('content')
             </div>
@@ -420,12 +617,19 @@
             const businessLabel = document.getElementById('business-label');
             const mainPanel = document.querySelector('.flex-1');
             
+            // Mobile menu elements
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+            
             // Check for saved state
             const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
             if (isCollapsed) {
                 collapseSidebar();
             }
             
+            // Desktop sidebar toggle
             sidebarToggle.addEventListener('click', function() {
                 if (sidebar.classList.contains('sidebar-expanded')) {
                     collapseSidebar();
@@ -433,6 +637,47 @@
                     expandSidebar();
                 }
             });
+            
+            // Mobile menu toggle
+            mobileMenuToggle.addEventListener('click', function() {
+                openMobileMenu();
+            });
+            
+            // Mobile menu close
+            mobileMenuClose.addEventListener('click', function() {
+                closeMobileMenu();
+            });
+            
+            // Close mobile menu when clicking overlay
+            mobileMenuOverlay.addEventListener('click', function() {
+                closeMobileMenu();
+            });
+            
+            // Close mobile menu when pressing Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                    closeMobileMenu();
+                }
+            });
+            
+            // Close mobile menu when clicking on navigation links
+            document.querySelectorAll('#mobile-menu a').forEach(link => {
+                link.addEventListener('click', function() {
+                    closeMobileMenu();
+                });
+            });
+            
+            function openMobileMenu() {
+                mobileMenu.classList.add('active');
+                mobileMenuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('active');
+                mobileMenuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
             
             function collapseSidebar() {
                 sidebar.classList.remove('sidebar-expanded');
