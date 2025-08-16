@@ -6,6 +6,7 @@
 
     @php
         $daysOpen = $deficiency->created_at->diffInDays(now());
+        $daysOpenFormatted = $daysOpen < 1 ? '<1' : $daysOpen;
     @endphp
 
     {{-- Breadcrumb --}}
@@ -114,7 +115,7 @@
 
                 <div>
                     <p class="text-[#667084] text-xs font-medium uppercase mb-1">Aging</p>
-                    <span class="text-[#be123c] font-normal">({{ $daysOpen }} days ago)</span>
+                    <span class="text-[#be123c] font-normal">{{ $daysOpenFormatted }} days ago</span>
                 </div>
 
 
@@ -123,10 +124,51 @@
 
             {{-- ##Description --}}
             <div class="">
-                <p class="text-[#667084] text-xs font-medium uppercase mb-2">Initial Report</p>
-                <p class="text-sm font-normal text-[#344053]">
-                    {{ $deficiency->detail }}
-                </p>
+                <div class="flex items-center gap-2 mb-2">
+                    <p class="text-[#667084] text-xs font-medium uppercase">Initial Report</p>
+                    <button 
+                        onclick="toggleDescriptionEdit()" 
+                        class="text-[#6840c6] hover:text-[#5a35a8] text-xs hover:underline transition-colors"
+                        id="editDescriptionBtn"
+                    >
+                        <i class="fa-solid fa-edit mr-1"></i>Edit
+                    </button>
+                </div>
+                
+                {{-- Display Mode --}}
+                <div id="descriptionDisplay" class="text-sm font-normal text-[#344053] min-h-[1.5rem]">
+                    @if($deficiency->description)
+                        {!! nl2br(e($deficiency->description)) !!}
+                    @else
+                        <span class="text-[#667084] italic">No initial report provided</span>
+                    @endif
+                </div>
+                
+                {{-- Edit Mode --}}
+                <form id="descriptionEdit" class="hidden" method="POST" action="{{ route('deficiencies.update-description', $deficiency) }}">
+                    @csrf
+                    <textarea 
+                        name="description"
+                        class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200 resize-none"
+                        rows="4"
+                        placeholder="Enter the initial report description..."
+                    >{{ $deficiency->description }}</textarea>
+                    <div class="flex items-center justify-end space-x-2 mt-2">
+                        <button 
+                            type="button"
+                            onclick="cancelDescriptionEdit()" 
+                            class="px-3 py-1 text-sm text-[#667084] hover:text-[#344053] transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit"
+                            class="px-3 py-1 text-sm bg-[#6840c6] text-white rounded hover:bg-[#5a35a8] transition-colors"
+                        >
+                            Save
+                        </button>
+                    </div>
+                </form>
             </div>
 
             {{-- ##Work Order Reference --}}
@@ -220,9 +262,7 @@
                 {{-- ###Priority --}}
                 <div>
                     <p class="text-[#667084] text-xs font-medium uppercase mb-3">Priority</p>
-                    <span class="inline-block px-2 py-1 rounded text-xs font-medium bg-[#f3f4f6] text-[#344053]">
-                        {{ ucfirst($deficiency->priority) }}
-                    </span>
+                    {!! priority_badge($deficiency->priority) !!}
                 </div>
 
                 {{-- ###Assigned To --}}
@@ -367,9 +407,7 @@
                             @if ($update->new_priority)
                                 <div class="flex items-center gap-2">
                                     <span>Priority changed:</span>
-                                    <span class="px-2 py-1 text-xs font-medium bg-[#f3f4f6] text-[#344053] rounded-full">
-                                        {{ ucfirst($update->new_priority) }}
-                                    </span>
+                                    {!! priority_badge($update->new_priority) !!}
                                 </div>
                             @endif
 
@@ -404,6 +442,47 @@
         }
     </script>
 
+    {{-- Inline Description Editing --}}
+    <script>
+        function toggleDescriptionEdit() {
+            const display = document.getElementById('descriptionDisplay');
+            const edit = document.getElementById('descriptionEdit');
+            const editBtn = document.getElementById('editDescriptionBtn');
+            
+            if (display.classList.contains('hidden')) {
+                // Switch to display mode
+                display.classList.remove('hidden');
+                edit.classList.add('hidden');
+                editBtn.innerHTML = '<i class="fa-solid fa-edit mr-1"></i>Edit';
+            } else {
+                // Switch to edit mode
+                display.classList.add('hidden');
+                edit.classList.remove('hidden');
+                editBtn.innerHTML = '<i class="fa-solid fa-eye mr-1"></i>View';
+                
+                // Focus on the textarea
+                document.querySelector('#descriptionEdit textarea[name="description"]').focus();
+            }
+        }
 
+        function cancelDescriptionEdit() {
+            const display = document.getElementById('descriptionDisplay');
+            const edit = document.getElementById('descriptionEdit');
+            const editBtn = document.getElementById('editDescriptionBtn');
+            
+            // Reset textarea to original value
+            document.querySelector('#descriptionEdit textarea[name="description"]').value = '{{ $deficiency->description ?? "" }}';
+            
+            // Switch back to display mode
+            display.classList.remove('hidden');
+            edit.classList.add('hidden');
+            editBtn.innerHTML = '<i class="fa-solid fa-edit mr-1"></i>Edit';
+        }
+
+        function saveDescription() {
+            // The form will submit naturally, no need for custom handling
+            // The success message will be shown via session flash message
+        }
+    </script>
 
 @endsection

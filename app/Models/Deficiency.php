@@ -40,6 +40,29 @@ class Deficiency extends Model
         return $this->hasMany(DeficiencyUpdate::class)->latest();
     }
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($deficiency) {
+            if (empty($deficiency->display_id)) {
+                // Get the vessel from the equipment
+                $vessel = $deficiency->equipment->vessel;
+                
+                // Find the highest display_id for this vessel and increment
+                $lastDeficiency = static::whereHas('equipment', function ($query) use ($vessel) {
+                    $query->where('vessel_id', $vessel->id);
+                })->orderByRaw('CAST(display_id AS UNSIGNED) DESC')->first();
+
+                if ($lastDeficiency && is_numeric($lastDeficiency->display_id)) {
+                    $deficiency->display_id = (int)$lastDeficiency->display_id + 1;
+                } else {
+                    $deficiency->display_id = 1;
+                }
+            }
+        });
+    }
+
      protected $fillable = [
         'display_id',
         'equipment_id',

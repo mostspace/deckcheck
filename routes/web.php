@@ -397,7 +397,10 @@ Route::middleware('auth')->group(function () {
 
     // Post Deficiency Update
     Route::post('/deficiencies/{deficiency}/updates', [DeficiencyController::class, 'storeUpdate'])
-        ->name('deficiencies.updates.store');
+    ->name('deficiencies.updates.store');
+
+Route::post('/deficiencies/{deficiency}/update-description', [DeficiencyController::class, 'updateDescription'])
+    ->name('deficiencies.update-description');
 
 
 });

@@ -167,11 +167,17 @@ class EquipmentController extends Controller
             }
         ]);
 
+        // Load deficiencies for this equipment, ordered by created_at (newest first)
+        $deficiencies = $equipment->deficiencies()
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('inventory.equipment.show', compact(
             'equipment',
             'categories',
             'decks',
-            'locations'
+            'locations',
+            'deficiencies'
         ));
     }
 

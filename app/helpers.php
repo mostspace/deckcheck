@@ -185,14 +185,19 @@ if (!function_exists('status_badge')) {
     function status_badge(?string $status): string
     {
         return match (strtolower($status)) {
-            'open' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 border-yellow-800">Open</span>',
+            // Deficiency statuses (same styling as deficiency show page)
+            'open' => '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>',
+            'waiting' => '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Waiting</span>',
+            'resolved' => '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Resolved</span>',
+            
+            // Work order statuses (keep existing styling)
             'scheduled' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#f0f9ff] text-[#026aa2] border-[#026aa2]">Scheduled</span>',
             'in_progress' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#fef6fb] text-[#c11574] border-[#c11574]">In Progress</span>',
             'completed' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#ecfdf3] text-[#027a48] border-[#027a48]">Completed</span>',
             'overdue' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#fef3f2] text-[#b42318] border-[#b42318]">Overdue</span>',
             'flagged' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#fffaeb] text-[#b54708] border-[#b54708]">Flagged</span>',
             'deferred' => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#f9f5ff] text-[#6941c6] border-[#6941c6]">Deferred</span>',
-            default => '<span class="border px-2 py-1 text-xs font-medium rounded-full bg-[#f2f4f7] text-[#667085] border-[#667085] italic">Unknown</span>',
+            default => '<span class="px-2 py-1 text-xs font-medium bg-[#f3f4f6] text-[#475466] rounded-full">Unknown</span>',
         };
     }
 }
@@ -205,6 +210,18 @@ function deficiency_status_class($status)
         'resolved' => 'bg-[#ecfdf3] text-[#027a48]',
         default => 'bg-[#f3f4f6] text-[#344053]',
     };
+}
+
+if (!function_exists('priority_badge')) {
+    function priority_badge(?string $priority): string
+    {
+        return match (strtolower($priority)) {
+            'high' => '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">High</span>',
+            'medium' => '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Medium</span>',
+            'low' => '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Low</span>',
+            default => '<span class="px-2 py-1 text-xs font-medium bg-[#f1f5f9] text-[#475466] rounded-full">Unset</span>',
+        };
+    }
 }
 
 if (!function_exists('work_order_due_badge')) {

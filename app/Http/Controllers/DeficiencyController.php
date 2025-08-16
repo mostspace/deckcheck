@@ -23,7 +23,39 @@ class DeficiencyController extends Controller
             ->latest()
             ->get();
 
-        return view('maintenance.deficiencies.index', compact('deficiencies'));
+        // Calculate deficiency age distribution for open deficiencies
+        $openDeficiencies = $deficiencies->where('status', 'open');
+        
+        $ageDistribution = [
+            'under_30_days' => 0,
+            '30_to_90_days' => 0,
+            'over_90_days' => 0
+        ];
+
+        foreach ($openDeficiencies as $deficiency) {
+            $daysOpen = $deficiency->created_at->diffInDays(now());
+            
+            if ($daysOpen < 30) {
+                $ageDistribution['under_30_days']++;
+            } elseif ($daysOpen >= 30 && $daysOpen <= 90) {
+                $ageDistribution['30_to_90_days']++;
+            } else {
+                $ageDistribution['over_90_days']++;
+            }
+        }
+
+        // Prepare chart data
+        $chartData = [
+            'labels' => ['< 30 Days', '30-90 Days', '> 90 Days'],
+            'data' => [
+                $ageDistribution['under_30_days'],
+                $ageDistribution['30_to_90_days'],
+                $ageDistribution['over_90_days']
+            ],
+            'colors' => ['#12b76a', '#f79009', '#f04438']
+        ];
+
+        return view('maintenance.deficiencies.index', compact('deficiencies', 'ageDistribution', 'chartData'));
     }
 
 
@@ -59,6 +91,14 @@ class DeficiencyController extends Controller
         $validated['status'] = 'open';
 
         Deficiency::create($validated);
+
+        // Check if this is an AJAX request
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Deficiency logged successfully!'
+            ]);
+        }
 
         return redirect()->route('deficiencies.index')->with('success', 'Deficiency logged.');
     }
@@ -161,6 +201,22 @@ class DeficiencyController extends Controller
         }
 
         return back()->with('success', 'Update saved.');
+    }
+
+    // Update Description
+    public function updateDescription(Request $request, Deficiency $deficiency)
+    {
+        // Vessel-level access check
+        $this->authorizeAccess($deficiency);
+
+        $request->validate([
+            'description' => 'nullable|string',
+        ]);
+
+        $deficiency->description = $request->input('description');
+        $deficiency->save();
+
+        return back()->with('success', 'Description updated successfully!');
     }
 
     protected function authorizeAccess(Deficiency $deficiency)

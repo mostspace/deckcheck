@@ -365,47 +365,387 @@
             <h2 class="text-lg font-semibold text-[#0f1728]">Deficiencies</h2>
         </div>
 
+        {{-- #Toggle Switch and Create Button --}}
+        <div class="px-6 py-3 border-b border-[#e4e7ec] flex items-center justify-between">
+            <label class="flex items-center cursor-pointer">
+                <input type="checkbox" id="show-resolved-toggle" class="sr-only">
+                <div class="relative">
+                    <div class="block bg-[#e4e7ec] w-10 h-6 rounded-full"></div>
+                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></div>
+                </div>
+                <span class="ml-3 text-sm font-medium text-[#475466]">Show Resolved</span>
+            </label>
+            
+            <button 
+                id="openDeficiencyModal" 
+                class="px-4 py-2 bg-[#6840c6] text-white text-sm font-medium rounded-lg hover:bg-[#5a35a8] transition-colors duration-200 flex items-center space-x-2"
+            >
+                <i class="fa-solid fa-plus"></i>
+                <span>New Deficiency</span>
+            </button>
+        </div>
 
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-[#f8f9fb]">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
-                            Date Opened
+                            ID
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
                             Status
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
-                            Description
+                            Subject
                         </th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
-                            Actions
+                            Date Opened
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                            Priority
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                            
                         </th>
                     </tr>
                 </thead>
 
                 {{-- #Deficiencies Loop --}}
-                <tbody class="divide-y divide-[#e4e7ec]">
-                    <tr>
-                        <td class="px-6 py-4 text-sm text-[#344053]">Nov 28, 2024</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-[#344053]">Minor crack observed on canister housing during
-                            monthly inspection</td>
-                        <td class="px-6 py-4">
-                            <button class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
-                                <i class="fa-solid fa-eye"></i>
-                            </button>
-                        </td>
-                    </tr>
+                <tbody class="divide-y divide-[#e4e7ec]" id="deficiencies-tbody">
+                    @if($deficiencies->whereIn('status', ['open', 'waiting'])->count() > 0)
+                        @foreach($deficiencies->whereIn('status', ['open', 'waiting']) as $deficiency)
+                            <tr class="deficiency-row hover:bg-[#f8f9fb] transition-colors duration-200" data-status="{{ $deficiency->status }}">
+                                <td class="px-6 py-4 text-sm font-medium">
+                                    <a href="{{ route('deficiencies.show', $deficiency) }}" class="text-[#6840c6] hover:text-[#5a35a8] hover:underline transition-colors duration-200">
+                                        {{ $deficiency->display_id ?: '#' . $deficiency->id }}
+                                    </a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($deficiency->status === 'open')
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>
+                                    @elseif($deficiency->status === 'waiting')
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Waiting</span>
+                                    @else
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Resolved</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-sm text-[#344053]">
+                                    {{ $deficiency->subject ?: 'No subject' }}
+                                </td>
+                                <td class="px-6 py-4 text-sm text-[#344053]">
+                                    {{ $deficiency->created_at->format('M j, Y') }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    @if($deficiency->priority === 'high')
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">High</span>
+                                    @elseif($deficiency->priority === 'medium')
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Medium</span>
+                                    @elseif($deficiency->priority === 'low')
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Low</span>
+                                    @else
+                                        <span class="px-2 py-1 text-xs font-medium bg-[#f1f5f9] text-[#475466] rounded-full">Unset</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="{{ route('deficiencies.show', $deficiency) }}" class="p-2 text-[#667084] hover:text-[#6840c6] hover:bg-[#f4ebff] rounded-lg transition-all duration-200 transform hover:scale-110">
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="6" class="px-6 py-8 text-center text-sm text-[#667084]">
+                                No Open Deficiencies to Display
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
 
             </table>
         </div>
 
     </div>
+
+    {{-- Deficiency Create Modal --}}
+    <div
+        id="deficiencyCreateModal"
+        class="fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col bg-white transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl"
+    >
+        {{-- HEADER --}}
+        <header class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+            <div class="flex items-center space-x-2">
+                {{-- Main Action --}}
+                <h2 class="text-2xl font-semibold text-[#0f1728]">
+                    New Deficiency
+                </h2>
+
+                {{-- Arrow Separator --}}
+                <i class="fa-solid fa-arrow-right text-gray-400"></i>
+
+                {{-- Equipment Name --}}
+                <div class="flex items-center space-x-1">
+                    <div class="w-8 h-8 bg-[#f9f5ff] border border-[#e4e7ec] rounded-md flex items-center justify-center">
+                        <i class="fa-solid fa-exclamation-triangle text-[#6840c6]"></i>
+                    </div>
+                    <span class="text-2xl font-semibold text-[#6840c6]">
+                        {{ $equipment->name }}
+                    </span>
+                </div>
+            </div>
+
+            {{-- Close --}}
+            <button id="closeDeficiencyModal" class="text-gray-500 hover:text-gray-800">
+                <i class="fa-solid fa-xmark fa-lg"></i>
+            </button>
+        </header>
+
+        {{-- FORM --}}
+        <form
+            id="deficiencyForm"
+            action="{{ route('deficiencies.store') }}"
+            method="POST"
+            class="flex-1 flex flex-col overflow-hidden"
+        >
+            @csrf
+            <input type="hidden" name="equipment_id" value="{{ $equipment->id }}">
+
+            {{-- FORM BODY (scrollable) --}}
+            <div class="flex-1 overflow-y-auto px-6 py-4">
+                <div class="space-y-6">
+                    {{-- Subject Field --}}
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-[#374151] mb-2">
+                            Subject <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="subject"
+                            name="subject"
+                            required
+                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
+                            placeholder="Enter deficiency subject"
+                        >
+                    </div>
+
+                    {{-- Description Field --}}
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-[#374151] mb-2">
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="4"
+                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200 resize-none"
+                            placeholder="Provide additional details about the deficiency (optional)"
+                        ></textarea>
+                    </div>
+
+                    {{-- Priority Field --}}
+                    <div>
+                        <label for="priority" class="block text-sm font-medium text-[#374151] mb-2">
+                            Priority <span class="text-red-500">*</span>
+                        </label>
+                        <select
+                            id="priority"
+                            name="priority"
+                            required
+                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
+                        >
+                            <option value="low" selected>Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {{-- FOOTER --}}
+            <footer class="flex-shrink-0 flex items-center justify-end space-x-3 px-6 py-4 border-t border-[#e4e7ec] bg-white">
+                <button
+                    type="button"
+                    id="cancelDeficiencyModal"
+                    class="px-4 py-2 border border-[#d1d5db] rounded-lg text-sm text-[#374151] hover:bg-[#f9fafb] transition-colors duration-200"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="submit"
+                    class="px-5 py-2 bg-[#6840c6] text-white rounded-lg text-sm font-medium hover:bg-[#5a35a8] transition-colors duration-200"
+                >
+                    Create Deficiency
+                </button>
+            </footer>
+        </form>
+    </div>
+
+    {{-- CSS for Toggle Switch --}}
+    <style>
+        #show-resolved-toggle:checked + .relative .block {
+            background-color: #6840c6;
+        }
+        
+        #show-resolved-toggle:checked + .relative .dot {
+            transform: translateX(16px);
+        }
+    </style>
+
+    {{-- JavaScript for Toggle Functionality --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggle = document.getElementById('show-resolved-toggle');
+            const tbody = document.getElementById('deficiencies-tbody');
+            const allDeficiencies = @json($deficiencies);
+            
+            toggle.addEventListener('change', function() {
+                const showResolved = toggle.checked;
+                const filteredDeficiencies = showResolved 
+                    ? allDeficiencies 
+                    : allDeficiencies.filter(d => ['open', 'waiting'].includes(d.status));
+                
+                // Clear existing rows
+                tbody.innerHTML = '';
+                
+                if (filteredDeficiencies.length > 0) {
+                    filteredDeficiencies.forEach(function(deficiency) {
+                        const row = document.createElement('tr');
+                        row.className = 'deficiency-row hover:bg-[#f8f9fb] transition-colors duration-200';
+                        row.setAttribute('data-status', deficiency.status);
+                        
+                        // Format date
+                        const date = new Date(deficiency.created_at);
+                        const formattedDate = date.toLocaleDateString('en-US', { 
+                            month: 'short', 
+                            day: 'numeric', 
+                            year: 'numeric' 
+                        });
+                        
+                        // Status badge
+                        let statusBadge = '';
+                        if (deficiency.status === 'open') {
+                            statusBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>';
+                        } else if (deficiency.status === 'waiting') {
+                            statusBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Waiting</span>';
+                        } else {
+                            statusBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Resolved</span>';
+                        }
+                        
+                        // Priority badge
+                        let priorityBadge = '';
+                        if (deficiency.priority === 'high') {
+                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">High</span>';
+                        } else if (deficiency.priority === 'medium') {
+                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Medium</span>';
+                        } else if (deficiency.priority === 'low') {
+                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Low</span>';
+                        } else {
+                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#f1f5f9] text-[#475466] rounded-full">Unset</span>';
+                        }
+                        
+                        // Subject
+                        const subject = deficiency.subject || 'No subject';
+                        
+                        // Display ID
+                        const displayId = deficiency.display_id || '#' + deficiency.id;
+                        
+                        row.innerHTML = `
+                            <td class="px-6 py-4 text-sm font-medium">
+                                <a href="/deficiencies/${deficiency.id}" class="text-[#6840c6] hover:text-[#5a35a8] hover:underline transition-colors duration-200">
+                                    ${displayId}
+                                </a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">${statusBadge}</td>
+                            <td class="px-6 py-4 text-sm text-[#344053]">${subject}</td>
+                            <td class="px-6 py-4 text-sm text-[#344053]">${formattedDate}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${priorityBadge}</td>
+                            <td class="px-6 py-4">
+                                <a href="/deficiencies/${deficiency.id}" class="p-2 text-[#667084] hover:text-[#6840c6] hover:bg-[#f4ebff] rounded-lg transition-all duration-200 transform hover:scale-110">
+                                    <i class="fa-solid fa-arrow-right"></i>
+                                </a>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    const noDataRow = document.createElement('tr');
+                    const message = showResolved ? 'No Deficiencies to Display' : 'No Open Deficiencies to Display';
+                    noDataRow.innerHTML = `
+                        <td colspan="6" class="px-6 py-8 text-center text-sm text-[#667084]">
+                            ${message}
+                        </td>
+                    `;
+                    tbody.appendChild(noDataRow);
+                }
+            });
+        });
+    </script>
+
+    {{-- JavaScript for Deficiency Modal --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('deficiencyCreateModal');
+
+            function openDeficiencyModal() {
+                modal.classList.remove('translate-x-full');
+            }
+
+            function closeDeficiencyModal() {
+                modal.classList.add('translate-x-full');
+                // Reset form
+                document.getElementById('deficiencyForm').reset();
+            }
+
+            // Open / Close
+            document.getElementById('openDeficiencyModal')
+                .addEventListener('click', openDeficiencyModal);
+            document.getElementById('closeDeficiencyModal')
+                .addEventListener('click', closeDeficiencyModal);
+            document.getElementById('cancelDeficiencyModal')
+                .addEventListener('click', closeDeficiencyModal);
+
+            // ESC key
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && !modal.classList.contains('translate-x-full')) {
+                    closeDeficiencyModal();
+                }
+            });
+
+            // Form submission
+            document.getElementById('deficiencyForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Close modal
+                        closeDeficiencyModal();
+                        
+                        // Reload the page to show the new deficiency
+                        window.location.reload();
+                    } else {
+                        // Handle validation errors
+                        console.error('Error creating deficiency:', data);
+                        alert('Error creating deficiency. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error creating deficiency. Please try again.');
+                });
+            });
+        });
+    </script>
 
 
     {{-- Resources --}}
