@@ -165,7 +165,8 @@ class EquipmentController extends Controller
             'vessel',
             'intervals.workOrders' => function ($query) {
                 $query->with('tasks');
-            }
+            },
+            'attachments.file'
         ]);
 
         // Load deficiencies for this equipment, ordered by created_at (newest first)

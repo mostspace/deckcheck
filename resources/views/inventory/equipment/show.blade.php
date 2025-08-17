@@ -285,8 +285,6 @@
                     Vessel: {{ $equipment->vessel->name ?? 'null' }}
                 </div>
             @endif
-            
-            <x-equipment-attachments :equipment="$equipment" />
         </div>
     </div>
 
@@ -763,94 +761,350 @@
                     alert('Error creating deficiency. Please try again.');
                 });
             });
+
+            // Delete Resource Function
+            window.deleteResource = function(attachmentId, displayName) {
+                if (confirm(`Are you sure you want to delete "${displayName}"? This action cannot be undone.`)) {
+                    fetch(`/attachments/${attachmentId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Reload the page to reflect the changes
+                            window.location.reload();
+                        } else {
+                            alert('Error deleting resource: ' + (data.message || 'Please try again.'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error deleting resource. Please try again.');
+                    });
+                }
+            };
         });
     </script>
 
+    {{-- JavaScript for Resource Modal --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('resourceCreateModal');
+            const fileInput = document.getElementById('resource-file');
+            const displayNameInput = document.getElementById('display_name');
+            const descriptionInput = document.getElementById('description');
+            const roleInput = document.getElementById('role');
+            const uploadButton = document.getElementById('uploadResource');
+
+            // Auto-fill display name when file is selected
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    const nameWithoutExt = fileName.replace(/\.[^/.]+$/, "");
+                    displayNameInput.value = nameWithoutExt;
+                }
+            });
+
+            function openResourceModal() {
+                modal.classList.remove('translate-x-full');
+            }
+
+            function closeResourceModal() {
+                modal.classList.add('translate-x-full');
+                // Reset form
+                fileInput.value = '';
+                displayNameInput.value = '';
+                descriptionInput.value = '';
+                roleInput.value = 'manual';
+            }
+
+            // Open / Close
+            document.getElementById('openResourceModal')
+                .addEventListener('click', openResourceModal);
+            document.getElementById('closeResourceModal')
+                .addEventListener('click', closeResourceModal);
+            document.getElementById('cancelResourceModal')
+                .addEventListener('click', closeResourceModal);
+
+            // ESC key
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && !modal.classList.contains('translate-x-full')) {
+                    closeResourceModal();
+                }
+            });
+
+            // Upload Resource
+            uploadButton.addEventListener('click', function() {
+                if (!fileInput.files.length) {
+                    alert('Please select a file to upload.');
+                    return;
+                }
+
+                if (!displayNameInput.value.trim()) {
+                    alert('Please enter a display name for the resource.');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                formData.append('vessel_id', '{{ $equipment->vessel_id }}');
+                formData.append('attachable_id', '{{ $equipment->id }}');
+                formData.append('attachable_type', 'Equipment');
+                formData.append('role', roleInput.value);
+                formData.append('description', descriptionInput.value);
+
+                // Show loading state
+                uploadButton.disabled = true;
+                uploadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Uploading...</span>';
+
+                fetch('{{ route("files.upload") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Close modal
+                        closeResourceModal();
+                        
+                        // Reload the page to show the new resource
+                        window.location.reload();
+                    } else {
+                        // Handle validation errors
+                        console.error('Error uploading resource:', data);
+                        alert('Error uploading resource: ' + (data.message || 'Please try again.'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error uploading resource. Please try again.');
+                })
+                .finally(() => {
+                    // Reset button state
+                    uploadButton.disabled = false;
+                    uploadButton.innerHTML = '<i class="fa-solid fa-upload"></i><span>Upload Resource</span>';
+                });
+            });
+        });
+    </script>
 
     {{-- Resources --}}
     <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
 
         {{-- #Title Block --}}
-        <div class="px-6 py-4 border-b border-[#e4e7ec]">
+        <div class="px-6 py-4 border-b border-[#e4e7ec] flex items-center justify-between">
             <h2 class="text-lg font-semibold text-[#0f1728]">Resources</h2>
+            
+            <button 
+                id="openResourceModal" 
+                class="px-4 py-2 bg-[#6840c6] text-white text-sm font-medium rounded-lg hover:bg-[#5a35a8] transition-colors duration-200 flex items-center space-x-2"
+            >
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Resource</span>
+            </button>
         </div>
 
         <div class="p-6">
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Manual/Documentation -->
-                <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                    <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                        <i class="text-[#6840c6] fa-solid fa-file-pdf"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-[#0f1728]">Operation Manual</h3>
-                        <p class="text-xs text-[#667084]">PDF • 2.4 MB</p>
-                    </div>
-                    <i class="text-[#667084] hover:text-[#6840c6] fa-solid fa-eye"></i>
+            @if($equipment->hasAttachments())
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    @foreach($equipment->attachments as $attachment)
+                        <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
+                            <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
+                                @if($attachment->isImage())
+                                    <i class="text-[#6840c6] fa-solid fa-image"></i>
+                                @elseif($attachment->isPdf())
+                                    <i class="text-[#6840c6] fa-solid fa-file-pdf"></i>
+                                @elseif(str_contains($attachment->file->mime_type, 'excel') || str_contains($attachment->file->mime_type, 'spreadsheet'))
+                                    <i class="text-[#6840c6] fa-solid fa-file-excel"></i>
+                                @elseif(str_contains($attachment->file->mime_type, 'word') || str_contains($attachment->file->mime_type, 'document'))
+                                    <i class="text-[#6840c6] fa-solid fa-file-word"></i>
+                                @else
+                                    <i class="text-[#6840c6] fa-solid fa-file"></i>
+                                @endif
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-sm font-medium text-[#0f1728]">{{ $attachment->display_name }}</h3>
+                                <p class="text-xs text-[#667084]">{{ strtoupper($attachment->file->extension) }} • {{ $attachment->file->human_size }}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                @if($attachment->isImage())
+                                    <a href="{{ $attachment->url }}" target="_blank" class="text-[#667084] hover:text-[#6840c6] transition-colors">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                @endif
+                                <a href="{{ route('files.download', $attachment->file) }}" class="text-[#667084] hover:text-[#6840c6] transition-colors">
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
+                                <button 
+                                    onclick="deleteResource({{ $attachment->id }}, '{{ $attachment->display_name }}')"
+                                    class="text-[#667084] hover:text-red-500 transition-colors"
+                                    title="Delete Resource"
+                                >
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-
-                <!-- Installation Guide -->
-                <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                    <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                        <i class="text-[#6840c6] fa-solid fa-file-pdf"></i>
+            @else
+                <div class="text-center py-8 text-[#667084]">
+                    <div class="w-16 h-16 bg-[#f4ebff] rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="text-[#6840c6] fa-solid fa-file text-2xl"></i>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-[#0f1728]">Installation Guide</h3>
-                        <p class="text-xs text-[#667084]">PDF • 1.8 MB</p>
-                    </div>
-                    <i class="text-[#667084] fa-solid fa-download"></i>
+                    <h3 class="text-lg font-medium text-[#0f1728] mb-2">No Resources Yet</h3>
+                    <p class="text-sm">Upload manuals, certificates, and other important documents to keep them organized and accessible.</p>
                 </div>
+            @endif
+        </div>
+    </div>
 
-                <!-- Maintenance Schedule -->
-                <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                    <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                        <i class="text-[#6840c6] fa-solid fa-file-excel"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-[#0f1728]">Maintenance Schedule</h3>
-                        <p class="text-xs text-[#667084]">XLSX • 0.5 MB</p>
-                    </div>
-                    <i class="text-[#667084] fa-solid fa-download"></i>
-                </div>
+    {{-- Resource Create Modal --}}
+    <div
+        id="resourceCreateModal"
+        class="fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col bg-white transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl"
+    >
+        {{-- HEADER --}}
+        <header class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+            <div class="flex items-center space-x-2">
+                {{-- Main Action --}}
+                <h2 class="text-2xl font-semibold text-[#0f1728]">
+                    Add Resource
+                </h2>
 
-                <!-- Certificate -->
-                <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                    <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                        <i class="text-[#6840c6] fa-solid fa-certificate"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-[#0f1728]">MED Certificate</h3>
-                        <p class="text-xs text-[#667084]">PDF • 0.8 MB</p>
-                    </div>
-                    <i class="text-[#667084] fa-solid fa-download"></i>
-                </div>
+                {{-- Arrow Separator --}}
+                <i class="fa-solid fa-arrow-right text-gray-400"></i>
 
-                <!-- Inspection Checklist -->
-                <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                    <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                        <i class="text-[#6840c6] fa-solid fa-list-check"></i>
+                {{-- Equipment Name --}}
+                <div class="flex items-center space-x-1">
+                    <div class="w-8 h-8 bg-[#f9f5ff] border border-[#e4e7ec] rounded-md flex items-center justify-center">
+                        <i class="fa-solid fa-file text-[#6840c6]"></i>
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-[#0f1728]">Inspection Checklist</h3>
-                        <p class="text-xs text-[#667084]">PDF • 0.3 MB</p>
-                    </div>
-                    <i class="text-[#667084] fa-solid fa-download"></i>
-                </div>
-
-                <!-- Parts Diagram -->
-                <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                    <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                        <i class="text-[#6840c6] fa-solid fa-image"></i>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-medium text-[#0f1728]">Parts Diagram</h3>
-                        <p class="text-xs text-[#667084]">PDF • 1.2 MB</p>
-                    </div>
-                    <i class="text-[#667084] fa-solid fa-download"></i>
+                    <span class="text-2xl font-semibold text-[#6840c6]">
+                        {{ $equipment->name }}
+                    </span>
                 </div>
             </div>
 
+            {{-- Close --}}
+            <button id="closeResourceModal" class="text-gray-500 hover:text-gray-800">
+                <i class="fa-solid fa-xmark fa-lg"></i>
+            </button>
+        </header>
+
+        {{-- FORM --}}
+        <div class="flex-1 flex flex-col overflow-hidden">
+            {{-- FORM BODY (scrollable) --}}
+            <div class="flex-1 overflow-y-auto px-6 py-4">
+                <div class="space-y-6">
+                    {{-- File Upload --}}
+                    <div>
+                        <label class="block text-sm font-medium text-[#374151] mb-2">
+                            File <span class="text-red-500">*</span>
+                        </label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                            <div class="space-y-2">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                
+                                <div class="text-sm text-gray-600">
+                                    <label for="resource-file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                        <span>Upload file</span>
+                                        <input 
+                                            id="resource-file"
+                                            name="file"
+                                            type="file"
+                                            class="sr-only"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,image/*"
+                                        >
+                                    </label>
+                                    <span class="ml-1">or drag and drop</span>
+                                </div>
+                                
+                                <p class="text-xs text-gray-500">
+                                    50MB max file size. Supported formats: PDF, DOC, DOCX, XLS, XLSX, images, and more.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Display Name --}}
+                    <div>
+                        <label for="display_name" class="block text-sm font-medium text-[#374151] mb-2">
+                            Display Name <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="display_name"
+                            name="display_name"
+                            required
+                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
+                            placeholder="e.g., Operation Manual, Installation Guide"
+                        >
+                    </div>
+
+                    {{-- Description --}}
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-[#374151] mb-2">
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="3"
+                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200 resize-none"
+                            placeholder="Brief description of this resource (optional)"
+                        ></textarea>
+                    </div>
+
+                    {{-- Role --}}
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-[#374151] mb-2">
+                            Category <span class="text-red-500">*</span>
+                        </label>
+                        <select
+                            id="role"
+                            name="role"
+                            required
+                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
+                        >
+                            <option value="manual">Manual & Documentation</option>
+                            <option value="certificate">Certificate & Compliance</option>
+                            <option value="diagram">Diagram & Schematic</option>
+                            <option value="checklist">Checklist & Form</option>
+                            <option value="schedule">Schedule & Plan</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            {{-- FOOTER --}}
+            <footer class="flex-shrink-0 flex items-center justify-end space-x-3 px-6 py-4 border-t border-[#e4e7ec] bg-white">
+                <button
+                    type="button"
+                    id="cancelResourceModal"
+                    class="px-4 py-2 text-sm font-medium text-[#374151] bg-white border border-[#d1d5db] rounded-lg hover:bg-[#f9fafb] transition-colors duration-200"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="button"
+                    id="uploadResource"
+                    class="px-4 py-2 bg-[#6840c6] text-white text-sm font-medium rounded-lg hover:bg-[#5a35a8] transition-colors duration-200 flex items-center space-x-2"
+                >
+                    <i class="fa-solid fa-upload"></i>
+                    <span>Upload Resource</span>
+                </button>
+            </footer>
         </div>
     </div>
 
