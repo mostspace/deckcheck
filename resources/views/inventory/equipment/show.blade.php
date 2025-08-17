@@ -762,6 +762,40 @@
                 });
             });
 
+            // View Resource Function
+            window.viewResource = function(fileId, mimeType, displayName) {
+                // For images, videos, and audio, open in lightbox
+                if (mimeType.startsWith('image/') || mimeType.startsWith('video/') || mimeType.startsWith('audio/')) {
+                    // Simple lightbox implementation
+                    const lightbox = document.createElement('div');
+                    lightbox.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center';
+                    lightbox.onclick = () => lightbox.remove();
+                    
+                    let content;
+                    if (mimeType.startsWith('image/')) {
+                        content = `<img src="/files/${fileId}" alt="${displayName}" class="max-w-full max-h-full object-contain">`;
+                    } else if (mimeType.startsWith('video/')) {
+                        content = `<video controls class="max-w-full max-h-full"><source src="/files/${fileId}" type="${mimeType}"></video>`;
+                    } else if (mimeType.startsWith('audio/')) {
+                        content = `<audio controls class="max-w-full max-h-full"><source src="/files/${fileId}" type="${mimeType}"></audio>`;
+                    }
+                    
+                    lightbox.innerHTML = `
+                        <div class="relative">
+                            <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300" onclick="this.parentElement.parentElement.remove()">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                            ${content}
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(lightbox);
+                } else {
+                    // For PDFs and other documents, open in new tab
+                    window.open(`/files/${fileId}`, '_blank');
+                }
+            };
+
             // Delete Resource Function
             window.deleteResource = function(attachmentId, displayName) {
                 if (confirm(`Are you sure you want to delete "${displayName}"? This action cannot be undone.`)) {
@@ -797,7 +831,6 @@
             const fileInput = document.getElementById('resource-file');
             const displayNameInput = document.getElementById('display_name');
             const descriptionInput = document.getElementById('description');
-            const roleInput = document.getElementById('role');
             const uploadButton = document.getElementById('uploadResource');
 
             // Auto-fill display name when file is selected
@@ -819,7 +852,6 @@
                 fileInput.value = '';
                 displayNameInput.value = '';
                 descriptionInput.value = '';
-                roleInput.value = 'manual';
             }
 
             // Open / Close
@@ -854,7 +886,7 @@
                 formData.append('vessel_id', '{{ $equipment->vessel_id }}');
                 formData.append('attachable_id', '{{ $equipment->id }}');
                 formData.append('attachable_type', 'Equipment');
-                formData.append('role', roleInput.value);
+                formData.append('role', 'resource'); // Default role for all resources
                 formData.append('description', descriptionInput.value);
 
                 // Show loading state
@@ -913,16 +945,6 @@
         </div>
 
         <div class="p-6">
-            {{-- Debug info --}}
-            @if(config('app.debug'))
-                <div class="mb-4 p-3 bg-gray-100 rounded text-xs text-gray-600">
-                    Debug: Equipment ID: {{ $equipment->id }}, 
-                    Attachments Count: {{ $equipment->attachments->count() }}, 
-                    Has Attachments: {{ $equipment->hasAttachments() ? 'Yes' : 'No' }},
-                    Attachments Loaded: {{ $equipment->relationLoaded('attachments') ? 'Yes' : 'No' }}
-                </div>
-            @endif
-            
             @if($equipment->hasAttachments())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($equipment->attachments as $attachment)
@@ -945,14 +967,21 @@
                                 <p class="text-xs text-[#667084]">{{ strtoupper($attachment->file->extension) }} • {{ $attachment->file->human_size }}</p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                @if($attachment->isImage())
-                                    <a href="{{ $attachment->url }}" target="_blank" class="text-[#667084] hover:text-[#6840c6] transition-colors">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
-                                @endif
+                                {{-- View button for all files --}}
+                                <button 
+                                    onclick="viewResource('{{ $attachment->file->id }}', '{{ $attachment->file->mime_type }}', '{{ $attachment->display_name }}')"
+                                    class="text-[#667084] hover:text-[#6840c6] transition-colors"
+                                    title="View Resource"
+                                >
+                                    <i class="fa-solid fa-eye"></i>
+                                </button>
+                                
+                                {{-- Download button --}}
                                 <a href="{{ route('files.download', $attachment->file) }}" class="text-[#667084] hover:text-[#6840c6] transition-colors">
                                     <i class="fa-solid fa-download"></i>
                                 </a>
+                                
+                                {{-- Delete button --}}
                                 <button 
                                     onclick="deleteResource({{ $attachment->id }}, '{{ $attachment->display_name }}')"
                                     class="text-[#667084] hover:text-red-500 transition-colors"
@@ -1075,25 +1104,7 @@
                         ></textarea>
                     </div>
 
-                    {{-- Role --}}
-                    <div>
-                        <label for="role" class="block text-sm font-medium text-[#374151] mb-2">
-                            Category <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="role"
-                            name="role"
-                            required
-                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
-                        >
-                            <option value="manual">Manual & Documentation</option>
-                            <option value="certificate">Certificate & Compliance</option>
-                            <option value="diagram">Diagram & Schematic</option>
-                            <option value="checklist">Checklist & Form</option>
-                            <option value="schedule">Schedule & Plan</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
+
                 </div>
             </div>
 

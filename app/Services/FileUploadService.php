@@ -59,7 +59,8 @@ class FileUploadService
         string $disk = 's3_private',
         string $visibility = 'private',
         ?string $description = null,
-        ?string $customPath = null
+        ?string $customPath = null,
+        ?string $displayName = null
     ): File {
         // File validation is now handled in the controller
 
@@ -88,7 +89,7 @@ class FileUploadService
             'disk' => $disk,
             'path' => $storedPath,
             'original_name' => $uploadedFile->getClientOriginalName(),
-            'display_name' => $uploadedFile->getClientOriginalName(),
+            'display_name' => $displayName ?: $uploadedFile->getClientOriginalName(),
             'description' => $description,
             'mime_type' => $uploadedFile->getMimeType(),
             'size' => $uploadedFile->getSize(),

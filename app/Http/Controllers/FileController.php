@@ -48,7 +48,9 @@ class FileController extends Controller
                 Auth::id(),
                 's3_private',
                 $request->visibility ?? 'private',
-                $request->description
+                $request->description,
+                null, // customPath
+                $request->get('display_name') // displayName
             );
 
             // Create attachment if attachable information is provided
