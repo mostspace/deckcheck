@@ -140,7 +140,10 @@ class FileController extends Controller
                 'attachable_id' => $request->get('attachable_id'),
                 'attachable_type' => $request->get('attachable_type'),
                 'role' => $request->get('role'),
-                'storage_disk' => 's3_private'
+                'storage_disk' => 's3_private',
+                'raw_request_data' => $request->all(),
+                'attachable_type_length' => strlen($request->get('attachable_type') ?? ''),
+                'attachable_type_bytes' => bin2hex($request->get('attachable_type') ?? '')
             ]);
         }
 
@@ -182,7 +185,14 @@ class FileController extends Controller
                         if (config('app.debug')) {
                             \Log::info('Resolving attachable class', [
                                 'attachable_type_string' => $request->attachable_type,
-                                'attachable_class' => $attachableClass
+                                'attachable_class' => $attachableClass,
+                                'attachable_type_raw' => var_export($request->attachable_type, true),
+                                'attachable_type_quoted' => '"' . $request->attachable_type . '"',
+                                'class_exists_check' => class_exists($request->attachable_type),
+                                'available_classes' => [
+                                    'App\Models\Equipment' => class_exists('App\Models\Equipment'),
+                                    'AppModelsEquipment' => class_exists('AppModelsEquipment')
+                                ]
                             ]);
                         }
                         $attachableModel = $attachableClass::find($request->attachable_id);
