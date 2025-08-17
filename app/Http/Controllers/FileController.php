@@ -42,6 +42,16 @@ class FileController extends Controller
         try {
             
             
+            // Debug logging for display name
+            if (config('app.debug')) {
+                \Log::info('File upload request data', [
+                    'display_name' => $request->get('display_name'),
+                    'description' => $request->description,
+                    'has_display_name' => $request->has('display_name'),
+                    'all_request_data' => $request->all()
+                ]);
+            }
+            
             $file = $this->fileUploadService->uploadFile(
                 $request->file('file'),
                 $request->vessel_id,
@@ -218,6 +228,51 @@ class FileController extends Controller
                 'message' => 'File upload failed: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    /**
+     * View a file in the browser
+     */
+    public function view(File $file)
+    {
+        // Check if user has access to this file
+        if (!$this->canAccessFile($file)) {
+            abort(403, 'Access denied');
+        }
+
+        if (!$file->exists()) {
+            abort(404, 'File not found');
+        }
+
+        // For S3 files, we need to stream them properly
+        if ($file->disk === 's3_private') {
+            // Stream the file from S3 with proper headers
+            $stream = Storage::disk($file->disk)->readStream($file->path);
+            
+            return response()->stream(
+                function () use ($stream) {
+                    fpassthru($stream);
+                },
+                200,
+                [
+                    'Content-Type' => $file->mime_type,
+                    'Content-Disposition' => 'inline; filename="' . $file->display_name . '"',
+                    'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
+                    'Pragma' => 'no-cache',
+                    'Expires' => '0'
+                ]
+            );
+        }
+
+        // For local files, get contents and serve
+        $contents = $file->getContents();
+        if ($contents === null) {
+            abort(404, 'File not found');
+        }
+
+        return response($contents)
+            ->header('Content-Type', $file->mime_type)
+            ->header('Content-Disposition', 'inline; filename="' . $file->display_name . '"');
     }
 
     /**

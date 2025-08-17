@@ -773,11 +773,11 @@
                     
                     let content;
                     if (mimeType.startsWith('image/')) {
-                        content = `<img src="/files/${fileId}" alt="${displayName}" class="max-w-full max-h-full object-contain">`;
+                        content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-full max-h-full object-contain">`;
                     } else if (mimeType.startsWith('video/')) {
-                        content = `<video controls class="max-w-full max-h-full"><source src="/files/${fileId}" type="${mimeType}"></video>`;
+                        content = `<video controls class="max-w-full max-h-full"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
                     } else if (mimeType.startsWith('audio/')) {
-                        content = `<audio controls class="max-w-full max-h-full"><source src="/files/${fileId}" type="${mimeType}"></audio>`;
+                        content = `<audio controls class="max-w-full max-h-full"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
                     }
                     
                     lightbox.innerHTML = `
@@ -792,7 +792,7 @@
                     document.body.appendChild(lightbox);
                 } else {
                     // For PDFs and other documents, open in new tab
-                    window.open(`/files/${fileId}`, '_blank');
+                    window.open(`/files/${fileId}/view`, '_blank');
                 }
             };
 
@@ -888,6 +888,14 @@
                 formData.append('attachable_type', 'Equipment');
                 formData.append('role', 'resource'); // Default role for all resources
                 formData.append('description', descriptionInput.value);
+                formData.append('display_name', displayNameInput.value.trim());
+                
+                // Debug logging
+                console.log('Form data being sent:', {
+                    display_name: displayNameInput.value.trim(),
+                    file_name: fileInput.files[0].name,
+                    description: descriptionInput.value
+                });
 
                 // Show loading state
                 uploadButton.disabled = true;

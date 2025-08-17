@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/config', [FileController::class, 'config'])->name('config');
         Route::get('/vessel/{vesselId}', [FileController::class, 'vesselFiles'])->name('vessel');
         Route::get('/{file}', [FileController::class, 'show'])->name('show');
+        Route::get('/{file}/view', [FileController::class, 'view'])->name('view');
         Route::put('/{file}', [FileController::class, 'update'])->name('update');
         Route::delete('/{file}', [FileController::class, 'destroy'])->name('destroy');
         Route::get('/{file}/download', [FileController::class, 'download'])->name('download');
