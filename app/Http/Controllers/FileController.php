@@ -71,6 +71,41 @@ class FileController extends Controller
             $attachment = null;
             if ($request->has('attachable_id') && $request->has('attachable_type') && $request->has('role')) {
                 try {
+                    // Resolve the class from the string - handle both full class names and aliases
+                    $attachableType = $request->attachable_type;
+                    $attachableClass = null;
+                    
+                    // Map common aliases to full class names
+                    $classMap = [
+                        'Equipment' => 'App\Models\Equipment',
+                        'Vessel' => 'App\Models\Vessel',
+                        'Task' => 'App\Models\Task',
+                        'WorkOrder' => 'App\Models\WorkOrder',
+                        'Deficiency' => 'App\Models\Deficiency',
+                    ];
+                    
+                    if (isset($classMap[$attachableType])) {
+                        $attachableClass = $classMap[$attachableType];
+                    } else {
+                        // Try to use the string directly (for full class names)
+                        $attachableClass = $attachableType;
+                    }
+                    
+                    if (config('app.debug')) {
+                        \Log::info('Resolving attachable class for single upload', [
+                            'attachable_type_string' => $request->attachable_type,
+                            'resolved_class' => $attachableClass,
+                            'class_exists_check' => class_exists($attachableClass),
+                            'class_map_used' => isset($classMap[$attachableType])
+                        ]);
+                    }
+                    
+                    if (!class_exists($attachableClass)) {
+                        throw new \Exception("Class '{$attachableClass}' not found");
+                    }
+                    
+                    $attachableModel = $attachableClass::find($request->attachable_id);
+                    
                     $attachment = \App\Models\Attachment::create([
                         'file_id' => $file->id,
                         'attachable_id' => $request->attachable_id,
@@ -180,21 +215,39 @@ class FileController extends Controller
                 
                 foreach ($files as $file) {
                     try {
-                        // Resolve the class from the string
-                        $attachableClass = $request->attachable_type;
+                        // Resolve the class from the string - handle both full class names and aliases
+                        $attachableType = $request->attachable_type;
+                        $attachableClass = null;
+                        
+                        // Map common aliases to full class names
+                        $classMap = [
+                            'Equipment' => 'App\Models\Equipment',
+                            'Vessel' => 'App\Models\Vessel',
+                            'Task' => 'App\Models\Task',
+                            'WorkOrder' => 'App\Models\WorkOrder',
+                            'Deficiency' => 'App\Models\Deficiency',
+                        ];
+                        
+                        if (isset($classMap[$attachableType])) {
+                            $attachableClass = $classMap[$attachableType];
+                        } else {
+                            // Try to use the string directly (for full class names)
+                            $attachableClass = $attachableType;
+                        }
+                        
                         if (config('app.debug')) {
                             \Log::info('Resolving attachable class', [
                                 'attachable_type_string' => $request->attachable_type,
-                                'attachable_class' => $attachableClass,
-                                'attachable_type_raw' => var_export($request->attachable_type, true),
-                                'attachable_type_quoted' => '"' . $request->attachable_type . '"',
-                                'class_exists_check' => class_exists($request->attachable_type),
-                                'available_classes' => [
-                                    'App\Models\Equipment' => class_exists('App\Models\Equipment'),
-                                    'AppModelsEquipment' => class_exists('AppModelsEquipment')
-                                ]
+                                'resolved_class' => $attachableClass,
+                                'class_exists_check' => class_exists($attachableClass),
+                                'class_map_used' => isset($classMap[$attachableType])
                             ]);
                         }
+                        
+                        if (!class_exists($attachableClass)) {
+                            throw new \Exception("Class '{$attachableClass}' not found");
+                        }
+                        
                         $attachableModel = $attachableClass::find($request->attachable_id);
                         
                         $attachment = \App\Models\Attachment::create([
