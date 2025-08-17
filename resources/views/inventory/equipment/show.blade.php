@@ -766,17 +766,40 @@
             window.viewResource = function(fileId, mimeType, displayName) {
                 // For images, videos, and audio, open in lightbox
                 if (mimeType.startsWith('image/') || mimeType.startsWith('video/') || mimeType.startsWith('audio/')) {
-                    // Enhanced lightbox implementation
+                    // Show loading lightbox immediately
                     const lightbox = document.createElement('div');
                     lightbox.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+                    lightbox.id = 'resource-lightbox';
+                    
+                    // Loading content
+                    lightbox.innerHTML = `
+                        <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden min-w-96">
+                            <!-- Close Button -->
+                            <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="window.closeResourceLightbox()">
+                                <i class="fa-solid fa-times text-lg"></i>
+                            </button>
+                            
+                            <!-- Loading Content -->
+                            <div class="p-12 text-center">
+                                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#6840c6] mx-auto mb-4"></div>
+                                <p class="text-gray-600">Loading resource...</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Add click outside to close
                     lightbox.onclick = (e) => {
-                        // Only close if clicking the backdrop, not the content
                         if (e.target === lightbox) {
-                            closeLightbox();
+                            window.closeResourceLightbox();
                         }
                     };
                     
-                    // Get file details for the metadata display
+                    document.body.appendChild(lightbox);
+                    
+                    // Add escape key listener
+                    document.addEventListener('keydown', window.handleResourceEscapeKey);
+                    
+                    // Get file details and load content
                     fetch(`/files/${fileId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -790,23 +813,32 @@
                                 
                                 let content;
                                 if (mimeType.startsWith('image/')) {
-                                    content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl">`;
+                                    content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl" onload="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'">`;
                                 } else if (mimeType.startsWith('video/')) {
-                                    content = `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
+                                    content = `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl" onloadeddata="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
                                 } else if (mimeType.startsWith('audio/')) {
-                                    content = `<audio controls class="max-w-4xl rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
+                                    content = `<audio controls class="max-w-4xl rounded-lg shadow-2xl" oncanplay="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
                                 }
                                 
+                                // Update lightbox with content
                                 lightbox.innerHTML = `
                                     <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
                                         <!-- Close Button -->
-                                        <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="closeLightbox()">
+                                        <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="window.closeResourceLightbox()">
                                             <i class="fa-solid fa-times text-lg"></i>
                                         </button>
                                         
                                         <!-- Content -->
                                         <div class="p-6">
                                             ${content}
+                                        </div>
+                                        
+                                        <!-- Loading Overlay (hidden when content loads) -->
+                                        <div class="loading-content absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
+                                            <div class="text-center">
+                                                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6840c6] mx-auto mb-2"></div>
+                                                <p class="text-sm text-gray-600">Loading...</p>
+                                            </div>
                                         </div>
                                         
                                         <!-- Metadata Footer -->
@@ -824,17 +856,25 @@
                                         </div>
                                     </div>
                                 `;
-                                
-                                document.body.appendChild(lightbox);
-                                
-                                // Add escape key listener
-                                document.addEventListener('keydown', handleEscapeKey);
                             }
                         })
                         .catch(error => {
                             console.error('Error fetching file details:', error);
-                            // Fallback to simple lightbox if metadata fetch fails
-                            showSimpleLightbox(mimeType, fileId, displayName);
+                            // Show error in lightbox
+                            lightbox.innerHTML = `
+                                <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden min-w-96">
+                                    <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="window.closeResourceLightbox()">
+                                        <i class="fa-solid fa-times text-lg"></i>
+                                    </button>
+                                    <div class="p-12 text-center">
+                                        <div class="text-red-500 mb-4">
+                                            <i class="fa-solid fa-exclamation-triangle text-4xl"></i>
+                                        </div>
+                                        <p class="text-gray-600">Failed to load resource</p>
+                                        <p class="text-sm text-gray-400 mt-2">Please try again</p>
+                                    </div>
+                                </div>
+                            `;
                         });
                 } else {
                     // For PDFs and other documents, open in new tab
@@ -842,55 +882,21 @@
                 }
             };
             
-            // Close lightbox function
-            function closeLightbox() {
-                const lightbox = document.querySelector('.fixed.inset-0.bg-black');
+            // Global close lightbox function
+            window.closeResourceLightbox = function() {
+                const lightbox = document.getElementById('resource-lightbox');
                 if (lightbox) {
                     lightbox.remove();
-                    document.removeEventListener('keydown', handleEscapeKey);
+                    document.removeEventListener('keydown', window.handleResourceEscapeKey);
                 }
-            }
+            };
             
-            // Handle escape key
-            function handleEscapeKey(e) {
+            // Global escape key handler
+            window.handleResourceEscapeKey = function(e) {
                 if (e.key === 'Escape') {
-                    closeLightbox();
+                    window.closeResourceLightbox();
                 }
-            }
-            
-            // Fallback simple lightbox (if metadata fetch fails)
-            function showSimpleLightbox(mimeType, fileId, displayName) {
-                const lightbox = document.createElement('div');
-                lightbox.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
-                lightbox.onclick = (e) => {
-                    if (e.target === lightbox) {
-                        closeLightbox();
-                    }
-                };
-                
-                let content;
-                if (mimeType.startsWith('image/')) {
-                    content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl">`;
-                } else if (mimeType.startsWith('video/')) {
-                    content = `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
-                } else if (mimeType.startsWith('audio/')) {
-                    content = `<audio controls class="max-w-4xl rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
-                }
-                
-                lightbox.innerHTML = `
-                    <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
-                        <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="closeLightbox()">
-                            <i class="fa-solid fa-times text-lg"></i>
-                        </button>
-                        <div class="p-6">
-                            ${content}
-                        </div>
-                    </div>
-                `;
-                
-                document.body.appendChild(lightbox);
-                document.addEventListener('keydown', handleEscapeKey);
-            }
+            };
 
             // Delete Resource Function
             window.deleteResource = function(attachmentId, displayName) {
