@@ -54,15 +54,6 @@ class AttachmentController extends Controller
                 $attachableClass = $attachableType;
             }
             
-            if (config('app.debug')) {
-                \Log::info('Resolving attachable class in AttachmentController', [
-                    'attachable_type_string' => $request->attachable_type,
-                    'resolved_class' => $attachableClass,
-                    'class_exists_check' => class_exists($attachableClass),
-                    'class_map_used' => isset($classMap[$attachableType])
-                ]);
-            }
-            
             if (!class_exists($attachableClass)) {
                 throw new \Exception("Class '{$attachableClass}' not found");
             }

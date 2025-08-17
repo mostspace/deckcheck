@@ -67,21 +67,7 @@ class FileUploadService
         $path = $customPath ?: $this->generateStoragePath($uploadedFile, $vesselId);
 
         // Store the file
-        try {
-            $storedPath = $uploadedFile->store($path, $disk);
-        } catch (\Exception $e) {
-            // If S3 fails, fall back to local storage for testing
-            if (config('app.debug') && $disk !== 'local') {
-                \Log::warning('S3 storage failed, falling back to local storage', [
-                    'disk' => $disk,
-                    'error' => $e->getMessage(),
-                    'falling_back_to' => 'local'
-                ]);
-                $storedPath = $uploadedFile->store($path, 'local');
-            } else {
-                throw $e;
-            }
-        }
+        $storedPath = $uploadedFile->store($path, $disk);
 
         // Calculate SHA256 hash for deduplication
         $sha256 = hash_file('sha256', $uploadedFile->getRealPath());
@@ -145,19 +131,6 @@ class FileUploadService
      */
     protected function validateFile(UploadedFile $uploadedFile): void
     {
-        // Debug logging
-        if (config('app.debug')) {
-            \Log::info('File validation', [
-                'file_size' => $uploadedFile->getSize(),
-                'max_size_bytes' => $this->maxFileSize,
-                'max_size_mb' => (int) ($this->maxFileSize / (1024 * 1024)),
-                'file_name' => $uploadedFile->getClientOriginalName(),
-                'php_upload_max_filesize' => ini_get('upload_max_filesize'),
-                'php_post_max_size' => ini_get('post_max_size'),
-                'php_max_file_uploads' => ini_get('max_file_uploads')
-            ]);
-        }
-        
         // Check file size directly first
         if ($uploadedFile->getSize() > $this->maxFileSize) {
             throw new ValidationException(

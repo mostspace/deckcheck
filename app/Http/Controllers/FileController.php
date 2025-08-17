@@ -40,29 +40,13 @@ class FileController extends Controller
         }
 
         try {
-            // Debug logging
-            if (config('app.debug')) {
-                \Log::info('File upload request', [
-                    'file_size' => $request->file('file')->getSize(),
-                    'vessel_id' => $request->vessel_id,
-                    'user_id' => Auth::id(),
-                    'php_upload_max_filesize' => ini_get('upload_max_filesize'),
-                    'php_post_max_size' => ini_get('post_max_size'),
-                    'attachable_id' => $request->get('attachable_id'),
-                    'attachable_type' => $request->get('attachable_type'),
-                    'role' => $request->get('role'),
-                    'storage_disk' => 's3_private'
-                ]);
-            }
             
-            // Use local storage for testing if S3 is not available
-            $storageDisk = config('app.env') === 'local' ? 'local' : 's3_private';
             
             $file = $this->fileUploadService->uploadFile(
                 $request->file('file'),
                 $request->vessel_id,
                 Auth::id(),
-                $storageDisk,
+                's3_private',
                 $request->visibility ?? 'private',
                 $request->description
             );
@@ -91,15 +75,6 @@ class FileController extends Controller
                         $attachableClass = $attachableType;
                     }
                     
-                    if (config('app.debug')) {
-                        \Log::info('Resolving attachable class for single upload', [
-                            'attachable_type_string' => $request->attachable_type,
-                            'resolved_class' => $attachableClass,
-                            'class_exists_check' => class_exists($attachableClass),
-                            'class_map_used' => isset($classMap[$attachableType])
-                        ]);
-                    }
-                    
                     if (!class_exists($attachableClass)) {
                         throw new \Exception("Class '{$attachableClass}' not found");
                     }
@@ -119,24 +94,9 @@ class FileController extends Controller
                         'created_by' => Auth::id(),
                     ]);
                     
-                    if (config('app.debug')) {
-                        \Log::info('Attachment created', [
-                            'attachment_id' => $attachment->id,
-                            'file_id' => $file->id,
-                            'attachable_id' => $request->attachable_id,
-                            'attachable_type' => $request->attachable_type,
-                            'role' => $request->role
-                        ]);
-                    }
+
                 } catch (\Exception $e) {
-                    if (config('app.debug')) {
-                        \Log::error('Failed to create attachment', [
-                            'error' => $e->getMessage(),
-                            'file_id' => $file->id,
-                            'attachable_id' => $request->attachable_id,
-                            'attachable_type' => $request->attachable_type
-                        ]);
-                    }
+                    // Log error silently in production
                 }
             }
 
@@ -166,21 +126,7 @@ class FileController extends Controller
             'visibility' => 'nullable|in:private,public',
         ]);
 
-        // Debug logging
-        if (config('app.debug')) {
-            \Log::info('Multiple file upload request', [
-                'file_count' => count($request->file('files')),
-                'vessel_id' => $request->vessel_id,
-                'user_id' => Auth::id(),
-                'attachable_id' => $request->get('attachable_id'),
-                'attachable_type' => $request->get('attachable_type'),
-                'role' => $request->get('role'),
-                'storage_disk' => 's3_private',
-                'raw_request_data' => $request->all(),
-                'attachable_type_length' => strlen($request->get('attachable_type') ?? ''),
-                'attachable_type_bytes' => bin2hex($request->get('attachable_type') ?? '')
-            ]);
-        }
+
 
         if ($validator->fails()) {
             return response()->json([
@@ -190,28 +136,17 @@ class FileController extends Controller
         }
 
         try {
-            // Use local storage for testing if S3 is not available
-            $storageDisk = config('app.env') === 'local' ? 'local' : 's3_private';
-            
             $files = $this->fileUploadService->uploadFiles(
                 $request->file('files'),
                 $request->vessel_id,
                 Auth::id(),
-                $storageDisk,
+                's3_private',
                 $request->visibility ?? 'private'
             );
 
             // Create attachments if attachable information is provided
             $attachments = [];
             if ($request->has('attachable_id') && $request->has('attachable_type') && $request->has('role')) {
-                if (config('app.debug')) {
-                    \Log::info('Creating attachments', [
-                        'attachable_id' => $request->attachable_id,
-                        'attachable_type' => $request->attachable_type,
-                        'role' => $request->role,
-                        'file_count' => count($files)
-                    ]);
-                }
                 
                 foreach ($files as $file) {
                     try {
@@ -235,15 +170,6 @@ class FileController extends Controller
                             $attachableClass = $attachableType;
                         }
                         
-                        if (config('app.debug')) {
-                            \Log::info('Resolving attachable class', [
-                                'attachable_type_string' => $request->attachable_type,
-                                'resolved_class' => $attachableClass,
-                                'class_exists_check' => class_exists($attachableClass),
-                                'class_map_used' => isset($classMap[$attachableType])
-                            ]);
-                        }
-                        
                         if (!class_exists($attachableClass)) {
                             throw new \Exception("Class '{$attachableClass}' not found");
                         }
@@ -265,24 +191,9 @@ class FileController extends Controller
                         
                         $attachments[] = $attachment;
                         
-                        if (config('app.debug')) {
-                            \Log::info('Attachment created for multiple upload', [
-                                'attachment_id' => $attachment->id,
-                                'file_id' => $file->id,
-                                'attachable_id' => $request->attachable_id,
-                                'attachable_type' => $request->attachable_type,
-                                'role' => $request->role
-                            ]);
-                        }
+
                     } catch (\Exception $e) {
-                        if (config('app.debug')) {
-                            \Log::error('Failed to create attachment for multiple upload', [
-                                'error' => $e->getMessage(),
-                                'file_id' => $file->id,
-                                'attachable_id' => $request->attachable_id,
-                                'attachable_type' => $request->attachable_type
-                            ]);
-                        }
+                        // Log error silently in production
                     }
                 }
             }

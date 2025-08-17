@@ -15,10 +15,7 @@
     $uploadUrl = $multiple ? route('files.upload-multiple') : route('files.upload');
     $inputName = $multiple ? 'files[]' : 'file';
     
-    // Debug info
-    if (config('app.debug')) {
-        echo "<!-- Debug: vesselId = {$vesselId}, model vessel_id = " . ($model?->vessel_id ?? 'null') . " -->";
-    }
+
 @endphp
 
 <div class="file-upload-component {{ $class }}" x-data="fileUpload()">
@@ -199,14 +196,7 @@ function fileUpload() {
                 formData.append('attachable_type', '{{ $modelClass }}');
                 formData.append('role', '{{ $role ?? "file" }}');
                 
-                // Debug logging
-                console.log('Uploading with attachable info:', {
-                    attachable_id: '{{ $model->id }}',
-                    attachable_type: '{{ $modelClass }}',
-                    role: '{{ $role ?? "file" }}'
-                });
-                @else
-                console.log('No model or modelClass provided for attachment');
+
                 @endif
                 
                 if ({{ $multiple ? 'true' : 'false' }}) {
@@ -217,11 +207,7 @@ function fileUpload() {
                     formData.append('file', this.uploads[0].file);
                 }
                 
-                // Debug: Log what's being sent
-                console.log('FormData contents:');
-                for (let [key, value] of formData.entries()) {
-                    console.log(key + ':', value);
-                }
+
                 
                 // Update status to uploading
                 this.uploads.forEach(upload => {
