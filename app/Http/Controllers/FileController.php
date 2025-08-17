@@ -78,7 +78,7 @@ class FileController extends Controller
                         'role' => $request->role,
                         'caption' => $request->caption,
                         'ordering' => \App\Models\Attachment::getNextOrdering(
-                            $request->attachable_type::find($request->attachable_id),
+                            $attachableModel,
                             $request->role
                         ),
                         'created_by' => Auth::id(),
@@ -139,7 +139,8 @@ class FileController extends Controller
                 'user_id' => Auth::id(),
                 'attachable_id' => $request->get('attachable_id'),
                 'attachable_type' => $request->get('attachable_type'),
-                'role' => $request->get('role')
+                'role' => $request->get('role'),
+                'storage_disk' => 's3_private'
             ]);
         }
 
@@ -165,8 +166,27 @@ class FileController extends Controller
             // Create attachments if attachable information is provided
             $attachments = [];
             if ($request->has('attachable_id') && $request->has('attachable_type') && $request->has('role')) {
+                if (config('app.debug')) {
+                    \Log::info('Creating attachments', [
+                        'attachable_id' => $request->attachable_id,
+                        'attachable_type' => $request->attachable_type,
+                        'role' => $request->role,
+                        'file_count' => count($files)
+                    ]);
+                }
+                
                 foreach ($files as $file) {
                     try {
+                        // Resolve the class from the string
+                        $attachableClass = $request->attachable_type;
+                        if (config('app.debug')) {
+                            \Log::info('Resolving attachable class', [
+                                'attachable_type_string' => $request->attachable_type,
+                                'attachable_class' => $attachableClass
+                            ]);
+                        }
+                        $attachableModel = $attachableClass::find($request->attachable_id);
+                        
                         $attachment = \App\Models\Attachment::create([
                             'file_id' => $file->id,
                             'attachable_id' => $request->attachable_id,
@@ -174,7 +194,7 @@ class FileController extends Controller
                             'role' => $request->role,
                             'caption' => $request->caption,
                             'ordering' => \App\Models\Attachment::getNextOrdering(
-                                $request->attachable_type::find($request->attachable_id),
+                                $attachableModel,
                                 $request->role
                             ),
                             'created_by' => Auth::id(),

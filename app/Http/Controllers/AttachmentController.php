@@ -34,8 +34,12 @@ class AttachmentController extends Controller
 
         try {
             // Get the next ordering number if not provided
+            // Resolve the class from the string
+            $attachableClass = $request->attachable_type;
+            $attachableModel = $attachableClass::find($request->attachable_id);
+            
             $ordering = $request->ordering ?? Attachment::getNextOrdering(
-                $request->attachable_type::find($request->attachable_id),
+                $attachableModel,
                 $request->role
             );
 
