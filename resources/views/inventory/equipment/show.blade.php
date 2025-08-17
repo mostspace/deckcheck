@@ -766,35 +766,131 @@
             window.viewResource = function(fileId, mimeType, displayName) {
                 // For images, videos, and audio, open in lightbox
                 if (mimeType.startsWith('image/') || mimeType.startsWith('video/') || mimeType.startsWith('audio/')) {
-                    // Simple lightbox implementation
+                    // Enhanced lightbox implementation
                     const lightbox = document.createElement('div');
-                    lightbox.className = 'fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center';
-                    lightbox.onclick = () => lightbox.remove();
+                    lightbox.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+                    lightbox.onclick = (e) => {
+                        // Only close if clicking the backdrop, not the content
+                        if (e.target === lightbox) {
+                            closeLightbox();
+                        }
+                    };
                     
-                    let content;
-                    if (mimeType.startsWith('image/')) {
-                        content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-full max-h-full object-contain">`;
-                    } else if (mimeType.startsWith('video/')) {
-                        content = `<video controls class="max-w-full max-h-full"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
-                    } else if (mimeType.startsWith('audio/')) {
-                        content = `<audio controls class="max-w-full max-h-full"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
-                    }
-                    
-                    lightbox.innerHTML = `
-                        <div class="relative">
-                            <button class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300" onclick="this.parentElement.parentElement.remove()">
-                                <i class="fa-solid fa-times"></i>
-                            </button>
-                            ${content}
-                        </div>
-                    `;
-                    
-                    document.body.appendChild(lightbox);
+                    // Get file details for the metadata display
+                    fetch(`/files/${fileId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const file = data.file;
+                                const uploadDate = new Date(file.created_at).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric'
+                                });
+                                
+                                let content;
+                                if (mimeType.startsWith('image/')) {
+                                    content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl">`;
+                                } else if (mimeType.startsWith('video/')) {
+                                    content = `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
+                                } else if (mimeType.startsWith('audio/')) {
+                                    content = `<audio controls class="max-w-4xl rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
+                                }
+                                
+                                lightbox.innerHTML = `
+                                    <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+                                        <!-- Close Button -->
+                                        <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="closeLightbox()">
+                                            <i class="fa-solid fa-times text-lg"></i>
+                                        </button>
+                                        
+                                        <!-- Content -->
+                                        <div class="p-6">
+                                            ${content}
+                                        </div>
+                                        
+                                        <!-- Metadata Footer -->
+                                        <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+                                            <div class="flex items-center justify-between text-sm text-gray-600">
+                                                <div class="flex-1">
+                                                    <h3 class="font-semibold text-gray-900 mb-1">${displayName}</h3>
+                                                    <p class="text-gray-500">Uploaded on ${uploadDate}</p>
+                                                </div>
+                                                <div class="text-right">
+                                                    <p class="text-gray-500">by ${file.uploaded_by?.first_name || 'Unknown'} ${file.uploaded_by?.last_name || ''}</p>
+                                                    <p class="text-xs text-gray-400">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                
+                                document.body.appendChild(lightbox);
+                                
+                                // Add escape key listener
+                                document.addEventListener('keydown', handleEscapeKey);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching file details:', error);
+                            // Fallback to simple lightbox if metadata fetch fails
+                            showSimpleLightbox(mimeType, fileId, displayName);
+                        });
                 } else {
                     // For PDFs and other documents, open in new tab
                     window.open(`/files/${fileId}/view`, '_blank');
                 }
             };
+            
+            // Close lightbox function
+            function closeLightbox() {
+                const lightbox = document.querySelector('.fixed.inset-0.bg-black');
+                if (lightbox) {
+                    lightbox.remove();
+                    document.removeEventListener('keydown', handleEscapeKey);
+                }
+            }
+            
+            // Handle escape key
+            function handleEscapeKey(e) {
+                if (e.key === 'Escape') {
+                    closeLightbox();
+                }
+            }
+            
+            // Fallback simple lightbox (if metadata fetch fails)
+            function showSimpleLightbox(mimeType, fileId, displayName) {
+                const lightbox = document.createElement('div');
+                lightbox.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+                lightbox.onclick = (e) => {
+                    if (e.target === lightbox) {
+                        closeLightbox();
+                    }
+                };
+                
+                let content;
+                if (mimeType.startsWith('image/')) {
+                    content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl">`;
+                } else if (mimeType.startsWith('video/')) {
+                    content = `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
+                } else if (mimeType.startsWith('audio/')) {
+                    content = `<audio controls class="max-w-4xl rounded-lg shadow-2xl"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
+                }
+                
+                lightbox.innerHTML = `
+                    <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
+                        <button class="absolute top-4 right-4 w-10 h-10 bg-black bg-opacity-50 hover:bg-opacity-75 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 z-10" onclick="closeLightbox()">
+                            <i class="fa-solid fa-times text-lg"></i>
+                        </button>
+                        <div class="p-6">
+                            ${content}
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(lightbox);
+                document.addEventListener('keydown', handleEscapeKey);
+            }
 
             // Delete Resource Function
             window.deleteResource = function(attachmentId, displayName) {
