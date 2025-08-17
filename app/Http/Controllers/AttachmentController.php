@@ -68,7 +68,7 @@ class AttachmentController extends Controller
             $attachment = Attachment::create([
                 'file_id' => $request->file_id,
                 'attachable_id' => $request->attachable_id,
-                'attachable_type' => $request->attachable_type,
+                'attachable_type' => $attachableClass, // Use the resolved class name, not the alias
                 'role' => $request->role,
                 'caption' => $request->caption,
                 'ordering' => $ordering,

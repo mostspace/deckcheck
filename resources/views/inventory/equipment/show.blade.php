@@ -913,6 +913,16 @@
         </div>
 
         <div class="p-6">
+            {{-- Debug info --}}
+            @if(config('app.debug'))
+                <div class="mb-4 p-3 bg-gray-100 rounded text-xs text-gray-600">
+                    Debug: Equipment ID: {{ $equipment->id }}, 
+                    Attachments Count: {{ $equipment->attachments->count() }}, 
+                    Has Attachments: {{ $equipment->hasAttachments() ? 'Yes' : 'No' }},
+                    Attachments Loaded: {{ $equipment->relationLoaded('attachments') ? 'Yes' : 'No' }}
+                </div>
+            @endif
+            
             @if($equipment->hasAttachments())
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($equipment->attachments as $attachment)

@@ -84,7 +84,7 @@ class FileController extends Controller
                     $attachment = \App\Models\Attachment::create([
                         'file_id' => $file->id,
                         'attachable_id' => $request->attachable_id,
-                        'attachable_type' => $request->attachable_type,
+                        'attachable_type' => $attachableClass, // Use the resolved class name, not the alias
                         'role' => $request->role,
                         'caption' => $request->caption,
                         'ordering' => \App\Models\Attachment::getNextOrdering(
@@ -179,7 +179,7 @@ class FileController extends Controller
                         $attachment = \App\Models\Attachment::create([
                             'file_id' => $file->id,
                             'attachable_id' => $request->attachable_id,
-                            'attachable_type' => $request->attachable_type,
+                            'attachable_type' => $attachableClass, // Use the resolved class name, not the alias
                             'role' => $request->role,
                             'caption' => $request->caption,
                             'ordering' => \App\Models\Attachment::getNextOrdering(
