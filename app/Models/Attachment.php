@@ -84,10 +84,10 @@ class Attachment extends Model
     public static function attachFile(
         File $file,
         Model $attachable,
-        string $role = null,
-        string $caption = null,
+        ?string $role = null,
+        ?string $caption = null,
         int $ordering = 0,
-        int $createdById = null
+        ?int $createdById = null
     ): self {
         return static::create([
             'file_id' => $file->id,
@@ -101,7 +101,7 @@ class Attachment extends Model
     }
 
     // Get the next ordering number for a specific attachable and role
-    public static function getNextOrdering($attachable, string $role = null): int
+    public static function getNextOrdering($attachable, ?string $role = null): int
     {
         $query = static::where('attachable_id', $attachable->id)
             ->where('attachable_type', get_class($attachable));

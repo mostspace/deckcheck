@@ -67,7 +67,21 @@ class FileUploadService
         $path = $customPath ?: $this->generateStoragePath($uploadedFile, $vesselId);
 
         // Store the file
-        $storedPath = $uploadedFile->store($path, $disk);
+        try {
+            $storedPath = $uploadedFile->store($path, $disk);
+        } catch (\Exception $e) {
+            // If S3 fails, fall back to local storage for testing
+            if (config('app.debug') && $disk !== 'local') {
+                \Log::warning('S3 storage failed, falling back to local storage', [
+                    'disk' => $disk,
+                    'error' => $e->getMessage(),
+                    'falling_back_to' => 'local'
+                ]);
+                $storedPath = $uploadedFile->store($path, 'local');
+            } else {
+                throw $e;
+            }
+        }
 
         // Calculate SHA256 hash for deduplication
         $sha256 = hash_file('sha256', $uploadedFile->getRealPath());

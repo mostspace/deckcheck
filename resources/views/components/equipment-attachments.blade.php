@@ -14,6 +14,7 @@
                 label="Upload Manuals & Documentation"
                 maxSize="50MB"
                 class="mb-4"
+                modelClass="App\Models\Equipment"
             />
             
             <x-file-upload 
@@ -24,6 +25,7 @@
                 label="Upload Photos"
                 maxSize="50MB"
                 class="mb-4"
+                modelClass="App\Models\Equipment"
             />
             
             <x-file-upload 
@@ -33,6 +35,7 @@
                 accept=".pdf,.doc,.docx,.xls,.xlsx"
                 label="Upload Reports & Certificates"
                 maxSize="50MB"
+                modelClass="App\Models\Equipment"
             />
         </div>
         

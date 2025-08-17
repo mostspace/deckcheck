@@ -6,7 +6,8 @@
     'maxSize' => '50MB',
     'vesselId' => null,
     'class' => '',
-    'label' => 'Upload Files'
+    'label' => 'Upload Files',
+    'modelClass' => null
 ])
 
 @php
@@ -192,12 +193,34 @@ function fileUpload() {
                 const formData = new FormData();
                 formData.append('vessel_id', '{{ $vesselId }}');
                 
+                // Add attachable information if model is provided
+                @if($model && $modelClass)
+                formData.append('attachable_id', '{{ $model->id }}');
+                formData.append('attachable_type', '{{ $modelClass }}');
+                formData.append('role', '{{ $role ?? "file" }}');
+                
+                // Debug logging
+                console.log('Uploading with attachable info:', {
+                    attachable_id: '{{ $model->id }}',
+                    attachable_type: '{{ $modelClass }}',
+                    role: '{{ $role ?? "file" }}'
+                });
+                @else
+                console.log('No model or modelClass provided for attachment');
+                @endif
+                
                 if ({{ $multiple ? 'true' : 'false' }}) {
                     this.uploads.forEach(upload => {
                         formData.append('files[]', upload.file);
                     });
                 } else {
                     formData.append('file', this.uploads[0].file);
+                }
+                
+                // Debug: Log what's being sent
+                console.log('FormData contents:');
+                for (let [key, value] of formData.entries()) {
+                    console.log(key + ':', value);
                 }
                 
                 // Update status to uploading
@@ -213,7 +236,22 @@ function fileUpload() {
                     body: formData
                 });
                 
-                const result = await response.json();
+                let result;
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    try {
+                        result = await response.json();
+                    } catch (jsonError) {
+                        console.error('Failed to parse JSON response:', jsonError);
+                        throw new Error('Server returned invalid JSON response');
+                    }
+                } else {
+                    // Response is not JSON (likely HTML error page)
+                    const responseText = await response.text();
+                    console.error('Server returned non-JSON response:', responseText);
+                    throw new Error('Server error: Received HTML instead of JSON response. Check server logs.');
+                }
                 
                 if (result.success) {
                     this.uploads.forEach(upload => {

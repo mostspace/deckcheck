@@ -38,8 +38,8 @@ trait HasAttachments
      */
     public function attachFile(
         UploadedFile $uploadedFile,
-        string $role = null,
-        string $caption = null,
+        ?string $role = null,
+        ?string $caption = null,
         string $disk = 's3_private',
         string $visibility = 'private',
         ?string $description = null
@@ -73,7 +73,7 @@ trait HasAttachments
      */
     public function attachFiles(
         array $uploadedFiles,
-        string $role = null,
+        ?string $role = null,
         string $disk = 's3_private',
         string $visibility = 'private'
     ): array {

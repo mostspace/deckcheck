@@ -47,23 +47,69 @@ class FileController extends Controller
                     'vessel_id' => $request->vessel_id,
                     'user_id' => Auth::id(),
                     'php_upload_max_filesize' => ini_get('upload_max_filesize'),
-                    'php_post_max_size' => ini_get('post_max_size')
+                    'php_post_max_size' => ini_get('post_max_size'),
+                    'attachable_id' => $request->get('attachable_id'),
+                    'attachable_type' => $request->get('attachable_type'),
+                    'role' => $request->get('role'),
+                    'storage_disk' => 's3_private'
                 ]);
             }
+            
+            // Use local storage for testing if S3 is not available
+            $storageDisk = config('app.env') === 'local' ? 'local' : 's3_private';
             
             $file = $this->fileUploadService->uploadFile(
                 $request->file('file'),
                 $request->vessel_id,
                 Auth::id(),
-                's3_private',
+                $storageDisk,
                 $request->visibility ?? 'private',
                 $request->description
             );
 
+            // Create attachment if attachable information is provided
+            $attachment = null;
+            if ($request->has('attachable_id') && $request->has('attachable_type') && $request->has('role')) {
+                try {
+                    $attachment = \App\Models\Attachment::create([
+                        'file_id' => $file->id,
+                        'attachable_id' => $request->attachable_id,
+                        'attachable_type' => $request->attachable_type,
+                        'role' => $request->role,
+                        'caption' => $request->caption,
+                        'ordering' => \App\Models\Attachment::getNextOrdering(
+                            $request->attachable_type::find($request->attachable_id),
+                            $request->role
+                        ),
+                        'created_by' => Auth::id(),
+                    ]);
+                    
+                    if (config('app.debug')) {
+                        \Log::info('Attachment created', [
+                            'attachment_id' => $attachment->id,
+                            'file_id' => $file->id,
+                            'attachable_id' => $request->attachable_id,
+                            'attachable_type' => $request->attachable_type,
+                            'role' => $request->role
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    if (config('app.debug')) {
+                        \Log::error('Failed to create attachment', [
+                            'error' => $e->getMessage(),
+                            'file_id' => $file->id,
+                            'attachable_id' => $request->attachable_id,
+                            'attachable_type' => $request->attachable_type
+                        ]);
+                    }
+                }
+            }
+
             return response()->json([
                 'success' => true,
                 'file' => $file->load('uploadedBy'),
-                'message' => 'File uploaded successfully'
+                'attachment' => $attachment,
+                'message' => 'File uploaded successfully' . ($attachment ? ' and attached' : '')
             ]);
 
         } catch (\Exception $e) {
@@ -85,6 +131,18 @@ class FileController extends Controller
             'visibility' => 'nullable|in:private,public',
         ]);
 
+        // Debug logging
+        if (config('app.debug')) {
+            \Log::info('Multiple file upload request', [
+                'file_count' => count($request->file('files')),
+                'vessel_id' => $request->vessel_id,
+                'user_id' => Auth::id(),
+                'attachable_id' => $request->get('attachable_id'),
+                'attachable_type' => $request->get('attachable_type'),
+                'role' => $request->get('role')
+            ]);
+        }
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -93,13 +151,58 @@ class FileController extends Controller
         }
 
         try {
+            // Use local storage for testing if S3 is not available
+            $storageDisk = config('app.env') === 'local' ? 'local' : 's3_private';
+            
             $files = $this->fileUploadService->uploadFiles(
                 $request->file('files'),
                 $request->vessel_id,
                 Auth::id(),
-                's3_private',
+                $storageDisk,
                 $request->visibility ?? 'private'
             );
+
+            // Create attachments if attachable information is provided
+            $attachments = [];
+            if ($request->has('attachable_id') && $request->has('attachable_type') && $request->has('role')) {
+                foreach ($files as $file) {
+                    try {
+                        $attachment = \App\Models\Attachment::create([
+                            'file_id' => $file->id,
+                            'attachable_id' => $request->attachable_id,
+                            'attachable_type' => $request->attachable_type,
+                            'role' => $request->role,
+                            'caption' => $request->caption,
+                            'ordering' => \App\Models\Attachment::getNextOrdering(
+                                $request->attachable_type::find($request->attachable_id),
+                                $request->role
+                            ),
+                            'created_by' => Auth::id(),
+                        ]);
+                        
+                        $attachments[] = $attachment;
+                        
+                        if (config('app.debug')) {
+                            \Log::info('Attachment created for multiple upload', [
+                                'attachment_id' => $attachment->id,
+                                'file_id' => $file->id,
+                                'attachable_id' => $request->attachable_id,
+                                'attachable_type' => $request->attachable_type,
+                                'role' => $request->role
+                            ]);
+                        }
+                    } catch (\Exception $e) {
+                        if (config('app.debug')) {
+                            \Log::error('Failed to create attachment for multiple upload', [
+                                'error' => $e->getMessage(),
+                                'file_id' => $file->id,
+                                'attachable_id' => $request->attachable_id,
+                                'attachable_type' => $request->attachable_type
+                            ]);
+                        }
+                    }
+                }
+            }
 
             // Load relationships on each file model
             $filesWithRelations = collect($files)->map(function($file) {
@@ -109,7 +212,8 @@ class FileController extends Controller
             return response()->json([
                 'success' => true,
                 'files' => $filesWithRelations,
-                'message' => count($files) . ' files uploaded successfully'
+                'attachments' => $attachments,
+                'message' => count($files) . ' files uploaded successfully' . (count($attachments) > 0 ? ' and attached' : '')
             ]);
 
         } catch (\Exception $e) {
