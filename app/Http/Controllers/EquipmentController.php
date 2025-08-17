@@ -162,6 +162,7 @@ class EquipmentController extends Controller
 
         // Load intervals and their work orders ordered by due date
         $equipment->load([
+            'vessel',
             'intervals.workOrders' => function ($query) {
                 $query->with('tasks');
             }

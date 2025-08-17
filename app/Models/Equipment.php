@@ -10,10 +10,13 @@ use App\Models\Location;
 use App\Models\EquipmentInterval;
 use App\Models\WorkOrder;
 use App\Models\Deficiency;
+use App\Models\Traits\HasAttachments;
 
 
 class Equipment extends Model
 {
+    use HasAttachments;
+
     public function vessel()
     {
         return $this->belongsTo(Vessel::class);

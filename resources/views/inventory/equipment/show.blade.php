@@ -271,6 +271,25 @@
         </div>
     </div>
 
+    {{-- Equipment Attachments --}}
+    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
+        <div class="px-6 py-4 border-b border-[#e4e7ec]">
+            <h2 class="text-lg font-semibold text-[#0f1728]">Equipment Attachments</h2>
+        </div>
+        <div class="p-6">
+            {{-- Debug Info --}}
+            @if(config('app.debug'))
+                <div class="mb-4 p-3 bg-gray-100 rounded text-xs">
+                    <strong>Debug:</strong> Equipment ID: {{ $equipment->id }}, 
+                    Vessel ID: {{ $equipment->vessel_id ?? 'null' }}, 
+                    Vessel: {{ $equipment->vessel->name ?? 'null' }}
+                </div>
+            @endif
+            
+            <x-equipment-attachments :equipment="$equipment" />
+        </div>
+    </div>
+
     {{-- Maintenance Intervals --}}
     <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
 

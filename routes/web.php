@@ -17,6 +17,8 @@ use App\Http\Controllers\VesselSwitchController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\WorkOrderFlowController;
 use App\Http\Controllers\InviteUserController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\AttachmentController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -45,6 +47,26 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/picture', [ProfileController::class, 'updatePicture'])
         ->name('profile.picture.update');
 
+    // File Management
+    Route::prefix('files')->name('files.')->group(function () {
+        Route::post('/upload', [FileController::class, 'upload'])->name('upload');
+        Route::post('/upload-multiple', [FileController::class, 'uploadMultiple'])->name('upload-multiple');
+        Route::get('/config', [FileController::class, 'config'])->name('config');
+        Route::get('/vessel/{vesselId}', [FileController::class, 'vesselFiles'])->name('vessel');
+        Route::get('/{file}', [FileController::class, 'show'])->name('show');
+        Route::put('/{file}', [FileController::class, 'update'])->name('update');
+        Route::delete('/{file}', [FileController::class, 'destroy'])->name('destroy');
+        Route::get('/{file}/download', [FileController::class, 'download'])->name('download');
+    });
+
+    // Attachment Management
+    Route::prefix('attachments')->name('attachments.')->group(function () {
+        Route::post('/', [AttachmentController::class, 'store'])->name('store');
+        Route::put('/{attachment}', [AttachmentController::class, 'update'])->name('update');
+        Route::delete('/{attachment}', [AttachmentController::class, 'destroy'])->name('destroy');
+        Route::post('/reorder', [AttachmentController::class, 'reorder'])->name('reorder');
+        Route::get('/{modelType}/{modelId}', [AttachmentController::class, 'forModel'])->name('for-model');
+    });
 });
 
 Route::get('/vessel', [\App\Http\Controllers\VesselController::class, 'index'])

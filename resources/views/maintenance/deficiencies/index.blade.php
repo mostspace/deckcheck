@@ -115,10 +115,8 @@
 
                 {{-- ##Deficiencies Conditional --}}
                 @if ($deficiencies->count())
-
                     {{-- ###Deficiencies Loop --}}
                     @foreach ($deficiencies as $deficiency)
-
                         <tr class="border-b border-[#e4e7ec] hover:bg-[#f9fafb]">
                             <td class="px-6 py-4 font-mono text-xs text-[#6941c6]">#{{ $deficiency->display_id }}</td>
                             <td class="px-6 py-4">
@@ -142,14 +140,21 @@
                                 </a>
                             </td>
                         </tr>
-
                     @endforeach
-
-                    @else
-                        <div class="text-sm text-[#475466]">
-                            No deficiencies have been logged yet.
-                        </div>
-                    @endif
+                @else
+                    {{-- ###No Deficiencies Message --}}
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <div class="flex flex-col items-center justify-center text-[#667084]">
+                                <div class="w-16 h-16 bg-[#f8f9fb] rounded-full flex items-center justify-center mb-4">
+                                    <i class="fa-solid fa-clipboard-list text-2xl text-[#c7c9d1]"></i>
+                                </div>
+                                <div class="text-lg font-medium text-[#344053] mb-2">No Deficiencies Found</div>
+                                <div class="text-sm">No deficiencies have been logged yet for this vessel.</div>
+                            </div>
+                        </td>
+                    </tr>
+                @endif
 
             </tbody>
         </table>
