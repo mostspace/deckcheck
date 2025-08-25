@@ -261,7 +261,7 @@
     {{-- User Actions --}}
             <div class="relative rounded-lg border border-[#e4e7ec]">
                 <button id="user-menu-button" class="w-full flex items-center px-3 py-2.5 text-md font-medium rounded-lg text-[#344053] hover:bg-[#f8f9fb] cursor-pointer">
-                    <img src="{{ Storage::url($user->profile_pic) }}" alt="User avatar" class="w-8 h-8 rounded-full mr-3">
+                    <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}">
                     <div class="flex-1 text-left">
                         <p class="text-sm font-medium text-[#0f1728]">{{ $user->first_name }} {{ $user->last_name }}</p>
                         <p class="text-xs text-[#475466]">First Officer</p>

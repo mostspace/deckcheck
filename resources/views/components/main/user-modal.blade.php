@@ -14,7 +14,7 @@
             <!-- Current User Info -->
             <div class="mb-6">
                 <div class="flex items-center p-4 bg-[#f9f5ff] rounded-lg border border-[#e4e7ec]">
-                    <img src="{{ Storage::url($user->profile_pic) }}" alt="User avatar" class="w-12 h-12 rounded-full mr-4">
+                    <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}" alt="User avatar" class="w-12 h-12 rounded-full mr-4">
                     <div>
                         <p class="text-sm font-medium text-[#0f1728]">{{ $user->first_name }} {{ $user->last_name }}</p>
                         <p class="text-xs text-[#475466]">{{ $user->email }}</p>

@@ -67,7 +67,7 @@
                 </button>
 
                 <button id="sidebar-user-btn">
-                    <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/default-avatar.png') }}"
+                    <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
                          alt="User avatar"
                          class="w-8 h-8 rounded-full border-2 border-white hover:ring-2 hover:ring-white object-cover transition" />
                 </button>
