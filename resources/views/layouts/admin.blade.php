@@ -536,7 +536,7 @@
         <div class="p-4 border-t border-subtle">
             <div class="flex items-center space-x-3 user-profile" id="user-profile">
                 <div class="relative user-avatar">
-                    <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
+                    <img src="{{ auth()->user()->profile_pic ? Storage::url(auth()->user()->profile_pic) : asset('images/placeholders/user.png') }}"
                         class="w-8 h-8 rounded-lg border-2 border-accent-primary object-cover" />
                     <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-dark-900"></div>
                 </div>
