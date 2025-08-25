@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'test@example.com'],
             [
-                'name' => 'Cabin Boy',
                 'email' => 'test@example.com',
                 'password' => Hash::make('password'),
                 'first_name' => 'Cabin',
