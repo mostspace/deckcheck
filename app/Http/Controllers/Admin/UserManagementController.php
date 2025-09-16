@@ -79,7 +79,7 @@ class UserManagementController extends Controller
             })->count(),
         ];
 
-        return view('admin.users.index', compact(
+        return view('v1.admin.users.index', compact(
             'users',
             'vessels',
             'statusOptions',
@@ -107,6 +107,6 @@ class UserManagementController extends Controller
             }
         });
 
-        return view('admin.users.show', compact('user'));
+        return view('v1.admin.users.show', compact('user'));
     }
 }

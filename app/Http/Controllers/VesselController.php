@@ -37,7 +37,7 @@ class VesselController extends Controller
             abort(404, 'No vessel assigned.');
         }
 
-        return view('vessel.index', compact('vessel'));
+        return view('v1.vessel.index', compact('vessel'));
     }
 
     // Display users for Vessel.Crew
@@ -52,7 +52,7 @@ class VesselController extends Controller
         // eager‐load if you like: $vessel->load('users');
         $users = $vessel->users;
 
-        return view('vessel.crew', compact('vessel','users'));
+        return view('v1.vessel.crew', compact('vessel','users'));
     }
 
     // Display Deck Plan for Vessel
@@ -70,7 +70,7 @@ class VesselController extends Controller
             ->with('locations')    // eager-load the locations relation
             ->get();
 
-        return view('vessel.deckplan', compact('vessel', 'decks'));
+        return view('v1.vessel.deckplan', compact('vessel', 'decks'));
     }
 
     // Maintenance Index Page
@@ -91,7 +91,7 @@ class VesselController extends Controller
 
             $totalEquipment = $categories->sum('equipment_count');
 
-        return view('maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
+        return view('v1.maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
     }
 
     // Maintenance Category Show
@@ -121,7 +121,7 @@ class VesselController extends Controller
 
         $decks = Deck::where('vessel_id', $category->vessel_id)->orderBy('name')->get();
 
-        return view('maintenance.show', compact('category', 'decks'));
+        return view('v1.maintenance.show', compact('category', 'decks'));
     }
 
     // Create & Store New Category
@@ -144,7 +144,7 @@ class VesselController extends Controller
             abort(404, 'No vessel assigned.');
         }
 
-        return view('maintenance.create', compact('types', 'icons', 'vessel'));
+        return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
     }
 
 
@@ -194,7 +194,7 @@ class VesselController extends Controller
             ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
             : [];
 
-        return view('maintenance.edit', compact('category', 'types', 'icons'));
+        return view('v1.maintenance.edit', compact('category', 'types', 'icons'));
     }
 
     public function updateCategory(Request $request, Category $category)
@@ -233,7 +233,7 @@ class VesselController extends Controller
         // eager-load locations if you need them on the detail page
         $deck->load('locations');
 
-        return view('vessel.decks.show', compact('deck'));
+        return view('v1.vessel.decks.show', compact('deck'));
     }
 
    // Create & Store New Deck
@@ -249,7 +249,7 @@ class VesselController extends Controller
             abort(403, 'Access denied to this vessel');
         }
 
-        return view('vessel.decks.create', compact('vessel'));
+        return view('v1.vessel.decks.create', compact('vessel'));
     }
 
     public function storeDeck(Request $request)

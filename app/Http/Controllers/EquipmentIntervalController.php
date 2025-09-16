@@ -55,7 +55,7 @@ class EquipmentIntervalController extends Controller
                 $query->orderBy('sequence_position'),
         ]);
 
-        return view('inventory.equipment.intervals.show', compact('interval', 'users'));
+        return view('v1.inventory.equipment.intervals.show', compact('interval', 'users'));
     }
 
     /**

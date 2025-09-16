@@ -44,7 +44,7 @@ class WorkOrderFlowController extends Controller
         $dateRangeLabel = $request->input('dateRangeLabel');
         $groupName = $request->input('groupName');
 
-        return view('maintenance.schedule.flow.modal', [
+        return view('v1.maintenance.schedule.flow.modal', [
             'workOrders' => $workOrders,
             'currentWorkOrder' => $currentWorkOrder,
             'currentIndex' => $currentIndex,
@@ -72,7 +72,7 @@ class WorkOrderFlowController extends Controller
             ->orderBy('first_name')
             ->get();
 
-        return view('maintenance.schedule.flow.partials.work-order', compact('workOrder', 'availableUsers'));
+        return view('v1.maintenance.schedule.flow.partials.work-order', compact('workOrder', 'availableUsers'));
     }
 
     /**

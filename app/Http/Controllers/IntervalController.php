@@ -28,7 +28,7 @@ class IntervalController extends Controller
 
         //$interval->load('instructions'); // or whatever relations you want
 
-        return view('maintenance.intervals.tasks.show', compact('task', 'interval'));
+        return view('v1.maintenance.intervals.tasks.show', compact('task', 'interval'));
     }
 
     public function createTask(Interval $interval)
@@ -73,7 +73,7 @@ class IntervalController extends Controller
             return [$key => collect($options)->pluck('label', 'value')];
         });
 
-        return view('maintenance.intervals.tasks.create', compact(
+        return view('v1.maintenance.intervals.tasks.create', compact(
             'interval',
             'staticConditions',
             'dynamicConditions',
@@ -225,7 +225,7 @@ class IntervalController extends Controller
         }
         if (!is_array($conditions)) $conditions = [];
 
-        return view('maintenance.intervals.tasks.edit', compact(
+        return view('v1.maintenance.intervals.tasks.edit', compact(
             'category',
             'interval',
             'task',
@@ -311,7 +311,7 @@ class IntervalController extends Controller
             abort(404);
         }
 
-        return view('maintenance.intervals.tasks.edit', compact('category', 'interval', 'task'));
+        return view('v1.maintenance.intervals.tasks.edit', compact('category', 'interval', 'task'));
     }
 
     public function updateTask(Request $request, Category $category, Interval $interval, Task $task)

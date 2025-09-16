@@ -49,7 +49,7 @@ class DeckController extends Controller
         if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
             abort(403, 'Access denied to this deck');
         }
-        return view('vessel.decks.edit', compact('deck'));
+        return view('v1.vessel.decks.edit', compact('deck'));
     }
 
     /**

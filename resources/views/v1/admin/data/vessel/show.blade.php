@@ -1,0 +1,409 @@
+@extends('layouts.admin')
+
+@section('title', $vessel->name)
+
+@section('content')
+    @if(session('success'))
+        <div class="mb-6 bg-green-600 border border-green-500 text-white px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    @endif
+
+    @if(session('info'))
+        <div class="mb-6 bg-blue-600 border border-blue-500 text-white px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('info') }}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-6 bg-red-600 border border-red-500 text-white px-4 py-3 rounded relative" role="alert">
+            <span class="block sm:inline">{{ session('error') }}</span>
+            <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <i class="fa-solid fa-times"></i>
+            </button>
+        </div>
+    @endif
+
+    <div id="vessel-detail-content" class="p-6">
+        <div id="vessel-hero" class="relative bg-[#243b53] rounded-lg border border-[#334e68] overflow-hidden mb-6">
+            <div class="relative h-64">
+                <img class="w-full h-full object-cover" 
+                     src="{{ $vessel->hero_photo ? Storage::url($vessel->hero_photo) : asset('images/placeholders/placeholder.png') }}"
+                     alt="{{ $vessel->name }}">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+                <div class="absolute bottom-6 left-6 right-6">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <span class="text-4xl mr-4">{{ $vessel->flag_emoji }}</span>
+                            <div>
+                                <div class="flex items-center text-xl">
+                                    @php
+                                        $countryCode = strtolower($vessel->flag);
+                                    @endphp
+
+                                    <img src="https://flagcdn.com/h20/{{ $countryCode }}.png" alt="{{ $vessel->flag }}"
+                                        class="w-5 h-4 object-cover rounded-sm mr-2" onerror="this.style.display='none'">
+
+                                    <span class="font-medium text-white">{{ $vessel->type }} {{ $vessel->name }}</span>
+                                </div>
+                                <p class="text-gray-400 text-sm">
+                                    Created: {{ $vessel->created_at ? $vessel->created_at->format('F j, Y') : 'Unknown' }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="px-3 py-1 backdrop-blur-sm text-sm rounded-full bg-green-600/90">
+                                Active
+                            </span>
+                            @if ($vessel->subscription)
+                                <span class="px-3 py-1 bg-blue-600/90 backdrop-blur-sm text-sm rounded-full">
+                                    {{ $vessel->subscription->plan_name }}
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Action Buttons --}}
+        <div class="mb-6 flex justify-end space-x-3">
+            @if (in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev']))
+                <form action="{{ route('vessel.switch') }}" method="POST" class="inline">
+                    @csrf
+                    <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
+                    <button type="submit" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                        <i class="fa-solid fa-sign-in-alt mr-1"></i> Enter Vessel
+                    </button>
+                </form>
+            @endif
+            
+            <a href="{{ route('admin.vessels.edit', $vessel) }}" 
+               class="bg-blue-600 hover:bg-blue-500 px-6 py-3 rounded-md text-white font-medium transition-colors">
+                <i class="fa-solid fa-edit mr-2"></i>
+                Edit Vessel
+            </a>
+        </div>
+
+        {{-- Stats --}}
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div id="vessel-stats" class="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-[#243b53] rounded-lg border border-[#334e68] p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Users</p>
+                            <p class="text-white text-2xl font-semibold">
+                                {{ $vessel->boardings->count() }}
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-users text-blue-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-[#243b53] rounded-lg border border-[#334e68] p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Active Today</p>
+                            <p class="text-white text-2xl font-semibold">
+                                {{ $vessel->boardings->where('last_active_at', '>=', now()->startOfDay())->count() }}
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-user-check text-green-400 text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-[#243b53] rounded-lg border border-[#334e68] p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">S3 Usage</p>
+                            <p class="text-white text-2xl font-semibold">
+                                {{ number_format($vessel->data_usage_gb, 1) }}GB
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-database text-[#05A0D1] text-xl"></i>
+                    </div>
+                </div>
+                <div class="bg-[#243b53] rounded-lg border border-[#334e68] p-4">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">DB Usage</p>
+                            <p class="text-white text-2xl font-semibold">
+                                {{ number_format($vessel->data_usage_gb, 1) }}GB
+                            </p>
+                        </div>
+                        <i class="fa-solid fa-database text-[#E39211] text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 space-y-6">
+                {{-- Vessel Information --}}
+                <div id="vessel-info-section" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-ship mr-2 text-blue-400"></i>
+                        Vessel Information
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Port of Registry</label>
+                            <p class="text-white">{{ $vessel->registry_port }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Build Year</label>
+                            <p class="text-white">{{ $vessel->build_year }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Vessel Make</label>
+                            <p class="text-white">{{ $vessel->vessel_make }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Official Number</label>
+                            <p class="text-white">{{ $vessel->official_number }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">IMO Number</label>
+                            <p class="text-white">{{ $vessel->imo_number }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">MMSI Number</label>
+                            <p class="text-white">{{ $vessel->mmsi_number }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Callsign</label>
+                            <p class="text-white">{{ $vessel->callsign }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Technical Specs --}}
+                <div id="technical-specs-display" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-cog mr-2 text-yellow-400"></i>
+                        Technical Specifications
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Length</label>
+                            <p class="text-white">{{ $vessel->vessel_size }}m</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">LWL</label>
+                            <p class="text-white">{{ number_format($vessel->vessel_lwl) }}</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Width</label>
+                            <p class="text-white">{{ $vessel->vessel_beam }}m</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Draft</label>
+                            <p class="text-white">{{ $vessel->vessel_draft }}m</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Gross Tonnage</label>
+                            <p class="text-white">{{ number_format($vessel->vessel_gt) }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Active Users Table --}}
+                <div id="users-table-section" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold flex items-center text-white">
+                            <i class="fa-solid fa-users mr-2 text-green-400"></i>
+                            Active Users ({{ $vessel->boardings->count() }})
+                        </h2>
+                        <a href="{{ route('admin.vessels.add-user', $vessel) }}" 
+                           class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-md text-white text-sm font-medium transition-colors">
+                            <i class="fa-solid fa-user-plus mr-2"></i>
+                            Add User
+                        </a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm">
+                            <thead>
+                                <tr class="border-b border-[#334e68]">
+                                    <th class="text-left py-2 text-gray-400">Name</th>
+                                    <th class="text-left py-2 text-gray-400">Department</th>
+                                    <th class="text-left py-2 text-gray-400">Role</th>
+                                    <th class="text-left py-2 text-gray-400">Permissions</th>
+                                    <th class="text-left py-2 text-gray-400">Last Active</th>
+                                    <th class="text-left py-2 text-gray-400">Status</th>
+                                    <th class="text-left py-2 text-gray-400">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#334e68]">
+                                @foreach ($vessel->boardings as $boarding)
+                                    <tr>
+                                        <td class="py-3 flex items-center">
+                                            <img src="{{ $boarding->user->profile_pic ? Storage::url($boarding->user->profile_pic) : asset('images/placeholders/user.png') }}"
+                                                class="w-8 h-8 rounded-full mr-3" alt="{{ $boarding->user->full_name }}">
+                                            {{ $boarding->user->full_name }}
+                                        </td>
+                                        <td class="py-3">{{ $boarding->department ?? '—' }}</td>
+                                        <td class="py-3">{{ $boarding->role ?? '—' }}</td>
+                                        <td class="py-3">{{ $boarding->access_level ?? '—' }}</td>
+                                        <td class="py-3">Placeholder</td>
+                                        <td class="py-3">
+                                            <span
+                                                class="px-2 py-1 text-xs rounded-full capitalize {{ $boarding->status === 'active' ? 'bg-green-600' : 'bg-yellow-600' }}">
+                                                {{ $boarding->status ?? '—' }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3">
+                                            <a href="{{ route('admin.users.show', $boarding->user) }}" 
+                                               class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs transition-colors text-white">
+                                                <i class="fa-solid fa-eye mr-1"></i>
+                                                View User
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Owner Information --}}
+            <div class="space-y-6">
+                <div id="owner-info-display" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-user mr-2 text-green-400"></i>
+                        Owner Information
+                    </h2>
+                    @if($vessel->owner)
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <img src="{{ $vessel->owner->profile_pic ? Storage::url($vessel->owner->profile_pic) : asset('images/placeholders/user.png') }}" class="w-12 h-12 rounded-full mr-3"
+                                    alt="{{ $vessel->owner->full_name }}">
+                                <div>
+                                    <p class="font-medium text-white">{{ $vessel->owner->full_name }}</p>
+                                    <p class="text-sm text-gray-400">{{ $ownerBoarding->role ?? 'Owner' }}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-sm font-medium mb-1">Email</label>
+                                <p class="text-white text-sm">{{ $vessel->owner->email }}</p>
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-sm font-medium mb-1">Phone</label>
+                                <p class="text-white text-sm">{{ $vessel->owner->phone ?? '—' }}</p>
+                            </div>
+                            <button class="w-full bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm text-white transition-colors mt-4">
+                                <i class="fa-solid fa-envelope mr-2"></i>
+                                Contact Owner
+                            </button>
+                            
+                            <div class="border-t border-[#334e68] pt-4 mt-4">
+                                <a href="{{ route('admin.vessels.transfer-ownership', $vessel) }}" 
+                                   class="w-full bg-yellow-600 hover:bg-yellow-500 px-4 py-2 rounded text-sm text-white transition-colors block text-center">
+                                    <i class="fa-solid fa-exchange-alt mr-2"></i>
+                                    Transfer Ownership
+                                </a>
+                            </div>
+                        </div>
+                    @else
+                        <div class="text-center py-4">
+                            <p class="text-gray-400 mb-3">No owner assigned to this vessel</p>
+                            <button class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm text-white transition-colors">
+                                <i class="fa-solid fa-user-plus mr-2"></i>
+                                Assign Owner
+                            </button>
+                        </div>
+                    @endif
+                </div>
+
+
+                {{-- Subscription Details --}}
+                <div id="subscription-display" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-credit-card mr-2 text-purple-400"></i>
+                        Subscription Details
+                    </h2>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Plan</label>
+                            <p class="text-white">BETA</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Status</label>
+                            <span class="px-2 py-1 bg-green-600 text-xs rounded-full">Active</span>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Next Billing</label>
+                            <p class="text-white">N/A</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Max Users</label>
+                            <p class="text-white">N/A</p>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 text-sm font-medium mb-1">Monthly Cost</label>
+                            <p class="text-white font-semibold">N/A</p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- System Health --}}
+                <div id="system-health" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-heart-pulse mr-2 text-red-400"></i>
+                        System Health
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Connection Status</span>
+                            <span class="px-2 py-1 bg-green-600 text-xs rounded-full">Connected</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Data Sync</span>
+                            <span class="px-2 py-1 bg-green-600 text-xs rounded-full">Synced</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Last Backup</span>
+                            <span class="text-sm text-gray-400">
+                                ##
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-400">Storage Used</span>
+                            <span class="text-sm text-gray-400">
+                                ##GB
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Quick Actions --}}
+                <div id="quick-actions" class="bg-[#243b53] rounded-lg border border-[#334e68] p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fa-solid fa-bolt mr-2 text-orange-400"></i>
+                        Quick Actions
+                    </h2>
+                    <div class="space-y-2">
+                        <button class="w-full bg-[#334e68] hover:bg-[#3f5b7b] px-4 py-2 rounded text-sm text-white transition-colors text-left">
+                            <i class="fa-solid fa-download mr-2"></i> Export Data
+                        </button>
+                        <button class="w-full bg-[#334e68] hover:bg-[#3f5b7b] px-4 py-2 rounded text-sm text-white transition-colors text-left">
+                            <i class="fa-solid fa-sync mr-2"></i> Force Sync
+                        </button>
+                        <button class="w-full bg-[#334e68] hover:bg-[#3f5b7b] px-4 py-2 rounded text-sm text-white transition-colors text-left">
+                            <i class="fa-solid fa-bell mr-2"></i> Send Alert
+                        </button>
+                        <button class="w-full bg-[#334e68] hover:bg-[#3f5b7b] px-4 py-2 rounded text-sm text-white transition-colors text-left">
+                            <i class="fa-solid fa-ban mr-2"></i> Suspend Access
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@endsection

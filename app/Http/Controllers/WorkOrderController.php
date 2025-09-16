@@ -56,7 +56,7 @@ class WorkOrderController extends Controller
             ->orderBy('first_name')
             ->get();
 
-        return view('inventory.equipment.intervals.work-orders.show', compact('workOrder', 'availableUsers'));
+        return view('v1.inventory.equipment.intervals.work-orders.show', compact('workOrder', 'availableUsers'));
     }
 
     /**
