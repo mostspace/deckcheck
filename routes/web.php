@@ -313,6 +313,14 @@ Route::middleware('auth')->group(function () {
 // ------------------------------------  Inventory ----------------------------------------
 Route::get('/inventory', [\App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index')->middleware('auth');
 
+// ------------------------------------  Reports ----------------------------------------
+Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index')->middleware('auth');
+Route::get('/reports/analytics', [\App\Http\Controllers\ReportController::class, 'analytics'])->name('reports.analytics')->middleware('auth');
+Route::get('/reports/exports', [\App\Http\Controllers\ReportController::class, 'exports'])->name('reports.exports')->middleware('auth');
+Route::get('/reports/my-reports', [\App\Http\Controllers\ReportController::class, 'myReports'])->name('reports.my-reports')->middleware('auth');
+Route::get('/reports/all-reports', [\App\Http\Controllers\ReportController::class, 'allReports'])->name('reports.all-reports')->middleware('auth');
+Route::post('/reports/generate/{reportType}', [\App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate')->middleware('auth');
+
 // Equipment
 Route::middleware('auth')->group(function () {
 

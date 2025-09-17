@@ -147,7 +147,11 @@
                 'deck_plan': 'Deck Plan',
                 'index': 'Index',
                 'schedule': 'Schedule', 
-                'deficiencies': 'Deficiencies'
+                'deficiencies': 'Deficiencies',
+                'equipment': 'Equipment',
+                'consumables': 'Consumables',
+                'all_reports': 'All Reports',
+                'my_reports': 'My Reports'
             };
             
             const label = tabLabels[tabId] || tabId.charAt(0).toUpperCase() + tabId.slice(1);

@@ -6,29 +6,28 @@
 
     @include('v2.components.navigation.page-header', [
         'tabs' => [
-            ['id' => 'analytics', 'label' => 'Analytics', 'icon' => 'tab-analytics.svg', 'active' => true],
-            ['id' => 'exports', 'label' => 'Exports', 'icon' => 'tab-exports.svg', 'active' => false]
+            ['id' => 'all_reports', 'label' => 'All Reports', 'icon' => 'tab-index.svg', 'active' => true],
+            ['id' => 'my_reports', 'label' => 'My Reports', 'icon' => 'tab-crew.svg', 'active' => false]
         ]
     ])
     
     @include('v2.components.navigation.sub-header', [
-        'breadcrumbs' => [
-            ['label' => 'Reports', 'short' => 'Rep', 'icon' => 'sidebar-solid-folders.svg'],
-            ['label' => 'Analytics']
-        ]
+        'pageName' => 'Reports',
+        'pageIcon' => asset('assets/media/icons/sidebar-solid-folder.svg'),
+        'activeTab' => 'All Reports'
     ])
 
-    <div class="p-6">
-        <h2 class="text-2xl font-bold">Reports Page</h2>
-        <p>This is the reports page with dynamic tabs for Analytics and Exports.</p>
+    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         
-        <div id="panel-analytics" class="mt-4 block">
-            <h3>Analytics Content</h3>
-            <p>Details about analytics and reporting.</p>
+        {{-- All Reports Tab Panel --}}
+        <div id="panel-all_reports" class="tab-panel" role="tabpanel" aria-labelledby="tab-all_reports">
+            @include('v2.crew.reports.all-reports.index')
         </div>
-        <div id="panel-exports" class="mt-4 hidden">
-            <h3>Exports Content</h3>
-            <p>Details about data exports.</p>
+
+        {{-- My Reports Tab Panel --}}
+        <div id="panel-my_reports" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-my_reports">
+            @include('v2.crew.reports.my-reports.index')
         </div>
+        
     </div>
 @endsection
