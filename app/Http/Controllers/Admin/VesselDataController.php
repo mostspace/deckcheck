@@ -69,7 +69,7 @@ class VesselDataController extends Controller
             ? round($totalUsers / $totalVessels, 1)
             : null;
 
-        return view('admin.data.vessel.index', [
+        return view('v1.admin.data.vessel.index', [
             'vessels' => $vessels,
             'overallAvgUsers' => $overallAvg,
             'avgUsersPerRange' => $avgUsersPerRange,
@@ -79,7 +79,7 @@ class VesselDataController extends Controller
     public function create()
     {
         $users = User::where('system_role', '!=', 'user')->get();
-        return view('admin.data.vessel.create', compact('users'));
+        return view('v1.admin.data.vessel.create', compact('users'));
     }
 
     public function store(Request $request)
@@ -130,7 +130,7 @@ class VesselDataController extends Controller
     public function edit(Vessel $vessel)
     {
         $users = User::where('system_role', '!=', 'user')->get();
-        return view('admin.data.vessel.edit', compact('vessel', 'users'));
+        return view('v1.admin.data.vessel.edit', compact('vessel', 'users'));
     }
 
     public function update(Request $request, Vessel $vessel)
@@ -196,7 +196,7 @@ class VesselDataController extends Controller
                 ->firstWhere('user_id', $vessel->owner->id);
         }
 
-        return view('admin.data.vessel.show', compact('vessel','ownerBoarding'));
+        return view('v1.admin.data.vessel.show', compact('vessel','ownerBoarding'));
     }
 
     public function addUser(Vessel $vessel)
@@ -211,7 +211,7 @@ class VesselDataController extends Controller
             ->orderBy('last_name')
             ->get();
 
-        return view('admin.data.vessel.add-user', compact('vessel', 'availableUsers'));
+        return view('v1.admin.data.vessel.add-user', compact('vessel', 'availableUsers'));
     }
 
     public function storeUser(Request $request, Vessel $vessel)
@@ -263,7 +263,7 @@ class VesselDataController extends Controller
             ->with('user:id,first_name,last_name,email,profile_pic')
             ->get();
 
-        return view('admin.data.vessel.transfer-ownership', compact('vessel', 'eligibleUsers'));
+        return view('v1.admin.data.vessel.transfer-ownership', compact('vessel', 'eligibleUsers'));
     }
 
     public function processOwnershipTransfer(Request $request, Vessel $vessel)

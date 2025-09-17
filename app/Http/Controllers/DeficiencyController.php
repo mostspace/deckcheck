@@ -55,7 +55,7 @@ class DeficiencyController extends Controller
             'colors' => ['#12b76a', '#f79009', '#f04438']
         ];
 
-        return view('maintenance.deficiencies.index', compact('deficiencies', 'ageDistribution', 'chartData'));
+        return view('v1.maintenance.deficiencies.index', compact('deficiencies', 'ageDistribution', 'chartData'));
     }
 
 
@@ -67,7 +67,7 @@ class DeficiencyController extends Controller
         {
             $vessel = currentVessel();
 
-            return view('deficiencies.create', [
+            return view('v1.deficiencies.create', [
                 'equipmentList' => $vessel->equipment,
                 'workOrders' => $vessel->workOrders ?? collect(),
             ]);
@@ -120,7 +120,7 @@ class DeficiencyController extends Controller
             'workOrder.tasks.completedBy',
         ]);
 
-        return view('maintenance.deficiencies.show', compact('deficiency', 'users'));
+        return view('v1.maintenance.deficiencies.show', compact('deficiency', 'users'));
     }
 
     /**

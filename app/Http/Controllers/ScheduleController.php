@@ -212,7 +212,7 @@ class ScheduleController extends Controller
         // Pass Vessel Crew into View for Assignee Drop-Down
         $availableUsers = $vessel->users()->orderBy('first_name')->get();
 
-        return view('maintenance.schedule.index', compact(
+        return view('v1.maintenance.schedule.index', compact(
             'frequency',
             'date',
             'visibleFrequencies',

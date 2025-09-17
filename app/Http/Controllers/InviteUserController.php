@@ -131,7 +131,7 @@ class InviteUserController extends Controller
             return redirect()->route('login')->with('info', 'You already have an account. Please log in to access your new vessel.');
         }
 
-        return view('auth.invite.accept-password', [
+        return view('v1.auth.invite.accept-password', [
             'invitation' => $invitation,
             'token' => $token,
         ]);
@@ -175,7 +175,7 @@ class InviteUserController extends Controller
             return redirect()->route('login');
         }
 
-        return view('auth.invite.accept-avatar', compact('invitation', 'token'));
+        return view('v1.auth.invite.accept-avatar', compact('invitation', 'token'));
     }
 
 
@@ -212,7 +212,7 @@ class InviteUserController extends Controller
             return redirect()->route('login');
         }
 
-        return view('auth.invite.accept-terms', compact('invitation', 'token'));
+        return view('v1.auth.invite.accept-terms', compact('invitation', 'token'));
     }
 
     public function storeTerms(Request $request)
