@@ -6,9 +6,9 @@
 
     @include('v2.components.navigation.page-header', [
         'tabs' => [
-            ['id' => 'information', 'label' => 'Information', 'icon' => 'tab-index.svg', 'active' => true],
-            ['id' => 'crew', 'label' => 'Crew', 'icon' => 'tab-crew.svg', 'active' => false],
-            ['id' => 'deck_plan', 'label' => 'Deck Plan', 'icon' => 'tab-specifications.svg', 'active' => false]
+            ['id' => 'information', 'label' => 'Information', 'active' => true],
+            ['id' => 'crew', 'label' => 'Crew', 'active' => false],
+            ['id' => 'deck_plan', 'label' => 'Deck Plan', 'active' => false]
         ]
     ])    
     

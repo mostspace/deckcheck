@@ -6,8 +6,8 @@
 
     @include('v2.components.navigation.page-header', [
         'tabs' => [
-            ['id' => 'all_reports', 'label' => 'All Reports', 'icon' => 'tab-index.svg', 'active' => true],
-            ['id' => 'my_reports', 'label' => 'My Reports', 'icon' => 'tab-crew.svg', 'active' => false]
+            ['id' => 'all_reports', 'label' => 'All Reports', 'active' => true],
+            ['id' => 'my_reports', 'label' => 'My Reports', 'active' => false]
         ]
     ])
     

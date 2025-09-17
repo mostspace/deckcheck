@@ -5,7 +5,7 @@
 @section('content')
     @include('v2.components.navigation.page-header', [
         'tabs' => [
-            ['id' => 'overview', 'label' => 'Overview', 'icon' => 'tab-overview.svg', 'active' => true]
+            ['id' => 'overview', 'label' => 'Overview', 'active' => true]
         ]
     ])
 

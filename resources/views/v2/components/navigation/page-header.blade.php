@@ -44,11 +44,13 @@
                     class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0"
                 @endif
             >
-                <img 
-                    src="{{ asset('assets/media/icons/' . $tab['icon']) }}" 
-                    class="h-4 w-4 {{ $tab['active'] ? 'text-slate-900' : 'text-slate-500' }}" 
-                    alt="{{ $tab['label'] }}" 
-                />
+                @if(isset($tab['icon']) && !empty($tab['icon']))
+                    <img 
+                        src="{{ asset('assets/media/icons/' . $tab['icon']) }}" 
+                        class="h-4 w-4 {{ $tab['active'] ? 'text-slate-900' : 'text-slate-500' }}" 
+                        alt="{{ $tab['label'] }}" 
+                    />
+                @endif
                 <span>{{ $tab['label'] }}</span>
             </button>
         @endforeach
