@@ -4,6 +4,19 @@
 
 @section('content')
     @include('components.dash.announcement')
+    
+    <!-- V2 Preview Link -->
+    <div class="mb-6 bg-gradient-to-r from-blue-500 to-purple-600 border border-blue-500 text-white px-4 py-3 rounded relative" role="alert">
+        <div class="flex items-center justify-between">
+            <div>
+                <h3 class="font-semibold">🚀 New v2 Interface Available!</h3>
+                <p class="text-sm opacity-90">Experience the modern sidebar and improved design</p>
+            </div>
+            <a href="{{ route('v2.dashboard') }}" class="bg-white text-blue-600 px-4 py-2 rounded font-medium hover:bg-gray-100 transition-colors">
+                Try v2 Dashboard
+            </a>
+        </div>
+    </div>
 
     <!-- Flash Messages -->
     @if(session('success'))

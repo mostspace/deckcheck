@@ -91,7 +91,8 @@ class VesselController extends Controller
 
             $totalEquipment = $categories->sum('equipment_count');
 
-        return view('v1.maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
+        // return view('v1.maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
+        return view('v2.crew.maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
     }
 
     // Maintenance Category Show

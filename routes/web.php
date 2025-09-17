@@ -30,6 +30,10 @@ Route::get('/dashboard', function () {
     return view('v1.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/v2/dashboard', function () {
+    return view('v2.dashboard');
+})->middleware(['auth', 'verified'])->name('v2.dashboard');
+
 Route::middleware('auth')->group(function () {
     // Switch Between Vessels
     Route::post('/switch-vessel', [VesselSwitchController::class, 'switch'])
@@ -238,8 +242,9 @@ Route::middleware('auth')->group(function () {
         ->middleware('vessel.access');
 
     // Category Index Page 
-    Route::get('/maintenance', [VesselController::class, 'categories'])
-        ->name('maintenance.index');
+    Route::get('/maintenance', [VesselController::class, 'categories'])->name('maintenance.index');
+
+    Route::get('/v2/maintenance', [VesselController::class, 'categories'])->name('v2.maintenance.index');
 
     // Category Detail Page
     Route::get('/maintenance/{category}', [VesselController::class, 'showCategory'])
