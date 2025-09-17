@@ -54,9 +54,9 @@
   background-color: #16151E;
   /* width: 5rem; */
   min-height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
+  /* position: fixed; */
+  /* top: 0;
+  left: 0; */
   z-index: 20;
 }
 

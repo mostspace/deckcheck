@@ -36,7 +36,7 @@
         <div class="w-full h-px bg-gray-700 my-2"></div>
         <div class="flex items-center justify-center">
             <button id="btnOpenProfile" class="rounded-md border-2 border-accent-300 h-10 w-10 overflow-hidden">
-                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}" alt="Profile" class="w-full h-full object-cover" />
+                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('assets/media/avatars/avatar1.png') }}" alt="Profile" class="w-full h-full object-cover" />
             </button>
         </div>
     </div>
