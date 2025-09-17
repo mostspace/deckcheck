@@ -10,7 +10,7 @@
         @if(count($breadcrumbs) > 0)
             @foreach($breadcrumbs as $index => $crumb)
                 @if($index === 0)
-                    <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary bg-accent-200/40 text-slate-900 z-10 shadow-soft">
+                    <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
                         @if(isset($crumb['icon']))
                             <img src="{{ $crumb['icon'] }}" alt="{{ $crumb['label'] }}" class="w-3 h-3" />
                         @endif
@@ -24,7 +24,7 @@
             @endforeach
         @else
             <!-- Default breadcrumb for maintenance -->
-            <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary bg-accent-200/40 text-slate-900 z-10 shadow-soft">
+            <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
                 <img src="{{ asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg') }}" alt="wrench-scredriver" class="w-3 h-3" />
                 <span>Maintenance</span>
             </span>
