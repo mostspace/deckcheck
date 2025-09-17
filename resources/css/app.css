@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global Theme Variables */
+:root {
+    /* Primary Color Theme */
+    --color-primary: #B8EC27;
+    --color-primary-light: #c5f096;
+    --color-primary-lighter: #ddf7c1;
+    --color-primary-dark: #8bb018;
+    --color-primary-darker: #6f8a1a;
+    
+    /* Accent colors (same as primary for consistency) */
+    --color-accent: var(--color-primary);
+    --color-accent-light: var(--color-primary-light);
+    --color-accent-lighter: var(--color-primary-lighter);
+    --color-accent-dark: var(--color-primary-dark);
+    --color-accent-darker: var(--color-primary-darker);
+    
+    /* Background variations */
+    --color-accent-50: #f7fdf0;
+    --color-accent-100: #eefbe0;
+    --color-accent-200: #ddf7c1;
+    --color-accent-300: #c5f096;
+    --color-accent-400: #a8e465;
+    --color-accent-500: #B8EC27;
+    --color-accent-600: #a6d41e;
+    --color-accent-700: #8bb018;
+    --color-accent-800: #6f8a1a;
+    --color-accent-900: #5a6f1a;
+    --color-accent-950: #2f3a0a;
+    
+    /* Legacy variables for backward compatibility */
+    --primary: #B8EC27;
+    --accent-300: #B8EC27;
+    --accent-200: #ddf7c1;
+    
+    /* Brand colors for sidebar */
+    --brand-900: #1e1b4b;
+    --brand-800: #312e81;
+    --brand-700: #4338ca;
+    --brand-600: #4f46e5;
+    --brand-500: #6366f1;
+    --brand-400: #818cf8;
+    --brand-300: #a5b4fc;
+    --brand-200: #c7d2fe;
+    --brand-100: #e0e7ff;
+    --brand-50: #f0f4ff;
+}

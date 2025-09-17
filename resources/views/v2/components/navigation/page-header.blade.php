@@ -17,8 +17,8 @@
 
     <!-- Announcement -->
     <div class="absolute top-2 left-4 sm:left-6 right-4 sm:right-auto">
-        <div id="announcement" class="relative flex items-center gap-1.5 sm:gap-2 rounded-md border-accent-300 bg-accent-200/40 px-2 sm:px-2.5 py-1 text-xs sm:text-sm text-slate-900 shrink min-w-0 overflow-hidden transition-all max-w-[calc(100vw-8rem)] sm:max-w-md">
-            <span class="absolute left-0 top-0 bottom-0 w-1 rounded-l bg-accent-500"></span>
+        <div id="announcement" class="relative flex items-center gap-1.5 sm:gap-2 rounded-md border-primary-300 bg-primary-200/40 px-2 sm:px-2.5 py-1 text-xs sm:text-sm text-slate-900 shrink min-w-0 overflow-hidden transition-all max-w-[calc(100vw-8rem)] sm:max-w-md">
+            <span class="absolute left-0 top-0 bottom-0 w-1 rounded-l bg-primary-500"></span>
             <img src="{{ asset('assets/media/icons/pin-list.svg') }}" alt="pin list" class="h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
             <span class="truncate text-xs">Some announcement or message</span>
             <button id="btnDismissAnnouncement" class="ml-1 text-slate-500 hover:text-slate-700 flex-shrink-0" aria-label="Dismiss">
@@ -39,7 +39,7 @@
                 onclick="switchTab('{{ $tab['id'] }}')"
                 @if($tab['active'])
                     data-accent="true" 
-                    class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-accent-200 text-slate-900 border border-accent-300 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
+                    class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-200 text-slate-900 border border-primary-300 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
                 @else
                     class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0"
                 @endif
@@ -64,13 +64,13 @@
         <div class="w-px h-4 sm:h-5 bg-[#E4E4E4] mx-1 sm:mx-2 md:mx-6"></div>
         
         <!-- Mobile: Just avatar button -->
-            <button id="btnOpenProfileMobile" class="sm:hidden rounded-md border-2 border-accent-300 h-7 w-7 sm:h-8 sm:w-8 overflow-hidden flex-shrink-0">
+            <button id="btnOpenProfileMobile" class="sm:hidden rounded-md border-2 border-primary-300 h-7 w-7 sm:h-8 sm:w-8 overflow-hidden flex-shrink-0">
                 <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('assets/media/avatars/avatar2.png') }}" alt="avatar" class="w-full h-full object-cover" />
             </button>
             
             <!-- Desktop: Full profile section -->
             <div class="hidden sm:flex items-center gap-2 lg:gap-3">
-                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('assets/media/avatars/avatar2.png') }}" alt="avatar" class="w-8 h-8 lg:w-10 lg:h-10 rounded-lg border-2 border-accent-300 flex-shrink-0" />
+                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('assets/media/avatars/avatar2.png') }}" alt="avatar" class="w-8 h-8 lg:w-10 lg:h-10 rounded-lg border-2 border-primary-300 flex-shrink-0" />
             <button class="leading-tight text-left hover:bg-slate-100 rounded-md px-2 py-1 -mx-2 -my-1 transition-colors min-w-0">
                 <div class="font-medium text-xs lg:text-sm flex items-center gap-1 lg:gap-2">
                     <span class="hidden lg:inline">Vessel Name</span>
@@ -95,7 +95,7 @@
         tabButtons.forEach(tab => {
             tab.setAttribute('aria-selected', 'false');
             tab.setAttribute('tabindex', '-1');
-            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-accent-200', 'text-slate-900', 'border', 'border-accent-300', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-200', 'text-slate-900', 'border', 'border-primary-300', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
             tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
             
             // Update icon color
@@ -119,7 +119,7 @@
             activeTab.setAttribute('aria-selected', 'true');
             activeTab.setAttribute('tabindex', '0');
             activeTab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
-            activeTab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-accent-200', 'text-slate-900', 'border', 'border-accent-300', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            activeTab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-200', 'text-slate-900', 'border', 'border-primary-300', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
             
             // Update icon color for active tab
             const activeIcon = activeTab.querySelector('img');
