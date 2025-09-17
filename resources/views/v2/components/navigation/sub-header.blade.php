@@ -4,7 +4,7 @@
 ])
 
 <!-- Sub header -->
-<section class="px-3 sm:px-5 lg:px-8 py-3 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 flex-shrink-0">
+<section class="sticky top-16 z-40 px-3 sm:px-5 lg:px-8 py-3 border-b bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 flex-shrink-0">
     <!-- Breadcrumbs -->
     <div class="flex items-center rounded-md bg-white">
         @if(count($breadcrumbs) > 0)

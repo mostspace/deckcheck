@@ -7,7 +7,7 @@
 <!-- Sidebar (desktop) -->
 <aside id="sidebar" aria-label="Main navigation" class="hidden md:flex bg-brand-900 text-slate-200 flex-col relative z-20 h-full gap-4 sm:gap-6 py-6">
     <div class="flex items-center justify-center">
-        <button onclick="window.location.href='{{ route('v2.dashboard') }}'" class="h-10 w-10 rounded-full bg-slate-700/70 flex items-center justify-center text-lg font-bold hover:bg-slate-600/70 transition-colors cursor-pointer hover:text-primary">D</button>
+        <button onclick="window.location.href='{{ route('dashboard') }}'" class="h-10 w-10 rounded-full bg-slate-700/70 flex items-center justify-center text-lg font-bold hover:bg-slate-600/70 transition-colors cursor-pointer hover:text-primary">D</button>
     </div>
 
     <div class="w-full h-px bg-gray-700"></div>
@@ -36,7 +36,7 @@
         <div class="w-full h-px bg-gray-700 my-2"></div>
         <div class="flex items-center justify-center">
             <button id="btnOpenProfile" class="rounded-md border-2 border-accent-300 h-10 w-10 overflow-hidden">
-                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('assets/media/avatars/avatar1.png') }}" alt="Profile" class="w-full h-full object-cover" />
+                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}" alt="Profile" class="w-full h-full object-cover" />
             </button>
         </div>
     </div>

@@ -1,9 +1,15 @@
+@props([
+    'tabs' => [
+        ['id' => 'overview', 'label' => 'Overview', 'icon' => 'tab-overview.svg', 'active' => true],
+    ]
+])
+
 @php
     $user = auth()->user();
 @endphp
 
 <!-- Top bar -->
-<header class="flex items-end justify-between gap-1 sm:gap-2 px-2 sm:px-3 md:px-6 pt-4 sm:pt-4 border-b bg-[#F8F8F6] flex-shrink-0 min-h-[4rem]">
+<header class="sticky top-0 z-50 flex items-end justify-between gap-1 sm:gap-2 px-2 sm:px-3 md:px-6 pt-4 sm:pt-4 border-b bg-[#F8F8F6] flex-shrink-0 min-h-[4rem]">
     <!-- Mobile hamburger -->
     <button id="btnOpenSidebar" class="md:hidden p-1.5 sm:p-2 rounded-md hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 flex-shrink-0" aria-label="Open menu">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -23,31 +29,28 @@
 
     <!-- Main Tab -->
     <div class="flex items-center overflow-x-auto no-scrollbar max-w-full -mb-px gap-0.5 sm:gap-1" role="tablist" aria-label="Primary tabs">
-        <button id="tab-summary" role="tab" aria-selected="false" aria-controls="panel-summary" tabindex="0" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0">
-            <img src="{{ asset('assets/media/icons/tab-summary.svg') }}" class="h-3 w-3 sm:h-4 sm:w-4 text-slate-500" alt="Summary" />
-            <span class="hidden xs:inline">Summary</span>
-            <span class="xs:hidden">Sum</span>
-        </button>
-        <button id="tab-index" role="tab" aria-selected="true" aria-controls="panel-index" tabindex="1" data-accent="true" class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-accent-200 text-slate-900 border border-accent-300 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            <img src="{{ asset('assets/media/icons/tab-index.svg') }}" class="h-3 w-3 sm:h-4 sm:w-4 text-slate-900" alt="Index" />
-            <span class="hidden xs:inline">Index</span>
-            <span class="xs:hidden">Idx</span>
-        </button>
-        <button id="tab-manifest" role="tab" aria-selected="false" aria-controls="panel-manifest" tabindex="2" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0">
-            <img src="{{ asset('assets/media/icons/tab-manifest.svg') }}" class="h-3 w-3 sm:h-4 sm:w-4 text-slate-500" alt="Manifest" />
-            <span class="hidden xs:inline">Manifest</span>
-            <span class="xs:hidden">Man</span>
-        </button>
-        <button id="tab-deficiencies" role="tab" aria-selected="false" aria-controls="panel-deficiencies" tabindex="3" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm flex items-center gap-1 sm:gap-2 whitespace-nowrap border hover:bg-white rounded-t-md flex-shrink-0">
-            <img src="{{ asset('assets/media/icons/tab-deficiencies.svg') }}" class="h-3 w-3 sm:h-4 sm:w-4 text-slate-500" alt="Deficiencies" />
-            <span class="hidden xs:inline">Deficiencies</span>
-            <span class="xs:hidden">Def</span>
-        </button>
-        <button id="tab-workflow" role="tab" aria-selected="false" aria-controls="panel-workflow" tabindex="4" class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0">
-            <img src="{{ asset('assets/media/icons/tab-workflow.svg') }}" class="h-3 w-3 sm:h-4 sm:w-4 text-slate-500" alt="Workflow" />
-            <span class="hidden xs:inline">Workflow</span>
-            <span class="xs:hidden">Work</span>
-        </button>
+        @foreach($tabs as $index => $tab)
+            <button 
+                id="tab-{{ $tab['id'] }}" 
+                role="tab" 
+                aria-selected="{{ $tab['active'] ? 'true' : 'false' }}" 
+                aria-controls="panel-{{ $tab['id'] }}" 
+                tabindex="{{ $tab['active'] ? '0' : '-1' }}"
+                @if($tab['active'])
+                    data-accent="true" 
+                    class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-accent-200 text-slate-900 border border-accent-300 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
+                @else
+                    class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0"
+                @endif
+            >
+                <img 
+                    src="{{ asset('assets/media/icons/' . $tab['icon']) }}" 
+                    class="h-3 w-3 sm:h-4 sm:w-4 {{ $tab['active'] ? 'text-slate-900' : 'text-slate-500' }}" 
+                    alt="{{ $tab['label'] }}" 
+                />
+                <span>{{ $tab['label'] }}</span>
+            </button>
+        @endforeach
     </div>
 
     <!-- Right Toolbar -->

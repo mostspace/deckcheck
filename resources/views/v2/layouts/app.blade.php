@@ -54,13 +54,10 @@
         @include('v2.components.navigation.sidebar')
 
         <main class="relative flex flex-col h-full overflow-hidden">
-            @include('v2.components.navigation.page-header')
-            @include('v2.components.navigation.sub-header')
-
             <!-- <section class="flex-1 flex flex-col min-h-screen"> -->
             <section class="relative flex-1 min-h-0">
                 <!-- <div id="main-content" class="flex-1 md:ml-20 p-8 transition-margin duration-300 ease-in-out"> -->
-                <div id="main-content" class="h-full rounded-md px-3 sm:px-6 lg:px-8 py-4 sm:py-6 bg-white overflow-y-auto">
+                <div id="main-content" class="h-full rounded-md bg-white overflow-y-auto">
                     <!-- @include('components.main.notification-button') -->
                     @include('components.main.user-modal')
                     @yield('content')

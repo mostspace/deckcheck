@@ -3,7 +3,7 @@ const Sidebar_Items = [
   {
     name: '',
     label: 'Dashboard',
-    route: 'v2.dashboard',
+    route: 'dashboard',
     svg: `
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
         <path d="M1.875 5.9375C1.875 5.41973 2.29473 5 2.8125 5H7.8125C8.33027 5 8.75 5.41973 8.75 5.9375V9.0625C8.75 9.58027 8.33027 10 7.8125 10H2.8125C2.29473 10 1.875 9.58027 1.875 9.0625V5.9375Z" stroke="#D3D6EC" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -90,8 +90,8 @@ function initializeSidebar() {
     let isActive = false;
     
     // Check for active state using server-side route information
-    if (item.route === 'v2.dashboard') {
-      isActive = currentRoute === 'v2.dashboard' || currentPath === 'v2/dashboard';
+    if (item.route === 'dashboard') {
+      isActive = currentRoute === 'dashboard' || currentPath === 'dashboard';
     } else if (item.route === 'v2.maintenance.index') {
       // Special handling for v2 maintenance
       isActive = currentRoute === 'v2.maintenance.index' || currentPath === 'v2/maintenance' || currentPath.startsWith('v2/maintenance/');
@@ -182,11 +182,11 @@ function initializeSidebar() {
 // Get route URL helper
 function getRouteUrl(route) {
   const routes = {
-    'v2.dashboard': '/v2/dashboard',
+    'dashboard': '/dashboard',
     'vessel.index': '/vessel',
     'v2.maintenance.index': '/v2/maintenance',
-    'inventory.index': '/inventory',
-    'reports.index': '/reports'
+    'inventory.index': '/v2/inventory',
+    'reports.index': '/v2/reports'
   };
   return routes[route] || '#';
 }
