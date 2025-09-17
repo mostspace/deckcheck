@@ -46,7 +46,7 @@
             >
                 <img 
                     src="{{ asset('assets/media/icons/' . $tab['icon']) }}" 
-                    class="h-3 w-3 sm:h-4 sm:w-4 {{ $tab['active'] ? 'text-slate-900' : 'text-slate-500' }}" 
+                    class="h-4 w-4 {{ $tab['active'] ? 'text-slate-900' : 'text-slate-500' }}" 
                     alt="{{ $tab['label'] }}" 
                 />
                 <span>{{ $tab['label'] }}</span>
