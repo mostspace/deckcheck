@@ -37,7 +37,8 @@ class VesselController extends Controller
             abort(404, 'No vessel assigned.');
         }
 
-        return view('v1.vessel.index', compact('vessel'));
+        // return view('v1.vessel.index', compact('vessel'));
+        return view('v2.crew.vessel.index', compact('vessel'));
     }
 
     // Display users for Vessel.Crew

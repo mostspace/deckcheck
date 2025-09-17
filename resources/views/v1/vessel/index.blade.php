@@ -33,126 +33,126 @@
             </div>
     </div>        
 
-                <!-- Vessel Information Display -->
-                <div class="mb-8">
-                    <div class="flex items-center justify-between mb-6">
-                        <div></div>
-                        <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium flex items-center gap-2">
-                            <i class="fa-solid fa-flag text-xs"></i>
-                            Report Inaccurate Information
-                        </button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">Make</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_make }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">Year</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->build_year }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">LOA</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_loa }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">LWL</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_lwl }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">Beam</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_beam }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">Gross Tonnage</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_gt }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">Official Number</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->official_number }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">IMO Number</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->imo_number }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">MMSI Number</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->mmsi_number }}</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-[#667084] mb-1">Call Sign</label>
-                            <p class="text-[#0f1728] font-medium">{{ $vessel->callsign }}</p>
-                        </div>
-                    </div>
-                </div>              
-
-                <!-- Vessel Home Port Section -->
-                <div class="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#e4e7ec] p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-[#0f1728]">Vessel Home Port</h2>
-                        <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium">Edit</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-[#344053] mb-2">Port</label>
-                            <input type="text" value="{{ $vessel->registry_port }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-[#344053] mb-2">Country</label>
-                            <input type="text" value="{{ $vessel->flag }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vessel Contact Section -->
-                <div class="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#e4e7ec] p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-[#0f1728]">Vessel Contact</h2>
-                        <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium">Edit</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-[#344053] mb-2">Satellite Phone</label>
-                            <input type="text" value="{{ $vessel->vessel_phone }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-[#344053] mb-2">Email</label>
-                            <input type="email" value="{{ $vessel->vessel_email }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Designated Person Ashore Section -->
-                <div class="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#e4e7ec] p-6 mb-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-lg font-semibold text-[#0f1728]">Designated Person Ashore</h2>
-                        <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium">Edit</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-[#344053] mb-2">Name</label>
-                            <input type="text" value="{{ $vessel->dpa_name }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-[#344053] mb-2">Phone</label>
-                            <input type="text" value="{{ $vessel->dpa_phone }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
-                        </div>
-                    </div>
-                </div>
+    <!-- Vessel Information Display -->
+    <div class="mb-8">
+        <div class="flex items-center justify-between mb-6">
+            <div></div>
+            <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium flex items-center gap-2">
+                <i class="fa-solid fa-flag text-xs"></i>
+                Report Inaccurate Information
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">Make</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_make }}</p>
+            </div>
             
-   @endsection
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">Year</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->build_year }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">LOA</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_loa }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">LWL</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_lwl }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">Beam</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_beam }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">Gross Tonnage</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->vessel_gt }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">Official Number</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->official_number }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">IMO Number</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->imo_number }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">MMSI Number</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->mmsi_number }}</p>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-[#667084] mb-1">Call Sign</label>
+                <p class="text-[#0f1728] font-medium">{{ $vessel->callsign }}</p>
+            </div>
+        </div>
+    </div>              
+
+    <!-- Vessel Home Port Section -->
+    <div class="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#e4e7ec] p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-[#0f1728]">Vessel Home Port</h2>
+            <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium">Edit</button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#344053] mb-2">Port</label>
+                <input type="text" value="{{ $vessel->registry_port }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#344053] mb-2">Country</label>
+                <input type="text" value="{{ $vessel->flag }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
+            </div>
+        </div>
+    </div>
+
+    <!-- Vessel Contact Section -->
+    <div class="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#e4e7ec] p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-[#0f1728]">Vessel Contact</h2>
+            <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium">Edit</button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#344053] mb-2">Satellite Phone</label>
+                <input type="text" value="{{ $vessel->vessel_phone }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#344053] mb-2">Email</label>
+                <input type="email" value="{{ $vessel->vessel_email }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
+            </div>
+        </div>
+    </div>
+
+    <!-- Designated Person Ashore Section -->
+    <div class="bg-white rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#e4e7ec] p-6 mb-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-[#0f1728]">Designated Person Ashore</h2>
+            <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium">Edit</button>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-[#344053] mb-2">Name</label>
+                <input type="text" value="{{ $vessel->dpa_name }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-[#344053] mb-2">Phone</label>
+                <input type="text" value="{{ $vessel->dpa_phone }}" class="w-full px-3 py-2 border border-[#cfd4dc] rounded-lg text-[#0f1728] bg-[#f8f9fb]" readonly="">
+            </div>
+        </div>
+    </div>
+            
+@endsection
 
 

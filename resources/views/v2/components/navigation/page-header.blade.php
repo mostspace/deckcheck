@@ -39,7 +39,7 @@
                 onclick="switchTab('{{ $tab['id'] }}')"
                 @if($tab['active'])
                     data-accent="true" 
-                    class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-200 text-slate-900 border border-primary-500 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
+                    class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 text-slate-900 border border-primary-500 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
                 @else
                     class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0"
                 @endif
@@ -95,7 +95,7 @@
         tabButtons.forEach(tab => {
             tab.setAttribute('aria-selected', 'false');
             tab.setAttribute('tabindex', '-1');
-            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-200', 'text-slate-900', 'border', 'border-primary-500', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-500', 'text-slate-900', 'border', 'border-primary-500', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
             tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
             
             // Update icon color
@@ -119,7 +119,7 @@
             activeTab.setAttribute('aria-selected', 'true');
             activeTab.setAttribute('tabindex', '0');
             activeTab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
-            activeTab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-200', 'text-slate-900', 'border', 'border-primary-500', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            activeTab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-500', 'text-slate-900', 'border', 'border-primary-500', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
             
             // Update icon color for active tab
             const activeIcon = activeTab.querySelector('img');

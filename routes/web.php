@@ -73,6 +73,9 @@ Route::middleware('auth')->group(function () {
 Route::get('/vessel', [\App\Http\Controllers\VesselController::class, 'index'])
     ->name('vessel.index')->middleware('auth');
 
+Route::get('/v2/vessel', [\App\Http\Controllers\VesselController::class, 'index'])
+    ->name('vessel.index')->middleware('auth');
+
 // V2 Pages
 Route::get('/v2/inventory', function () {
     return view('v2.crew.inventory.index');
