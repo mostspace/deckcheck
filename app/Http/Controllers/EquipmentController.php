@@ -73,7 +73,16 @@ class EquipmentController extends Controller
             ->unique()
             ->values();
 
-        return view('v1.inventory.equipment.index', compact(
+        // return view('v1.inventory.equipment.index', compact(
+        //     'equipment',
+        //     'operationalCount',
+        //     'inoperableCount',
+        //     'staticFields',
+        //     'attributeKeys',
+        //     'defaultColumns'
+        // ));
+
+        return view('v2.crew.inventory.equipment.index', compact(
             'equipment',
             'operationalCount',
             'inoperableCount',

@@ -185,7 +185,7 @@ function getRouteUrl(route) {
     'dashboard': '/dashboard',
     'vessel.index': '/vessel',
     'v2.maintenance.index': '/v2/maintenance',
-    'inventory.index': '/v2/inventory',
+    'inventory.index': '/inventory',
     'reports.index': '/v2/reports'
   };
   return routes[route] || '#';

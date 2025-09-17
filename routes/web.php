@@ -70,25 +70,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-Route::get('/vessel', [\App\Http\Controllers\VesselController::class, 'index'])
-    ->name('vessel.index')->middleware('auth');
+Route::get('/vessel', [\App\Http\Controllers\VesselController::class, 'index'])->name('vessel.index')->middleware('auth');
 
-Route::get('/v2/vessel', [\App\Http\Controllers\VesselController::class, 'index'])
-    ->name('vessel.index')->middleware('auth');
-
-// V2 Pages
-Route::get('/v2/inventory', function () {
-    return view('v2.crew.inventory.index');
-})->middleware(['auth', 'verified'])->name('inventory.index');
-
-Route::get('/v2/vessel', function () {
-    return view('v2.crew.vessel.index');
-})->middleware(['auth', 'verified'])->name('vessel.v2.index');
-
-Route::get('/v2/reports', function () {
-    return view('v2.crew.reports.index');
-})->middleware(['auth', 'verified'])->name('reports.index');
-
+Route::get('/v2/vessel', [\App\Http\Controllers\VesselController::class, 'index'])->name('vessel.v2.index')->middleware('auth');
 
 // Crew Pages
     Route::middleware('auth')->group(function(){
@@ -324,6 +308,10 @@ Route::middleware('auth')->group(function () {
         ->name('maintenance.intervals.tasks.update')
         ->middleware('vessel.access');
 });
+
+
+// ------------------------------------  Inventory ----------------------------------------
+Route::get('/inventory', [\App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index')->middleware('auth');
 
 // Equipment
 Route::middleware('auth')->group(function () {
