@@ -33,10 +33,15 @@
     @include('v2.components.navigation.sub-header')
 
     <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-        @include ('components.maintenance.stat-cards')
-    
-        {{-- Maintenance Index --}}
-        <div id="maintenance-table" class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-hidden">
+        
+        {{-- Tab Panels --}}
+        {{-- Index Tab Panel --}}
+        <div id="panel-index" class="tab-panel" role="tabpanel" aria-labelledby="tab-index">
+
+            @include ('components.maintenance.stat-cards')
+            
+            {{-- Maintenance Index --}}
+            <div id="maintenance-table" class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-hidden">
     
             {{-- Header & Controls --}}
             <div class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
@@ -150,6 +155,31 @@
                 </table>
             </div>
     
+            </div>
+        </div>
+
+        {{-- Schedule Tab Panel --}}
+        <div id="panel-schedule" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-schedule">
+            <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-hidden">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+                    <h2 class="text-lg font-semibold text-[#0f1728]">Maintenance Schedule</h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-[#667084]">Schedule content will be implemented here.</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- Deficiencies Tab Panel --}}
+        <div id="panel-deficiencies" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-deficiencies">
+            <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-hidden">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+                    <h2 class="text-lg font-semibold text-[#0f1728]">Deficiencies</h2>
+                </div>
+                <div class="p-6">
+                    <p class="text-[#667084]">Deficiencies content will be implemented here.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -229,5 +259,6 @@
             });
         });
     </script>
+
 
 @endsection

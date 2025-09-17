@@ -36,6 +36,7 @@
                 aria-selected="{{ $tab['active'] ? 'true' : 'false' }}" 
                 aria-controls="panel-{{ $tab['id'] }}" 
                 tabindex="{{ $tab['active'] ? '0' : '-1' }}"
+                onclick="switchTab('{{ $tab['id'] }}')"
                 @if($tab['active'])
                     data-accent="true" 
                     class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-accent-200 text-slate-900 border border-accent-300 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
@@ -83,3 +84,71 @@
         </div>
     </div>
 </header>
+
+<script>
+    function switchTab(tabId) {
+        // Get all tab buttons and panels
+        const tabButtons = document.querySelectorAll('[role="tab"]');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        // Remove active state from all tabs
+        tabButtons.forEach(tab => {
+            tab.setAttribute('aria-selected', 'false');
+            tab.setAttribute('tabindex', '-1');
+            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-accent-200', 'text-slate-900', 'border', 'border-accent-300', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
+            
+            // Update icon color
+            const icon = tab.querySelector('img');
+            if (icon) {
+                icon.classList.remove('text-slate-900');
+                icon.classList.add('text-slate-500');
+            }
+        });
+
+        // Hide all panels
+        tabPanels.forEach(panel => {
+            panel.classList.add('hidden');
+        });
+
+        // Find and activate the clicked tab
+        const activeTab = document.getElementById(`tab-${tabId}`);
+        const targetPanel = document.getElementById(`panel-${tabId}`);
+
+        if (activeTab) {
+            activeTab.setAttribute('aria-selected', 'true');
+            activeTab.setAttribute('tabindex', '0');
+            activeTab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
+            activeTab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-accent-200', 'text-slate-900', 'border', 'border-accent-300', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            
+            // Update icon color for active tab
+            const activeIcon = activeTab.querySelector('img');
+            if (activeIcon) {
+                activeIcon.classList.remove('text-slate-500');
+                activeIcon.classList.add('text-slate-900');
+            }
+        }
+
+        // Show target panel
+        if (targetPanel) {
+            targetPanel.classList.remove('hidden');
+        }
+
+        // Update breadcrumb
+        updateBreadcrumb(tabId);
+    }
+
+    function updateBreadcrumb(tabId) {
+        const breadcrumbElement = document.getElementById('current-tab-breadcrumb');
+        if (breadcrumbElement) {
+            const tabLabels = {
+                'index': 'Index',
+                'schedule': 'Schedule', 
+                'deficiencies': 'Deficiencies'
+            };
+            
+            const label = tabLabels[tabId] || tabId.charAt(0).toUpperCase() + tabId.slice(1);
+            breadcrumbElement.textContent = label;
+        }
+    }
+</script>
