@@ -70,15 +70,14 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// ------------------------------------  Maintenance ----------------------------------------
 Route::get('/vessel', [\App\Http\Controllers\VesselController::class, 'index'])->name('vessel.index')->middleware('auth');
-
-Route::get('/v2/vessel', [\App\Http\Controllers\VesselController::class, 'index'])->name('vessel.v2.index')->middleware('auth');
 
 // Crew Pages
     Route::middleware('auth')->group(function(){
     // existing…
     Route::get('/vessel/crew', [VesselController::class, 'users'])
-         ->name('vessel.crew');
+        ->name('vessel.crew');
 });
 
 Route::get('vessel/crew/{user}', [UserController::class, 'show'])
@@ -88,20 +87,15 @@ Route::get('vessel/crew/{user}', [UserController::class, 'show'])
 Route::middleware('auth')->group(function(){
     // existing…
     Route::get('/vessel/deckplan', [VesselController::class, 'decks'])
-         ->name('vessel.deckplan');
+        ->name('vessel.deckplan');
 });
 
 // Invitation & User Management
 Route::middleware('auth')->group(function () { 
-
     // Invite User to Vessel
     Route::post('/vessel/invitations', [InviteUserController::class, 'store'])
     ->name('vessel.invitations.store');
-
-    
-
 });
-   
     // Invitation Accept Flow
     Route::get('/invitations/accept', [InviteUserController::class, 'showAcceptForm'])
         ->name('invitations.accept');
@@ -122,12 +116,8 @@ Route::middleware('auth')->group(function () {
         ->name('invitations.accept.terms.store');
 
 
-
-
-
 // Deck & Locations
 Route::middleware('auth')->group(function () {
-
 
     // Deck Create & Store
     Route::get('/vessel/decks/create', [VesselController::class, 'createDeck'])
@@ -199,26 +189,17 @@ Route::middleware('auth')->group(function () {
 
 // Schedule
 Route::middleware('auth')->group(function () { 
-
     // Schedule Index Page 
-    Route::get('/maintenance/schedule', [ScheduleController::class, 'index'])
-        ->name('schedule.index');
-
+    Route::get('/maintenance/schedule', [ScheduleController::class, 'index'])->name('schedule.index');
 });
 
 // Schedule Flow
 Route::middleware('auth')->prefix('maintenance/schedule/flow')->group(function () {
-
-    Route::get('/', [WorkOrderFlowController::class, 'start'])
-        ->name('flow.start');
-
-    Route::get('/load/{workOrder}', [WorkOrderFlowController::class, 'load'])
-        ->name('flow.load');
-
+    Route::get('/', [WorkOrderFlowController::class, 'start'])->name('flow.start');
+    Route::get('/load/{workOrder}', [WorkOrderFlowController::class, 'load'])->name('flow.load');
 });
 
-
-// Maintenance
+// ------------------------------------  Maintenance ----------------------------------------
 Route::middleware('auth')->group(function () {
 
     // Category Create & Store
@@ -309,17 +290,8 @@ Route::middleware('auth')->group(function () {
         ->middleware('vessel.access');
 });
 
-
 // ------------------------------------  Inventory ----------------------------------------
 Route::get('/inventory', [\App\Http\Controllers\InventoryController::class, 'index'])->name('inventory.index')->middleware('auth');
-
-// ------------------------------------  Reports ----------------------------------------
-Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index')->middleware('auth');
-Route::get('/reports/analytics', [\App\Http\Controllers\ReportController::class, 'analytics'])->name('reports.analytics')->middleware('auth');
-Route::get('/reports/exports', [\App\Http\Controllers\ReportController::class, 'exports'])->name('reports.exports')->middleware('auth');
-Route::get('/reports/my-reports', [\App\Http\Controllers\ReportController::class, 'myReports'])->name('reports.my-reports')->middleware('auth');
-Route::get('/reports/all-reports', [\App\Http\Controllers\ReportController::class, 'allReports'])->name('reports.all-reports')->middleware('auth');
-Route::post('/reports/generate/{reportType}', [\App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate')->middleware('auth');
 
 // Equipment
 Route::middleware('auth')->group(function () {
@@ -385,9 +357,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/equipment/bulk-row', [EquipmentController::class, 'getBulkRow'])
         ->name('equipment.bulk-row.partial')
         ->middleware('vessel.access');
-
-
 });
+
+// ------------------------------------  Reports ----------------------------------------
+Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index')->middleware('auth');
+Route::get('/reports/analytics', [\App\Http\Controllers\ReportController::class, 'analytics'])->name('reports.analytics')->middleware('auth');
+Route::get('/reports/exports', [\App\Http\Controllers\ReportController::class, 'exports'])->name('reports.exports')->middleware('auth');
+Route::get('/reports/my-reports', [\App\Http\Controllers\ReportController::class, 'myReports'])->name('reports.my-reports')->middleware('auth');
+Route::get('/reports/all-reports', [\App\Http\Controllers\ReportController::class, 'allReports'])->name('reports.all-reports')->middleware('auth');
+Route::post('/reports/generate/{reportType}', [\App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate')->middleware('auth');
 
 
 // Work Orders & Work Order Tasks
@@ -433,14 +411,11 @@ Route::middleware('auth')->group(function () {
 
     // Post Deficiency Update
     Route::post('/deficiencies/{deficiency}/updates', [DeficiencyController::class, 'storeUpdate'])
-    ->name('deficiencies.updates.store');
+        ->name('deficiencies.updates.store');
 
-Route::post('/deficiencies/{deficiency}/update-description', [DeficiencyController::class, 'updateDescription'])
-    ->name('deficiencies.update-description');
-
-
+    Route::post('/deficiencies/{deficiency}/update-description', [DeficiencyController::class, 'updateDescription'])
+        ->name('deficiencies.update-description');
 });
-
 
 require __DIR__.'/admin.php';
 require __DIR__.'/auth.php';
