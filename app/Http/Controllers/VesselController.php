@@ -37,8 +37,14 @@ class VesselController extends Controller
             abort(404, 'No vessel assigned.');
         }
 
+        // Get users for the crew tab
+        $users = $vessel->users;
+        
+        // Get decks for the deck plan tab
+        $decks = $vessel->decks()->with('locations')->get();
+
         // return view('v1.vessel.index', compact('vessel'));
-        return view('v2.crew.vessel.index', compact('vessel'));
+        return view('v2.crew.vessel.index', compact('vessel', 'users', 'decks'));
     }
 
     // Display users for Vessel.Crew

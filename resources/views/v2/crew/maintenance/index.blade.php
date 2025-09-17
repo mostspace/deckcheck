@@ -30,7 +30,11 @@
         ]
     ])
     
-    @include('v2.components.navigation.sub-header')
+    @include('v2.components.navigation.sub-header', [
+        'pageName' => 'Maintenance',
+        'pageIcon' => asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg'),
+        'activeTab' => 'Index'
+    ])
 
     <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
 

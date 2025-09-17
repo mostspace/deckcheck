@@ -142,6 +142,9 @@
         const breadcrumbElement = document.getElementById('current-tab-breadcrumb');
         if (breadcrumbElement) {
             const tabLabels = {
+                'information': 'Information',
+                'crew': 'Crew',
+                'deck_plan': 'Deck Plan',
                 'index': 'Index',
                 'schedule': 'Schedule', 
                 'deficiencies': 'Deficiencies'

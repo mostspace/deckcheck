@@ -23,12 +23,12 @@
                 @endif
             @endforeach
         @else
-            <!-- Default breadcrumb for maintenance -->
-            <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
-                <img src="{{ asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg') }}" alt="wrench-scredriver" class="w-3 h-3" />
-                <span>Maintenance</span>
+            <!-- Dynamic breadcrumb based on page and active tab -->
+            <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft" id="page-breadcrumb">
+                <img src="{{ $pageIcon ?? asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg') }}" alt="{{ $pageName ?? 'Page' }}" class="w-3 h-3" />
+                <span>{{ $pageName ?? 'Page' }}</span>
             </span>
-            <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-md border border-slate-200" id="current-tab-breadcrumb">Index</span>
+            <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-md border border-slate-200" id="current-tab-breadcrumb">{{ $activeTab ?? 'Tab' }}</span>
         @endif
     </div>
 
