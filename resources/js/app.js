@@ -123,18 +123,14 @@ const closeDrawer = document.getElementById('btnCloseDrawer');
 const helpButtons = Array.from(document.querySelectorAll('[aria-label="Help"], [title="Help"]'));
 
 function openDrawer() {
-  if (infoDrawer) {
-    infoDrawer.classList.remove('hidden');
-    requestAnimationFrame(() => infoDrawer.classList.remove('translate-x-full'));
-    document.body.classList.add('overflow-hidden');
-  }
+  infoDrawer?.classList.remove('hidden');
+  requestAnimationFrame(() => infoDrawer?.classList.remove('translate-x-full'));
+  document.body.classList.add('overflow-hidden');
 }
 
 function closeDrawerFn() {
-  if (infoDrawer) {
-    infoDrawer.classList.add('translate-x-full');
-    setTimeout(() => infoDrawer.classList.add('hidden'), 200);
-  }
+  infoDrawer?.classList.add('translate-x-full');
+  setTimeout(() => infoDrawer?.classList.add('hidden'), 200);
   document.body.classList.remove('overflow-hidden');
 }
 
