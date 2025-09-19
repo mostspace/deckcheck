@@ -4,14 +4,11 @@
 
 @section('content')
 
-    @include('v2.components.navigation.page-header', [
+    @include('v2.components.navigation.header', [
         'tabs' => [
             ['id' => 'equipment', 'label' => 'Equipment', 'active' => true],
             ['id' => 'consumables', 'label' => 'Consumables', 'active' => false]
-        ]
-    ])    
-    
-    @include('v2.components.navigation.sub-header', [
+        ],
         'pageName' => 'Inventory',
         'pageIcon' => asset('assets/media/icons/sidebar-solid-archive-box.svg'),
         'activeTab' => 'Equipment'

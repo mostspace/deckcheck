@@ -3,13 +3,12 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    @include('v2.components.navigation.page-header', [
-        'tabs' => [
-            ['id' => 'overview', 'label' => 'Overview', 'active' => true]
-        ]
+    @include('v2.components.navigation.header', [
+        'tabs' => [],
+        'showSubHeader' => false
     ])
 
-    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div class="bg-white px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         @include('components.dash.announcement')
         
         <!-- V2 Preview Link -->
