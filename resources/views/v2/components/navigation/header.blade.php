@@ -43,7 +43,9 @@
                     onclick="switchTab('{{ $tab['id'] }}')"
                     @if($tab['active'])
                         data-accent="true" 
-                        class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 text-slate-900 border border-primary-500 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
+                        class="px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-white text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0"
+                    @elseif($tab['id'] === 'workflow')
+                        class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 rounded-t-md flex-shrink-0"
                     @else
                         class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0"
                     @endif
@@ -51,7 +53,7 @@
                     @if(isset($tab['icon']) && !empty($tab['icon']))
                         <img 
                             src="{{ asset('assets/media/icons/' . $tab['icon']) }}" 
-                            class="h-4 w-4 {{ $tab['active'] ? 'text-slate-900' : 'text-slate-500' }}" 
+                            class="h-4 w-4 {{ $tab['active'] || $tab['id'] === 'workflow' ? 'text-slate-900' : 'text-slate-500' }}" 
                             alt="{{ $tab['label'] }}" 
                         />
                     @endif
@@ -161,14 +163,28 @@
         tabButtons.forEach(tab => {
             tab.setAttribute('aria-selected', 'false');
             tab.setAttribute('tabindex', '-1');
-            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-500', 'text-slate-900', 'border', 'border-primary-500', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
-            tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
+            
+            // Remove all possible background and styling classes
+            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-white', 'bg-primary-500', 'bg-opacity-50', 'bg-opacity-100', 'text-slate-900', 'border', 'border-[#E4E4E4]', 'border-primary-500', 'border-b-0', 'border-b-transparent', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0', 'hover:bg-white', 'hover:bg-primary-500', 'hover:bg-opacity-100');
+            
+            // Check if this is the workflow tab
+            const isWorkflowTab = tab.id === 'tab-workflow';
+            if (isWorkflowTab) {
+                tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'bg-primary-500', 'bg-opacity-50', 'hover:bg-primary-500', 'hover:bg-opacity-100', 'text-slate-900', 'rounded-t-md', 'flex-shrink-0');
+            } else {
+                tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
+            }
             
             // Update icon color
             const icon = tab.querySelector('img');
             if (icon) {
-                icon.classList.remove('text-slate-900');
-                icon.classList.add('text-slate-500');
+                if (isWorkflowTab) {
+                    icon.classList.remove('text-slate-500');
+                    icon.classList.add('text-slate-900');
+                } else {
+                    icon.classList.remove('text-slate-900');
+                    icon.classList.add('text-slate-500');
+                }
             }
         });
 
@@ -184,8 +200,20 @@
         if (activeTab) {
             activeTab.setAttribute('aria-selected', 'true');
             activeTab.setAttribute('tabindex', '0');
-            activeTab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
-            activeTab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-primary-500', 'text-slate-900', 'border', 'border-primary-500', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0');
+            
+            // Check if this is the workflow tab
+            const isWorkflowTab = activeTab.id === 'tab-workflow';
+            
+            // Clear all classes first
+            activeTab.className = '';
+            
+            if (isWorkflowTab) {
+                // Workflow tab should always have primary/50 background, even when active
+                activeTab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+            } else {
+                // Regular tab active state - white background
+                activeTab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-white text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+            }
             
             // Update icon color for active tab
             const activeIcon = activeTab.querySelector('img');

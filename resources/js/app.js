@@ -153,7 +153,15 @@ function setActiveTab(nextTab) {
     tab.tabIndex = isActive ? 0 : -1;
     
     if (isActive) {
-      tab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 text-slate-900 border border-primary-500 whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+      // Check if this is the workflow tab
+      const isWorkflowTab = tab.id === 'tab-workflow';
+      if (isWorkflowTab) {
+        // Workflow tab should always have primary/50 background, even when active
+        tab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+      } else {
+        // Regular tab active state - white background
+        tab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-white text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+      }
       const icon = tab.querySelector('img');
       if (icon) {
         icon.classList.remove('text-slate-500');
@@ -162,11 +170,24 @@ function setActiveTab(nextTab) {
       panel?.classList.remove('hidden');
       panel?.classList.add('block');
     } else {
-      tab.className = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0';
+      // Check if this is the workflow tab
+      const isWorkflowTab = tab.id === 'tab-workflow';
+      if (isWorkflowTab) {
+        // Workflow tab always has primary/50 background
+        tab.className = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 rounded-t-md flex-shrink-0';
+      } else {
+        // Regular tabs have default styling
+        tab.className = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0';
+      }
       const icon = tab.querySelector('img');
       if (icon) {
-        icon.classList.remove('text-slate-900');
-        icon.classList.add('text-slate-500');
+        if (isWorkflowTab) {
+          icon.classList.remove('text-slate-500');
+          icon.classList.add('text-slate-900');
+        } else {
+          icon.classList.remove('text-slate-900');
+          icon.classList.add('text-slate-500');
+        }
       }
       panel?.classList.add('hidden');
       panel?.classList.remove('block');
