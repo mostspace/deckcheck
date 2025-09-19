@@ -281,12 +281,75 @@ class VesselController extends Controller
         // Pass Vessel Crew into View for Assignee Drop-Down
         $availableUsers = $vessel->users()->orderBy('first_name')->get();
 
+        // Load equipment data for the manifest tab
+        $equipment = \App\Models\Equipment::with(['category', 'deck', 'location'])
+            ->where('vessel_id', $vessel->id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Count equipment status for status cards
+        $operationalCount = $equipment
+            ->where('status', 'In Service')
+            ->count();
+
+        $inoperableCount = $equipment
+            ->where('status', 'Inoperable')
+            ->count();
+
+        // Count equipment that needs attention (has open deficiencies)
+        $attentionNeededCount = $deficiencies
+            ->where('status', 'open')
+            ->count();
+
+        // Static DB columns (key => label) for equipment manifest
+        $staticFields = [
+            'category'             => 'Category',
+            'deck'                 => 'Deck',
+            'location'             => 'Location',
+            'internal_id'          => 'Internal ID',
+            'name'                 => 'Name',
+            'manufacturer'         => 'Manufacturer',
+            'model'                => 'Model',
+            'serial_number'        => 'Serial Number',
+            'preferred_vendor'     => 'Preferred Vendor',
+            'comments'             => 'Comments',
+            'in_service'           => 'In Service',
+            'manufacturing_date'   => 'Manufacturing Date',
+            'purchase_date'        => 'Purchase Date',
+            'expiry_date'          => 'Expiry Date',
+            'status'               => 'Status',
+            'removed_from_service' => 'Removed From Service',
+        ];
+
+        // Default columns to display for equipment manifest
+        $defaultColumns = ['category', 'name', 'serial_number', 'deck', 'location', 'status'];
+
+        // Extract JSON attribute keys across all equipment
+        $attributeKeys = $equipment->pluck('attributes_json')
+            ->filter()
+            ->flatMap(function ($attr) {
+                // Only decode if it's a string
+                if (is_string($attr)) {
+                    $decoded = json_decode($attr, true);
+                } elseif (is_array($attr)) {
+                    $decoded = $attr;
+                } else {
+                    return [];
+                }
+
+                return is_array($decoded) ? array_keys($decoded) : [];
+            })
+            ->unique()
+            ->values();
+
         // return view('v1.maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
         return view('v2.crew.maintenance.index', compact(
             'vessel', 'categories', 'totalEquipment', 
             'deficiencies', 'ageDistribution', 'chartData',
             'frequency', 'date', 'visibleFrequencies', 'group', 'groups',
-            'activeWorkOrders', 'resolvedWorkOrders', 'availableUsers'
+            'activeWorkOrders', 'resolvedWorkOrders', 'availableUsers',
+            'equipment', 'staticFields', 'defaultColumns', 'attributeKeys',
+            'operationalCount', 'inoperableCount', 'attentionNeededCount'
         ));
     }
 
