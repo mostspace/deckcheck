@@ -221,8 +221,6 @@ Route::middleware('auth')->group(function () {
     // Category Index Page 
     Route::get('/maintenance', [VesselController::class, 'categories'])->name('maintenance.index');
 
-    Route::get('/v2/maintenance', [VesselController::class, 'categories'])->name('v2.maintenance.index');
-
     // Category Detail Page
     Route::get('/maintenance/{category}', [VesselController::class, 'showCategory'])
         ->name('maintenance.show')
@@ -360,12 +358,12 @@ Route::middleware('auth')->group(function () {
 });
 
 // ------------------------------------  Reports ----------------------------------------
-Route::get('/reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index')->middleware('auth');
-Route::get('/reports/analytics', [\App\Http\Controllers\ReportController::class, 'analytics'])->name('reports.analytics')->middleware('auth');
-Route::get('/reports/exports', [\App\Http\Controllers\ReportController::class, 'exports'])->name('reports.exports')->middleware('auth');
-Route::get('/reports/my-reports', [\App\Http\Controllers\ReportController::class, 'myReports'])->name('reports.my-reports')->middleware('auth');
-Route::get('/reports/all-reports', [\App\Http\Controllers\ReportController::class, 'allReports'])->name('reports.all-reports')->middleware('auth');
-Route::post('/reports/generate/{reportType}', [\App\Http\Controllers\ReportController::class, 'generate'])->name('reports.generate')->middleware('auth');
+Route::get('/files', [\App\Http\Controllers\ReportController::class, 'index'])->name('files.index')->middleware('auth');
+Route::get('/files/analytics', [\App\Http\Controllers\ReportController::class, 'analytics'])->name('files.analytics')->middleware('auth');
+Route::get('/files/exports', [\App\Http\Controllers\ReportController::class, 'exports'])->name('files.exports')->middleware('auth');
+Route::get('/files/my-reports', [\App\Http\Controllers\ReportController::class, 'myReports'])->name('files.my-reports')->middleware('auth');
+Route::get('/files/all-reports', [\App\Http\Controllers\ReportController::class, 'allReports'])->name('files.all-reports')->middleware('auth');
+Route::post('/files/generate/{reportType}', [\App\Http\Controllers\ReportController::class, 'generate'])->name('files.generate')->middleware('auth');
 
 
 // Work Orders & Work Order Tasks

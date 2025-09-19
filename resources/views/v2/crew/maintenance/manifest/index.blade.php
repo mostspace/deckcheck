@@ -15,5 +15,4 @@
             <p class="text-[#475466]">Manifest content goes here.</p>
         </div>
     </div>
-
 </div>
