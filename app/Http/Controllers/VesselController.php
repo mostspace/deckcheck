@@ -25,6 +25,7 @@ class VesselController extends Controller
      */
     public function index()
     {
+        dd("Hello");
         $vessel = currentVessel();
         
         // If no vessel is selected and user is a system user, redirect to dashboard
