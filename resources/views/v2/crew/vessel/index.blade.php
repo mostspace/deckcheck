@@ -4,15 +4,12 @@
 
 @section('content')
 
-    @include('v2.components.navigation.page-header', [
+    @include('v2.components.navigation.header', [
         'tabs' => [
             ['id' => 'information', 'label' => 'Information', 'active' => true],
             ['id' => 'crew', 'label' => 'Crew', 'active' => false],
             ['id' => 'deck_plan', 'label' => 'Deck Plan', 'active' => false]
-        ]
-    ])    
-    
-    @include('v2.components.navigation.sub-header', [
+        ],
         'pageName' => 'Vessel',
         'pageIcon' => asset('assets/media/icons/sidebar-solid-boat.svg'),
         'activeTab' => 'Information'

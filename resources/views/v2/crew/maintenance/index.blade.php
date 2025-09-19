@@ -22,17 +22,14 @@
         ];
     @endphp
 
-    @include('v2.components.navigation.page-header', [
+    @include('v2.components.navigation.header', [
         'tabs' => [
             ['id' => 'summary', 'label' => 'Summary', 'icon' => 'tab-summary.svg', 'active' => false],
             ['id' => 'index', 'label' => 'Index', 'icon' => 'tab-index.svg', 'active' => true],
             ['id' => 'manifest', 'label' => 'Manifest', 'icon' => 'tab-manifest.svg', 'active' => false],
             ['id' => 'deficiencies', 'label' => 'Deficiencies', 'icon' => 'tab-deficiencies.svg', 'active' => false],
             ['id' => 'workflow', 'label' => 'Workflow', 'icon' => 'tab-workflow.svg', 'active' => false],
-        ]
-    ])
-    
-    @include('v2.components.navigation.sub-header', [
+        ],
         'pageName' => 'Maintenance',
         'pageIcon' => asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg'),
         'activeTab' => 'Index'

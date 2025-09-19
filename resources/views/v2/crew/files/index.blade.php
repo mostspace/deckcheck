@@ -4,14 +4,11 @@
 
 @section('content')
 
-    @include('v2.components.navigation.page-header', [
+    @include('v2.components.navigation.header', [
         'tabs' => [
             ['id' => 'all_reports', 'label' => 'All Reports', 'active' => true],
             ['id' => 'my_reports', 'label' => 'My Reports', 'active' => false]
-        ]
-    ])
-    
-    @include('v2.components.navigation.sub-header', [
+        ],
         'pageName' => 'Files',
         'pageIcon' => asset('assets/media/icons/sidebar-solid-folder.svg'),
         'activeTab' => 'All Reports'

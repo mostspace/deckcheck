@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    @include('v2.components.navigation.page-header', [
+    @include('v2.components.navigation.header', [
         'tabs' => [
             ['id' => 'overview', 'label' => 'Overview', 'active' => true]
         ]
