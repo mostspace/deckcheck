@@ -25,7 +25,6 @@ class VesselController extends Controller
      */
     public function index()
     {
-        dd("Hello");
         $vessel = currentVessel();
         
         // If no vessel is selected and user is a system user, redirect to dashboard
@@ -44,8 +43,8 @@ class VesselController extends Controller
         // Get decks for the deck plan tab
         $decks = $vessel->decks()->with('locations')->get();
 
-        // return view('v1.vessel.index', compact('vessel'));
-        return view('v2.crew.vessel.index', compact('vessel', 'users', 'decks'));
+        return view('v1.vessel.index', compact('vessel'));
+        // return view('v2.crew.vessel.index', compact('vessel', 'users', 'decks'));
     }
 
     // Display users for Vessel.Crew
