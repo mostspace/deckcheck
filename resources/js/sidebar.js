@@ -102,7 +102,7 @@ function initializeSidebar() {
     
     const svgToUse = isActive ? (item.activeSvg || item.svg) : item.svg;
     
-    li.innerHTML = `${svgToUse}<span>${item.name}</span><span class="tooltip-arrow pointer-events-none absolute left-full px-3 py-1.5 rounded-md bg-primary text-brand-900 text-xs font-normal whitespace-nowrap opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition z-20" style="font-size: 12px;">${item.label}</span>`;
+    li.innerHTML = `${svgToUse}<span>${item.name}</span><span class="tooltip-arrow pointer-events-none absolute left-full px-3 py-1.5 rounded-md bg-primary text-brand-900 text-xs font-normal whitespace-nowrap opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition z-50" style="font-size: 12px;">${item.label}</span>`;
     li.setAttribute('role', 'button');
     li.setAttribute('tabindex', '0');
     li.setAttribute('data-index', index);
