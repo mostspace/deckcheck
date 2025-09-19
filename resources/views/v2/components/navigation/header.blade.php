@@ -93,7 +93,7 @@
 </header>
 
 @if($showSubHeader)
-<div id="sub-header" class="sticky top-0 z-30 px-3 sm:px-5 lg:px-8 py-3 border-b bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 flex-shrink-0">
+<div id="sub-header" class="sticky top-0 z-10 px-3 sm:px-5 lg:px-8 py-3 border-b bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 flex-shrink-0">
     <!-- Breadcrumbs -->
     <div class="flex items-center rounded-md bg-white" id="breadcrumb-container">
         @if(count($breadcrumbs) > 0)
