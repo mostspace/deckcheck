@@ -178,7 +178,15 @@
 
         {{-- Manifest Tab Panel --}}
         <div id="panel-manifest" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-manifest">
-            @include('v2.crew.maintenance.manifest.index')
+            @include('v2.crew.maintenance.manifest.index', [
+                'equipment' => $equipment,
+                'staticFields' => $staticFields,
+                'defaultColumns' => $defaultColumns,
+                'attributeKeys' => $attributeKeys,
+                'operationalCount' => $operationalCount,
+                'inoperableCount' => $inoperableCount,
+                'attentionNeededCount' => $attentionNeededCount
+            ])
         </div>
 
         {{-- Deficiencies Tab Panel --}}
