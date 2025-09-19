@@ -171,8 +171,8 @@
             </ul>
         </li>
 
-    {{-- Reports --}}
-        <li x-data="{ open: {{ request()->routeIs('reports.*') ? 'true' : 'false' }} }" class="space-y-1"> 
+    {{-- Files --}}
+        <li x-data="{ open: {{ request()->routeIs('files.*') ? 'true' : 'false' }} }" class="space-y-1"> 
             <a href="#"
             @click.prevent="open = !open"
             @keydown.escape.window="open = false"
@@ -184,7 +184,7 @@
                     }" >
                 <span class="flex items-center">
                     <i class="fa-solid fa-file-lines mr-3 w-5"></i>
-                    Reports
+                    Files
                 </span>
             </a>
 
@@ -193,8 +193,8 @@
                     <a href="#"
                         @class([
                         'block px-3 py-2 text-sm font-light rounded-lg transition',
-                        'text-[#6840c6]'      => request()->routeIs('reports.index'),
-                        'text-[#475466] hover:bg-[#f8f9fb]' => !request()->routeIs('reports.index'),
+                        'text-[#6840c6]'      => request()->routeIs('files.index'),
+                        'text-[#475466] hover:bg-[#f8f9fb]' => !request()->routeIs('files.index'),
                         ]) >
                         All Reports
                     </a>
@@ -203,8 +203,8 @@
                     <a href="#"
                         @class([
                         'block px-3 py-2 text-sm font-light rounded-lg transition',
-                        'text-[#6840c6]'      => request()->routeIs('reports.saved'),
-                        'text-[#475466] hover:bg-[#f8f9fb]' => !request()->routeIs('reports.saved'), 
+                        'text-[#6840c6]'      => request()->routeIs('files.saved'),
+                        'text-[#475466] hover:bg-[#f8f9fb]' => !request()->routeIs('files.saved'), 
                         ]) >
                         My Reports
                     </a>

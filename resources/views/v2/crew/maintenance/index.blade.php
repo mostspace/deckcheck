@@ -24,9 +24,11 @@
 
     @include('v2.components.navigation.page-header', [
         'tabs' => [
+            ['id' => 'summary', 'label' => 'Summary', 'icon' => 'tab-summary.svg', 'active' => false],
             ['id' => 'index', 'label' => 'Index', 'icon' => 'tab-index.svg', 'active' => true],
-            ['id' => 'schedule', 'label' => 'Schedule', 'icon' => 'tab-schedule.svg', 'active' => false],
-            ['id' => 'deficiencies', 'label' => 'Deficiencies', 'icon' => 'tab-deficiencies.svg', 'active' => false]
+            ['id' => 'manifest', 'label' => 'Manifest', 'icon' => 'tab-manifest.svg', 'active' => false],
+            ['id' => 'deficiencies', 'label' => 'Deficiencies', 'icon' => 'tab-deficiencies.svg', 'active' => false],
+            ['id' => 'workflow', 'label' => 'Workflow', 'icon' => 'tab-workflow.svg', 'active' => false],
         ]
     ])
     
@@ -37,6 +39,11 @@
     ])
 
     <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+
+        {{-- Summary Tab Panel --}}
+        <div id="panel-summary" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-summary">
+            @include('v2.crew.maintenance.summary.index')
+        </div>
 
         {{-- Index Tab Panel --}}
         <div id="panel-index" class="tab-panel" role="tabpanel" aria-labelledby="tab-index">
@@ -169,14 +176,19 @@
             </div>
         </div>
 
-        {{-- Schedule Tab Panel --}}
-        <div id="panel-schedule" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-schedule">
-            @include('v2.crew.maintenance.schedule.index')
+        {{-- Manifest Tab Panel --}}
+        <div id="panel-manifest" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-manifest">
+            @include('v2.crew.maintenance.manifest.index')
         </div>
 
         {{-- Deficiencies Tab Panel --}}
         <div id="panel-deficiencies" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-deficiencies">
             @include('v2.crew.maintenance.deficiencies.index')
+        </div>
+
+        {{-- Workflow Tab Panel --}}
+        <div id="panel-workflow" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-workflow">
+            @include('v2.crew.maintenance.workflow.index')
         </div>
     </div>
 

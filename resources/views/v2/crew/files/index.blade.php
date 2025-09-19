@@ -12,7 +12,7 @@
     ])
     
     @include('v2.components.navigation.sub-header', [
-        'pageName' => 'Reports',
+        'pageName' => 'Files',
         'pageIcon' => asset('assets/media/icons/sidebar-solid-folder.svg'),
         'activeTab' => 'All Reports'
     ])
@@ -21,12 +21,12 @@
         
         {{-- All Reports Tab Panel --}}
         <div id="panel-all_reports" class="tab-panel" role="tabpanel" aria-labelledby="tab-all_reports">
-            @include('v2.crew.reports.all-reports.index')
+            @include('v2.crew.files.all-reports.index')
         </div>
 
         {{-- My Reports Tab Panel --}}
         <div id="panel-my_reports" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-my_reports">
-            @include('v2.crew.reports.my-reports.index')
+            @include('v2.crew.files.my-reports.index')
         </div>
         
     </div>

@@ -31,7 +31,7 @@ const Sidebar_Items = [
   {
     name: '',
     label: 'Maintenance',
-    route: 'v2.maintenance.index',
+    route: 'maintenance.index',
     svg: `
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
         <path d="M8.51613 11.6411L13.375 16.5C14.2379 17.3629 15.6371 17.3629 16.5 16.5C17.3629 15.6371 17.3629 14.2379 16.5 13.375L11.6027 8.47774M8.51613 11.6411L10.5962 9.11529C10.8596 8.79551 11.2118 8.59433 11.6027 8.47774M8.51613 11.6411L4.63693 16.3516C4.23364 16.8413 3.63247 17.125 2.99807 17.125C1.82553 17.125 0.875 16.1745 0.875 15.0019C0.875 14.3675 1.1587 13.7664 1.64842 13.3631L7.34551 8.67134M11.6027 8.47774C12.0606 8.34119 12.5715 8.32067 13.0549 8.36153C13.1604 8.37045 13.2672 8.375 13.375 8.375C15.4461 8.375 17.125 6.69607 17.125 4.625C17.125 4.07478 17.0065 3.55223 16.7936 3.08149L14.0635 5.81164C13.1338 5.59821 12.4019 4.86636 12.1885 3.93664L14.9187 1.20645C14.4479 0.993528 13.9253 0.875 13.375 0.875C11.3039 0.875 9.625 2.55393 9.625 4.625C9.625 4.73282 9.62955 4.83958 9.63847 4.94509C9.71423 5.8413 9.57899 6.83201 8.88471 7.40377L8.79965 7.47382M7.34551 8.67134L3.92417 5.25H2.75L0.875 2.125L2.125 0.875L5.25 2.75V3.92417L8.79965 7.47382M7.34551 8.67134L8.79965 7.47382M14.3125 14.3125L12.125 12.125M3.05603 14.9375H3.06228V14.9438H3.05603V14.9375Z" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -59,8 +59,8 @@ const Sidebar_Items = [
   },
   {
     name: '',
-    label: 'Reports',
-    route: 'reports.index',
+    label: 'Files',
+    route: 'files.index',
     svg: `
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" fill="none">
         <path d="M0.875 8.625V8C0.875 6.96447 1.71447 6.125 2.75 6.125H15.25C16.2855 6.125 17.125 6.96447 17.125 8V8.625M9.88388 3.25888L8.11612 1.49112C7.8817 1.2567 7.56375 1.125 7.23223 1.125H2.75C1.71447 1.125 0.875 1.96447 0.875 3V13C0.875 14.0355 1.71447 14.875 2.75 14.875H15.25C16.2855 14.875 17.125 14.0355 17.125 13V5.5C17.125 4.46447 16.2855 3.625 15.25 3.625H10.7678C10.4362 3.625 10.1183 3.4933 9.88388 3.25888Z" stroke="#D3D6EC" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
@@ -92,9 +92,9 @@ function initializeSidebar() {
     // Check for active state using server-side route information
     if (item.route === 'dashboard') {
       isActive = currentRoute === 'dashboard' || currentPath === 'dashboard';
-    } else if (item.route === 'v2.maintenance.index') {
+    } else if (item.route === 'maintenance.index') {
       // Special handling for v2 maintenance
-      isActive = currentRoute === 'v2.maintenance.index' || currentPath === 'v2/maintenance' || currentPath.startsWith('v2/maintenance/');
+      isActive = currentRoute === 'maintenance.index' || currentPath === 'maintenance' || currentPath.startsWith('/maintenance/');
     } else {
       const routeName = item.route.replace('.index', '');
       isActive = currentRoute === item.route || currentRoute.startsWith(routeName + '.');
@@ -184,9 +184,9 @@ function getRouteUrl(route) {
   const routes = {
     'dashboard': '/dashboard',
     'vessel.index': '/vessel',
-    'v2.maintenance.index': '/v2/maintenance',
+    'maintenance.index': '/maintenance',
     'inventory.index': '/inventory',
-    'reports.index': '/reports'
+    'files.index': '/files'
   };
   return routes[route] || '#';
 }
