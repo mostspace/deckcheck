@@ -9,7 +9,7 @@
 @endphp
 
 <!-- Top bar -->
-<header class="sticky top-0 z-50 flex items-end justify-between gap-1 sm:gap-2 px-2 sm:px-3 md:px-6 pt-4 sm:pt-4 border-b bg-[#F8F8F6] flex-shrink-0 min-h-[4rem]">
+<header class="sticky top-0 z-20 flex items-end justify-between gap-1 sm:gap-2 px-2 sm:px-3 md:px-6 pt-4 sm:pt-4 border-b bg-[#F8F8F6] flex-shrink-0 min-h-[4rem]">
     <!-- Mobile hamburger -->
     <button id="btnOpenSidebar" class="md:hidden p-1.5 sm:p-2 rounded-md hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 flex-shrink-0" aria-label="Open menu">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7h16M4 12h16M4 17h16"/></svg>
