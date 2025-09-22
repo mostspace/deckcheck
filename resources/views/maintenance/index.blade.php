@@ -50,8 +50,10 @@
                     <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#667084]"></i>
                 </div>
 
-                <button onclick="window.location='{{ route('maintenance.create') }}'" class="px-3 py-2 bg-primary text-white rounded-lg text-sm hover:bg-[#5a35a8] flex items-center">
-                    <i class="fa-solid fa-plus mr-2"></i> Add New
+                <button onclick="window.location='{{ route('maintenance.create') }}'"
+                    class="px-3 py-2 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8] flex items-center">
+                    <i class="fa-solid fa-plus mr-2"></i>
+                    Add New
                 </button>
 
             </div>

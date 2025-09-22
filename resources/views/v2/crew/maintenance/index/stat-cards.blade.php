@@ -1,5 +1,5 @@
 {{--Stat Cards--}}
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">     
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">     
     {{--Card 1: Total Equipment--}}
     <div class="bg-white border border-slate-200 rounded-lg relative shadow-sm hover:bg-slate-50 transition">
         <div class="h-full flex flex-col justify-between">
