@@ -51,7 +51,7 @@
 
                 @forelse ($categories as $category)
 
-                    <tr class="hover:bg-[#f9f5ff]" data-name="{{ strtolower($category->name) }}" data-type="{{ strtolower($category->type) }}">
+                    <tr class="hover:bg-accent-50" data-name="{{ strtolower($category->name) }}" data-type="{{ strtolower($category->type) }}">
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex items-center name">
