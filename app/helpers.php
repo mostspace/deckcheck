@@ -76,13 +76,13 @@ if (!function_exists('frequency_label_class')) {
     {
         return match (strtolower($frequency)) {
             // Common intervals — vibrant, varied
-            'daily'         => 'bg-[#e0f2fe] text-[#0369a1]', // blue
-            'bi-weekly'     => 'bg-[#b4faee] text-[#0f766e]', // teal
-            'weekly'        => 'bg-[#beffba] text-[#0f766e]', // green
-            'monthly'       => 'bg-[#f3e8ff] text-[#7e22ce]', // lavender
+            'daily'         => 'bg-[#E67E47] text-[#0369a1]', // blue
+            'bi-weekly'     => 'bg-[#208448] text-[#0f766e]', // teal
+            'weekly'        => 'bg-[#2865D2] text-[#0f766e]', // green
+            'monthly'       => 'bg-[#D22D71] text-[#7e22ce]', // lavender
             'quarterly'     => 'bg-[#fef3c7] text-[#92400e]', // amber
             'bi-annually'   => 'bg-[#ffedd5] text-[#c2410c]', // orange
-            'annual'        => 'bg-[#ffe4e6] text-[#be123c]', // rose
+            'annual'        => 'bg-[#7D48CB] text-[#be123c]', // rose
 
             // Less common — subtle purples/blues
             '2-yearly'      => 'bg-[#ede9fe] text-[#6b21a8]', // violet

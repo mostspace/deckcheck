@@ -23,26 +23,26 @@
     <div class="overflow-x-auto">
         <table class="w-full">
             <thead>
-                <tr class="bg-[#f8f9fb] text-[#475466] text-xs uppercase">
-                    <th class="px-6 py-3 text-left font-medium">
+                <tr class="bg-[#f8f9fb] text-[#475466] text-sm">
+                    <th class="px-6 py-5 text-left">
                         <button data-sort-key="name" type="button"
-                            class="sort-button flex items-center text-xs font-medium text-[#6840c6] hover:text-[#7e56d8] uppercase tracking-wider">
+                            class="sort-button flex items-center text-sm text-black hover:text-slate-700 tracking-wider">
                             Category
-                            <i class="fa-solid fa-sort ml-1 text-xs transition-colors text-[#475466]"></i>
+                            <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-[#475466]"></i>
                         </button>
                     </th>
 
-                    <th class="px-6 py-3 text-left font-medium">
+                    <th class="px-6 py-5 text-left">
                         <button data-sort-key="type" type="button"
-                            class="sort-button flex items-center text-xs font-medium text-[#6840c6] hover:text-[#7e56d8] uppercase tracking-wider">
+                            class="sort-button flex items-center text-sm text-black hover:text-slate-700 tracking-wider">
                             Type
-                            <i class="fa-solid fa-sort ml-1 text-xs transition-colors text-[#475466]"></i>
+                            <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-[#475466]"></i>
                         </button>
                     </th>
 
-                    <th class="px-6 py-3 text-left font-medium">Affected Equipment</th>
-                    <th class="px-6 py-3 text-left font-medium">Intervals</th>
-                    <th class="px-6 py-3 text-left font-medium">Actions</th>
+                    <th class="px-6 py-5 text-left font-medium">Affected Equipment</th>
+                    <th class="px-6 py-5 text-left font-medium">Intervals</th>
+                    <th class="px-6 py-5 text-left font-medium">Actions</th>
                 </tr>
             </thead>
 
@@ -55,16 +55,16 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div class="flex items-center name">
-                                    <div class="w-8 h-8 bg-[#f9f5ff] rounded-md flex items-center justify-center mr-3">
-                                        <i class="text-[#6840c6] fa-solid {{ $category->icon }}"></i>
+                                    <div class="w-8 h-8 flex items-center justify-center mr-3">
+                                        <i class="text-slate-700 fa-solid {{ $category->icon }}"></i>
                                     </div>
                                     <span class="text-sm text-[#344053]">{{ $category->name ?? '—' }}</span>
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm font-bold text-[#344053]">{{ $category->type }}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-[#344053]">{{ $category->type }}</td>
                         <td class="px-6 py-4">
-                            <span class="text-sm text-[#6840c6]">{{ $category->equipment_count }}</span>
+                            <span class="text-sm text-slate-700">{{ $category->equipment_count }}</span>
                         </td>
 
                         {{-- Interval Requirements --}}
@@ -76,10 +76,16 @@
                                 @endphp
 
                                 @if ($count > 0)
-                                    <span
-                                        class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ frequency_label_class($freq) }}">
+                                    <span class="inline-flex items-center border border-[#ECEDEA] px-1 sm:px-2 py-1 text-xs font-medium rounded-md bg-[#FAFAF8] text-slate-700 gap-1 sm:gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full {{ frequency_label_class($freq) }}"></div>
                                         {{ $freq }}: {{ $count }}
                                     </span>
+
+                                    <!-- <span class="border border-slate-200 px-1 sm:px-2 py-1 text-xs rounded-md bg-slate-100 text-slate-700 flex items-center gap-1 sm:gap-2">
+                                        <div class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-${interval.color}"></div>
+                                        <span class="hidden sm:inline">{{ $freq }}: {{ $count }}</span>
+                                        <span class="sm:hidden">{{ $freq }}:{{ $count }}</span>
+                                    </span> -->
                                 @endif
                             @endforeach
                         </td>
