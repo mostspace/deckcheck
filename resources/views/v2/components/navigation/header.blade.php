@@ -47,7 +47,7 @@
                     @elseif($tab['id'] === 'workflow')
                         class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 rounded-t-md flex-shrink-0"
                     @else
-                        class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0"
+                        class="px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white text-slate-700 rounded-t-md flex-shrink-0"
                     @endif
                 >
                     @if(isset($tab['icon']) && !empty($tab['icon']))
@@ -182,14 +182,14 @@
             tab.setAttribute('tabindex', '-1');
             
             // Remove all possible background and styling classes
-            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-white', 'bg-primary-500', 'bg-opacity-50', 'bg-opacity-100', 'text-slate-900', 'border', 'border-[#E4E4E4]', 'border-primary-500', 'border-b-0', 'border-b-transparent', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0', 'hover:bg-white', 'hover:bg-primary-500', 'hover:bg-opacity-100');
+            tab.classList.remove('px-2', 'sm:px-3', 'py-1.5', 'rounded-t-md', 'rounded-b-none', 'text-xs', 'sm:text-sm', 'bg-white', 'bg-primary-500', 'bg-opacity-50', 'bg-opacity-100', 'text-slate-900', 'text-slate-700', 'border', 'border-[#E4E4E4]', 'border-primary-500', 'border-b-0', 'border-b-transparent', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'flex-shrink-0', 'hover:bg-white', 'hover:bg-primary-500', 'hover:bg-opacity-100');
             
             // Check if this is the workflow tab
             const isWorkflowTab = tab.id === 'tab-workflow';
             if (isWorkflowTab) {
                 tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'bg-primary-500', 'bg-opacity-50', 'hover:bg-primary-500', 'hover:bg-opacity-100', 'text-slate-900', 'rounded-t-md', 'flex-shrink-0');
             } else {
-                tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
+                tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'text-slate-700', 'rounded-t-md', 'flex-shrink-0');
             }
             
             // Update icon color and switch to normal icon for inactive tabs
@@ -205,6 +205,18 @@
                 // Switch back to normal icon for inactive tabs
                 if (icon.dataset.solidSrc) {
                     icon.src = icon.src.replace('-solid.svg', '.svg');
+                }
+            }
+            
+            // Update tab text color for inactive tabs
+            const tabText = tab.querySelector('.tab-text');
+            if (tabText) {
+                if (isWorkflowTab) {
+                    tabText.classList.remove('text-slate-700');
+                    tabText.classList.add('text-slate-900');
+                } else {
+                    tabText.classList.remove('text-slate-900');
+                    tabText.classList.add('text-slate-700');
                 }
             }
         });
@@ -245,6 +257,13 @@
                 if (activeIcon.dataset.solidSrc) {
                     activeIcon.src = activeIcon.dataset.solidSrc;
                 }
+            }
+            
+            // Update tab text color for active tab
+            const activeTabText = activeTab.querySelector('.tab-text');
+            if (activeTabText) {
+                activeTabText.classList.remove('text-slate-700');
+                activeTabText.classList.add('text-slate-900');
             }
         }
 
