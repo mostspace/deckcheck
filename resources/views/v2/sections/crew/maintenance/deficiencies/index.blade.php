@@ -16,6 +16,6 @@
     </div>
 </div>
 
-@include ('v2.crew.maintenance.deficiencies.dashboard')
+@include ('v2.sections.crew.maintenance.deficiencies.dashboard')
 
-@include ('v2.crew.maintenance.deficiencies.open-deficiencies')
+@include ('v2.sections.crew.maintenance.deficiencies.open-deficiencies')

@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    @include('v2.components.navigation.header', [
+    @include('v2.components.nav.header', [
         'tabs' => [],
         'showSubHeader' => false
     ])

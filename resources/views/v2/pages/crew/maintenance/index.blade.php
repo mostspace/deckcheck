@@ -22,7 +22,7 @@
         ];
     @endphp
 
-    @include('v2.components.navigation.header', [
+    @include('v2.components.nav.header', [
         'tabs' => [
             ['id' => 'summary', 'label' => 'Summary', 'icon' => 'tab-summary.svg', 'active' => false],
             ['id' => 'index', 'label' => 'Index', 'icon' => 'tab-index.svg', 'active' => true],
@@ -39,17 +39,17 @@
 
         {{-- Summary Tab Panel --}}
         <div id="panel-summary" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-summary">
-            @include('v2.crew.maintenance.summary.index')
+            @include('v2.sections.crew.maintenance.summary.index')
         </div>
 
         {{-- Index Tab Panel --}}
         <div id="panel-index" class="tab-panel" role="tabpanel" aria-labelledby="tab-index">
-            @include('v2.crew.maintenance.index.index')
+            @include('v2.sections.crew.maintenance.index.index')
         </div>
 
         {{-- Manifest Tab Panel --}}
         <div id="panel-manifest" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-manifest">
-            @include('v2.crew.maintenance.manifest.index', [
+            @include('v2.sections.crew.maintenance.manifest.index', [
                 'equipment' => $equipment,
                 'staticFields' => $staticFields,
                 'defaultColumns' => $defaultColumns,
@@ -62,12 +62,12 @@
 
         {{-- Deficiencies Tab Panel --}}
         <div id="panel-deficiencies" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-deficiencies">
-            @include('v2.crew.maintenance.deficiencies.index')
+            @include('v2.sections.crew.maintenance.deficiencies.index')
         </div>
 
         {{-- Workflow Tab Panel --}}
         <div id="panel-workflow" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-workflow">
-            @include('v2.crew.maintenance.workflow.index')
+            @include('v2.sections.crew.maintenance.workflow.index')
         </div>
     </div>
 

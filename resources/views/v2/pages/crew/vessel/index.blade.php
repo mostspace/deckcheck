@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('v2.components.navigation.header', [
+    @include('v2.components.nav.header', [
         'tabs' => [
             ['id' => 'information', 'label' => 'Information', 'active' => true],
             ['id' => 'crew', 'label' => 'Crew', 'active' => false],
@@ -172,12 +172,12 @@
 
         {{-- Crew Tab Panel --}}
         <div id="panel-crew" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-crew">
-            @include('v2.crew.vessel.crew.index')
+            @include('v2.pages.crew.vessel.crew.index')
         </div>
 
         {{-- Deck Plan Tab Panel --}}
         <div id="panel-deck_plan" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-deck_plan">
-            @include('v2.crew.vessel.deck-plan.index')
+            @include('v2.pages.crew.vessel.deck-plan.index')
         </div>
 
     </div>

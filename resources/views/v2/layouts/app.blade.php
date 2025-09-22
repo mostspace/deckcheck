@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&display=swap">
     
     {{-- Vite Assets --}}
-    @vite(['resources/css/app.css', 'resources/css/sidebar.css', 'resources/js/app.js', 'resources/js/sidebar.js'])
+    @vite(['resources/css/app.css', 'resources/css/sidebar.css', 'resources/js/app.js', 'resources/js/layouts/sidebar.js'])
 
     <style>
         * {
@@ -50,7 +50,7 @@
     @endphp
 
     <div id="app-layout" class="w-full h-full grid md:grid-cols-[56px_1fr]">
-        @include('v2.components.navigation.sidebar')
+        @include('v2.components.nav.sidebar')
 
         <main class="relative flex flex-col h-full overflow-hidden">
             <section class="relative flex-1 min-h-0">

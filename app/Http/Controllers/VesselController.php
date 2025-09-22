@@ -44,7 +44,7 @@ class VesselController extends Controller
         $decks = $vessel->decks()->with('locations')->get();
 
         // return view('v1.vessel.index', compact('vessel'));
-        return view('v2.crew.vessel.index', compact('vessel', 'users', 'decks'));
+        return view('v2.pages.crew.vessel.index', compact('vessel', 'users', 'decks'));
     }
 
     // Display users for Vessel.Crew
@@ -343,7 +343,7 @@ class VesselController extends Controller
             ->values();
 
         // return view('v1.maintenance.index', compact('vessel', 'categories', 'totalEquipment'));
-        return view('v2.crew.maintenance.index', compact(
+        return view('v2.pages.crew.maintenance.index', compact(
             'vessel', 'categories', 'totalEquipment', 
             'deficiencies', 'ageDistribution', 'chartData',
             'frequency', 'date', 'visibleFrequencies', 'group', 'groups',
@@ -403,40 +403,41 @@ class VesselController extends Controller
             abort(404, 'No vessel assigned.');
         }
 
-        return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
+        // return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
+        return view('v2.pages.crew.maintenance.create', compact('types', 'icons', 'vessel'));
     }
 
 
     public function storeCategory(Request $request)
-{
-    // Get ENUM values for 'icon' via raw SQL (reliable fallback)
-    $enumRaw = DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'icon'")->Type;
+    {
+        // Get ENUM values for 'icon' via raw SQL (reliable fallback)
+        $enumRaw = DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'icon'")->Type;
 
-    preg_match('/^enum\((.*)\)$/', $enumRaw, $matches);
+        preg_match('/^enum\((.*)\)$/', $enumRaw, $matches);
 
-    $iconOptions = isset($matches[1])
-        ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
-        : [];
+        $iconOptions = isset($matches[1])
+            ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
+            : [];
 
-    // Validate input
-    $data = $request->validate([
-        'name' => 'required|string|max:255',
-        'type' => 'required|in:LSA,FFE,FFS,Radio & Nav,Deck,Other',
-        'icon' => ['required', Rule::in($iconOptions)],
-        'vessel_id' => 'required|exists:vessels,id',
-    ]);
+        // Validate input
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:LSA,FFE,FFS,Radio & Nav,Deck,Other',
+            'icon' => ['required', Rule::in($iconOptions)],
+            'vessel_id' => 'required|exists:vessels,id',
+        ]);
 
-    // Check if user has access to the specified vessel
-    $vessel = Vessel::findOrFail($data['vessel_id']);
-    if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
-        abort(403, 'Access denied to this vessel');
+        // Check if user has access to the specified vessel
+        $vessel = Vessel::findOrFail($data['vessel_id']);
+        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+            abort(403, 'Access denied to this vessel');
+        }
+
+        // Create the new category
+        $category = Category::create($data);
+
+        return redirect()->route('maintenance.show', $category)->with('success', 'Category created.');
     }
-
-    // Create the new category
-    $category = Category::create($data);
-
-    return redirect()->route('maintenance.show', $category)->with('success', 'Category created.');
-}
 
     // Edit & Update Category
     public function editCategory(Category $category)
