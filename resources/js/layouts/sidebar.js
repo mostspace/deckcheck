@@ -94,7 +94,7 @@ function initializeSidebar() {
       isActive = currentRoute === 'dashboard' || currentPath === 'dashboard';
     } else if (item.route === 'maintenance.index') {
       // Special handling for v2 maintenance
-      isActive = currentRoute === 'maintenance.index' || currentRoute === 'maintenance.create' || currentPath === 'maintenance' || currentPath.startsWith('/maintenance/');
+      isActive = currentRoute === 'maintenance.index' || currentRoute === 'maintenance.create' || currentRoute === 'maintenance.show' || currentRoute === 'maintenance.edit' || currentPath === 'maintenance' || currentPath.startsWith('/maintenance/');
     } else {
       const routeName = item.route.replace('.index', '');
       isActive = currentRoute === item.route || currentRoute.startsWith(routeName + '.');

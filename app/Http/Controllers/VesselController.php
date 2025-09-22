@@ -376,11 +376,12 @@ class VesselController extends Controller
                         '6-Yearly','10-Yearly','12-Yearly'
                     )");
             },
-    ]);
+        ]);
 
         $decks = Deck::where('vessel_id', $category->vessel_id)->orderBy('name')->get();
 
-        return view('v1.maintenance.show', compact('category', 'decks'));
+        // return view('v1.maintenance.show', compact('category', 'decks'));
+        return view('v2.pages.crew.maintenance.show', compact('category', 'decks'));
     }
 
     // Create & Store New Category
@@ -454,7 +455,8 @@ class VesselController extends Controller
             ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
             : [];
 
-        return view('v1.maintenance.edit', compact('category', 'types', 'icons'));
+        // return view('v1.maintenance.edit', compact('category', 'types', 'icons'));
+        return view('v2.pages.crew..maintenance.edit', compact('category', 'types', 'icons'));
     }
 
     public function updateCategory(Request $request, Category $category)

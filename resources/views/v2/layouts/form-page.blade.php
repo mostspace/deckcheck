@@ -1,7 +1,23 @@
 @extends('v2.layouts.app')
 
+@section('title', 'Maintenance New Category')
+
 @section('content')
-    <div class="flex flex-col gap-4 sm:gap-8 p-4 sm:p-8">
+
+    @include('v2.components.nav.header', [
+        'tabs' => [],
+        'pageName' => 'Maintenance',
+        'pageIcon' => asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg'),
+        'activeTab' => 'Index',
+        'breadcrumbs' => [
+            ['label' => 'Maintenance', 'url' => route('maintenance.index')],
+            ['label' => 'Index', 'url' => route('maintenance.index')],
+            ['label' => $breadcrumbLabel ?? 'New Category', 'url' => null]
+        ],
+        'showTopHeader' => false
+    ])
+
+    <div class="flex flex-col gap-4 sm:gap-8 px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div class="">
             <h1 class="text-2xl font-semibold text-[#0f1728]">
                 {{ $title ?? 'New Record' }}
