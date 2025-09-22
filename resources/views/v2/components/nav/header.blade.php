@@ -4,7 +4,8 @@
     ],
     'breadcrumbs' => [],
     'actions' => [],
-    'showSubHeader' => true
+    'showSubHeader' => true,
+    'showTopHeader' => true
 ])
 
 @php
@@ -13,6 +14,7 @@
 
 <!-- Top bar -->
 <header class="relative z-20 flex flex-col">
+    @if($showTopHeader)
     <div id="top-header" class="flex items-end justify-between gap-1 sm:gap-2 px-2 sm:px-3 md:px-6 pt-4 sm:pt-4 border-b bg-[#F8F8F6] flex-shrink-0 min-h-[4rem]">
         <!-- Mobile hamburger -->
         <button id="btnOpenSidebar" class="md:hidden p-1.5 sm:p-2 rounded-md hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 flex-shrink-0" aria-label="Open menu">
@@ -97,6 +99,7 @@
             </div>
         </div>
     </div>
+    @endif
 </header>
 
 @if($showSubHeader)
@@ -106,16 +109,31 @@
         @if(count($breadcrumbs) > 0)
             @foreach($breadcrumbs as $index => $crumb)
                 @if($index === 0)
-                    <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-lg border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
-                        @if(isset($crumb['icon']))
-                            <img src="{{ $crumb['icon'] }}" alt="{{ $crumb['label'] }}" class="w-3 h-3" />
-                        @endif
-                        <span>{{ $crumb['label'] }}</span>
-                    </span>
+                    @if(isset($crumb['url']) && $crumb['url'])
+                        <a href="{{ $crumb['url'] }}" class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-lg border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft hover:bg-accent-200/60 transition-colors">
+                            @if(isset($crumb['icon']))
+                                <img src="{{ $crumb['icon'] }}" alt="{{ $crumb['label'] }}" class="w-3 h-3" />
+                            @endif
+                            <span>{{ $crumb['label'] }}</span>
+                        </a>
+                    @else
+                        <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-lg border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
+                            @if(isset($crumb['icon']))
+                                <img src="{{ $crumb['icon'] }}" alt="{{ $crumb['label'] }}" class="w-3 h-3" />
+                            @endif
+                            <span>{{ $crumb['label'] }}</span>
+                        </span>
+                    @endif
                 @else
-                    <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-lg border border-l-0 border-slate-200">
-                        {{ $crumb['label'] }}
-                    </span>
+                    @if(isset($crumb['url']) && $crumb['url'])
+                        <a href="{{ $crumb['url'] }}" class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-lg border border-l-0 border-slate-200 hover:text-slate-900 hover:bg-slate-50 transition-colors">
+                            {{ $crumb['label'] }}
+                        </a>
+                    @else
+                        <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-lg border border-l-0 border-slate-200">
+                            {{ $crumb['label'] }}
+                        </span>
+                    @endif
                 @endif
             @endforeach
         @else

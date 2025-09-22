@@ -403,7 +403,8 @@ class VesselController extends Controller
             abort(404, 'No vessel assigned.');
         }
 
-        return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
+        // return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
+        return view('v2.pages.crew.maintenance.create', compact('types', 'icons', 'vessel'));
     }
 
 

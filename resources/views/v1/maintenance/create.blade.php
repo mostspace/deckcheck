@@ -36,39 +36,37 @@
             </select>
         </div>
 
+        {{-- Icon Picker --}}
+        <div>
+            <label class="block text-sm font-medium text-[#344053] mb-2">Select Icon</label>
 
-{{-- Icon Picker --}}
-<div>
-    <label class="block text-sm font-medium text-[#344053] mb-2">Select Icon</label>
+            <input type="hidden" name="icon" id="icon-input" value="{{ old('icon') }}">
 
-    <input type="hidden" name="icon" id="icon-input" value="{{ old('icon') }}">
+            <div id="icon-picker" class="w-1/3 grid grid-cols-8 gap-4">
+                @foreach ($icons as $icon)
+                    <div 
+                        class="relative w-8 h-8 bg-white rounded-md flex items-center justify-center cursor-pointer border transition-all
+                                {{ old('icon') === $icon ? 'bg-indigo-50' : 'border-[#fff]' }}"
+                        data-icon="{{ $icon }}"
+                        onclick="selectIcon(this)"
+                    >
+                        {{-- Actual icon --}}
+                        <i class="fa-solid {{ $icon }} text-[16px] {{ old('icon') === $icon ? 'text-indigo-600' : 'text-[#6840c6]' }}"></i>
 
-    <div id="icon-picker" class="w-1/3 grid grid-cols-8 gap-4">
-        @foreach ($icons as $icon)
-            <div 
-                class="relative w-8 h-8 bg-white rounded-md flex items-center justify-center cursor-pointer border transition-all
-                        {{ old('icon') === $icon ? 'bg-indigo-50' : 'border-[#fff]' }}"
-                data-icon="{{ $icon }}"
-                onclick="selectIcon(this)"
-            >
-                {{-- Actual icon --}}
-                <i class="fa-solid {{ $icon }} text-[16px] {{ old('icon') === $icon ? 'text-indigo-600' : 'text-[#6840c6]' }}"></i>
-
-                {{-- Checkmark overlay --}}
-                @if (old('icon') === $icon)
-                    <div class="absolute -top-1.5 -right-1.5  text-white rounded-full text-[10px]">
-                        <i class="fa-solid fa-circle-check"></i>
+                        {{-- Checkmark overlay --}}
+                        @if (old('icon') === $icon)
+                            <div class="absolute -top-1.5 -right-1.5  text-white rounded-full text-[10px]">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                        @endif
                     </div>
-                @endif
+                @endforeach
             </div>
-        @endforeach
-    </div>
 
-    @error('icon')
-        <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
-    @enderror
-</div>
-
+            @error('icon')
+                <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+            @enderror
+        </div>
 
         {{-- Buttons --}}
         <div class="flex justify-end space-x-4">
@@ -83,48 +81,47 @@
                 Save Category
             </button>
         </div>
-
     </form>
 
     {{-- Script --}}
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        window.selectIcon = function (element) {
-            // Deselect all
-            document.querySelectorAll('#icon-picker div[data-icon]').forEach(div => {
-                div.classList.remove('bg-violet-50', 'border-indigo-500');
-                div.classList.add('bg-white', 'border-[#e4e7ec]');
+        document.addEventListener('DOMContentLoaded', function () {
+            window.selectIcon = function (element) {
+                // Deselect all
+                document.querySelectorAll('#icon-picker div[data-icon]').forEach(div => {
+                    div.classList.remove('bg-violet-50', 'border-indigo-500');
+                    div.classList.add('bg-white', 'border-[#e4e7ec]');
 
-                const icon = div.querySelector('i');
-                if (icon) {
-                    icon.classList.replace('text-indigo-600', 'text-[#6840c6]');
+                    const icon = div.querySelector('i');
+                    if (icon) {
+                        icon.classList.replace('text-indigo-600', 'text-[#6840c6]');
+                    }
+
+                    // Remove checkmark
+                    const check = div.querySelector('.checkmark');
+                    if (check) check.remove();
+                });
+
+                // Select this one
+                const iconValue = element.getAttribute('data-icon');
+                element.classList.add('bg-violet-50');
+                element.classList.remove('bg-white', 'border-[#e4e7ec]');
+
+                const selectedIcon = element.querySelector('i');
+                if (selectedIcon) {
+                    selectedIcon.classList.replace('text-[#6840c6]', 'text-indigo-600');
                 }
 
-                // Remove checkmark
-                const check = div.querySelector('.checkmark');
-                if (check) check.remove();
-            });
+                // Add checkmark
+                const checkmark = document.createElement('div');
+                checkmark.className = 'checkmark absolute -top-1.5 -right-1.5 text-green-600 rounded-full bg-white text-[12px]';
+                checkmark.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                element.appendChild(checkmark);
 
-            // Select this one
-            const iconValue = element.getAttribute('data-icon');
-            element.classList.add('bg-violet-50');
-            element.classList.remove('bg-white', 'border-[#e4e7ec]');
-
-            const selectedIcon = element.querySelector('i');
-            if (selectedIcon) {
-                selectedIcon.classList.replace('text-[#6840c6]', 'text-indigo-600');
-            }
-
-            // Add checkmark
-            const checkmark = document.createElement('div');
-            checkmark.className = 'checkmark absolute -top-1.5 -right-1.5 text-green-600 rounded-full bg-white text-[12px]';
-            checkmark.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-            element.appendChild(checkmark);
-
-            document.getElementById('icon-input').value = iconValue;
-        };
-    });
-</script>
+                document.getElementById('icon-input').value = iconValue;
+            };
+        });
+    </script>
 
 
 @endsection
