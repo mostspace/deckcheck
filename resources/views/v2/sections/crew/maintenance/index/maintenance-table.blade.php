@@ -12,32 +12,33 @@
                 <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5F6472]"></i>
             </div>
 
-            <button onclick="window.location='{{ route('maintenance.create') }}'" class="px-3 py-2 bg-primary-500 text-slate-900 rounded-lg text-sm hover:bg-primary-600 transition flex items-center">
-                <i class="fa-solid fa-plus mr-2"></i> Add New
+            <button onclick="window.location='{{ route('maintenance.create') }}'" class="px-3 py-2 h-9 bg-primary-500 text-slate-900 rounded-lg text-sm hover:bg-primary-600 transition flex items-center">
+                <i class="fa-solid fa-plus"></i> 
+                <span class="hidden sm:block ml-2">Add New</span>
             </button>
         </div>
     </div>
 
     {{-- Table --}}
-    <div class="overflow-x-auto rounded-lg border border-slate-200">
-        <table class="w-full min-w-[600px]">
+    <div class="overflow-x-auto rounded-lg border border-slate-200" style="scrollbar-width: thin; scrollbar-color: #cbd5e1 #f1f5f9;">
+        <table class="w-full min-w-[800px]">
             <thead class="border-b border-slate-200">
                 <tr>
-                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">
+                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider w-48">
                         <button data-sort-key="name" type="button" class="sort-button flex items-center text-slate-500 hover:text-slate-800 tracking-wider">
                             Category <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-[#475466]"></i>
                         </button>
                     </th>
 
-                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">
+                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider w-32">
                         <button data-sort-key="type" type="button" class="sort-button flex items-center text-slate-500 hover:text-slate-800 tracking-wider">
                             Type <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-[#475466]"></i>
                         </button>
                     </th>
 
-                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">Affected Equipment</th>
-                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">Intervals</th>
-                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">Actions</th>
+                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider w-32">Affected Equipment</th>
+                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider w-48">Intervals</th>
+                    <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider w-24">Actions</th>
                 </tr>
             </thead>
 
@@ -47,7 +48,7 @@
                 @forelse ($categories as $category)
 
                     <tr class="hover:bg-slate-50" data-name="{{ strtolower($category->name) }}" data-type="{{ strtolower($category->type) }}">
-                        <td class="px-3 sm:px-6 py-3 text-xs sm:text-sm text-slate-900">
+                        <td class="px-3 sm:px-6 py-3 text-xs sm:text-sm text-slate-900 w-48">
                             <div class="flex items-center">
                                 <div class="flex items-center name">
                                     <div class="w-8 h-8 flex items-center justify-center mr-3">
@@ -57,13 +58,13 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-3 sm:px-6 py-3 text-xs sm:text-sm text-slate-500">{{ $category->type }}</td>
-                        <td class="px-3 sm:px-6 py-3 text-xs sm:text-sm text-slate-900">
+                        <td class="px-3 sm:px-6 py-3 text-xs sm:text-sm text-slate-500 w-32">{{ $category->type }}</td>
+                        <td class="px-3 sm:px-6 py-3 text-xs sm:text-sm text-slate-900 w-32">
                             <span class="">{{ $category->equipment_count }}</span>
                         </td>
 
                         {{-- Interval Requirements --}}
-                        <td class="px-3 sm:px-6 py-3">
+                        <td class="px-3 sm:px-6 py-3 w-48">
 
                             @foreach ($intervalTypes as $freq)
                                 @php
@@ -80,7 +81,7 @@
                         </td>
 
                         {{-- Actions --}}
-                        <td class="px-3 sm:px-6 py-3">
+                        <td class="px-3 sm:px-6 py-3 w-24">
                             <div class="flex space-x-2">
 
                                 {{-- View Category --}}

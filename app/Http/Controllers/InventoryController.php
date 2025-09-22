@@ -70,7 +70,7 @@ class InventoryController extends Controller
             ->unique()
             ->values();
 
-        return view('v2.crew.inventory.index', compact(
+        return view('v2.pages.crew.inventory.index', compact(
             'equipment',
             'operationalCount',
             'inoperableCount',

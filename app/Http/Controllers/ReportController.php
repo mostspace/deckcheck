@@ -23,7 +23,7 @@ class ReportController extends Controller
         $allReports = $this->getAllReports($vessel);
         $myReports = $this->getUserReports(auth()->user(), $vessel);
         
-        return view('v2.crew.files.index', compact('allReports', 'myReports'));
+        return view('v2.pages.crew.files.index', compact('allReports', 'myReports'));
     }
 
     /**
@@ -36,7 +36,7 @@ class ReportController extends Controller
         // Get analytics data
         $analytics = $this->getAnalyticsData($vessel);
         
-        return view('v2.crew.files.analytics.index', compact('analytics'));
+        return view('v2.pages.crew.files.analytics.index', compact('analytics'));
     }
 
     /**
@@ -49,7 +49,7 @@ class ReportController extends Controller
         // Get available export options
         $exportOptions = $this->getExportOptions($vessel);
         
-        return view('v2.crew.files.exports.index', compact('exportOptions'));
+        return view('v2.pages.crew.files.exports.index', compact('exportOptions'));
     }
 
     /**
@@ -63,7 +63,7 @@ class ReportController extends Controller
         // Get user's custom reports
         $reports = $this->getUserReports($user, $vessel);
         
-        return view('v2.crew.files.my-reports.index', compact('reports'));
+        return view('v2.pages.crew.files.my-reports.index', compact('reports'));
     }
 
     /**
@@ -76,7 +76,7 @@ class ReportController extends Controller
         // Get all available reports
         $reports = $this->getAllReports($vessel);
         
-        return view('v2.crew.files.all-reports.index', compact('reports'));
+        return view('v2.pages.crew.files.all-reports.index', compact('reports'));
     }
 
     /**

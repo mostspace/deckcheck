@@ -27,7 +27,7 @@ use App\Http\Controllers\{
 
 // ------------------------------------  Public ----------------------------------------
 Route::view('/', 'v1.welcome');
-Route::view('/dashboard', 'v2.dashboard')
+Route::view('/dashboard', 'v2.pages.dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 

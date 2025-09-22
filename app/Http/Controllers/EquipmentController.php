@@ -82,7 +82,7 @@ class EquipmentController extends Controller
         //     'defaultColumns'
         // ));
 
-        return view('v2.crew.inventory.equipment.index', compact(
+        return view('v2.pages.crew.inventory.equipment.index', compact(
             'equipment',
             'operationalCount',
             'inoperableCount',

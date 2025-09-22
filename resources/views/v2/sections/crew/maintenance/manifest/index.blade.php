@@ -25,11 +25,11 @@
 @endif
 
 {{-- Status Cards --}}
-@include ('v2.crew.maintenance.manifest.status-cards.index')
+@include ('v2.sections.crew.maintenance.manifest.status-cards.index')
 
-@include('v2.crew.maintenance.manifest.equipment-table')
+@include('v2.sections.crew.maintenance.manifest.equipment-table')
 
-@include('v2.crew.maintenance.manifest.edit-columns-modal')
+@include('v2.sections.crew.maintenance.manifest.edit-columns-modal')
 
 @push('scripts')
     @vite(['resources/js/pages/maintenance/manifest.js'])

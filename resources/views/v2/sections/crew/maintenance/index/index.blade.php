@@ -7,8 +7,8 @@
     </div>
 
     <div class="flex flex-col gap-4 sm:gap-6">
-        @include ('v2.crew.maintenance.index.stat-cards')
+        @include ('v2.sections.crew.maintenance.index.stat-cards')
         
-        @include ('v2.crew.maintenance.index.maintenance-table')
+        @include ('v2.sections.crew.maintenance.index.maintenance-table')
     </div>
 </div>

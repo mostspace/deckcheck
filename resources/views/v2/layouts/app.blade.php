@@ -50,7 +50,7 @@
     @endphp
 
     <div id="app-layout" class="w-full h-full grid md:grid-cols-[56px_1fr]">
-        @include('v2.components.navigation.sidebar')
+        @include('v2.components.nav.sidebar')
 
         <main class="relative flex flex-col h-full overflow-hidden">
             <section class="relative flex-1 min-h-0">
