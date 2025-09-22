@@ -22,6 +22,16 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    // New themed login page
+    Route::get('login-v2', function () {
+        return view('auth.login-v2');
+    })->name('login.v2');
+
+    // Themed login page (matches design exactly)
+    Route::get('login-themed', function () {
+        return view('auth.login-themed');
+    })->name('login.themed');
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 
