@@ -18,7 +18,7 @@
                     <h3 class="font-semibold">🚀 New v2 Interface Available!</h3>
                     <p class="text-sm opacity-90">Experience the modern sidebar and improved design</p>
                 </div>
-                <a href="{{ route('dashboard') }}" class="bg-white text-blue-600 px-4 py-2 rounded font-medium hover:bg-gray-100 transition-colors">
+                <a href="{{ route('dashboard') }}" class="bg-primary-500 text-slate-800 px-4 py-2 rounded font-medium hover:bg-primary-600 transition-colors">
                     Try v2 Dashboard
                 </a>
             </div>

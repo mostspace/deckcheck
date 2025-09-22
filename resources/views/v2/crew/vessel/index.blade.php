@@ -53,7 +53,7 @@
             <div class="mb-8">
                 <div class="flex items-center justify-between mb-6">
                     <div></div>
-                    <button class="text-sm text-[#6840c6] hover:text-[#7e56d8] font-medium flex items-center gap-2">
+                    <button class="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-2">
                         <i class="fa-solid fa-flag text-xs"></i>
                         Report Inaccurate Information
                     </button>
