@@ -25,13 +25,13 @@
                 <tr>
                     <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">
                         <button data-sort-key="name" type="button" class="sort-button flex items-center text-slate-500 hover:text-slate-800 tracking-wider">
-                            Category <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-primary-800"></i>
+                            Category <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-[#475466]"></i>
                         </button>
                     </th>
 
                     <th class="px-3 sm:px-6 py-5 text-left text-xs sm:text-sm font-medium text-slate-500 tracking-wider">
                         <button data-sort-key="type" type="button" class="sort-button flex items-center text-slate-500 hover:text-slate-800 tracking-wider">
-                            Type <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-primary-800"></i>
+                            Type <i class="fa-solid fa-sort ml-1 text-sm transition-colors text-[#475466]"></i>
                         </button>
                     </th>
 
