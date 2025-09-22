@@ -27,8 +27,8 @@
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-sm text-[#667084]">Last run: 1 day ago</span>
-                <button class="px-3 py-1.5 bg-[#22c55e] text-white rounded-lg text-sm hover:bg-[#16a34a]">Run</button>
-                <button class="px-3 py-1.5 bg-[#667084] text-white rounded-lg text-sm hover:bg-[#475466]">Edit</button>
+                <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">Run</button>
+                <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">Edit</button>
             </div>
         </div>
     </div>
@@ -46,8 +46,8 @@
             </div>
             <div class="flex items-center gap-2">
                 <span class="text-sm text-[#667084]">Last run: 1 week ago</span>
-                <button class="px-3 py-1.5 bg-[#22c55e] text-white rounded-lg text-sm hover:bg-[#16a34a]">Run</button>
-                <button class="px-3 py-1.5 bg-[#667084] text-white rounded-lg text-sm hover:bg-[#475466]">Edit</button>
+                <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">Run</button>
+                <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">Edit</button>
             </div>
         </div>
     </div>

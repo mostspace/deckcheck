@@ -8,7 +8,7 @@
     </div>
 </div>
 <div class="mb-6 flex items-center gap-4">
-    <button onclick="window.location='{{ route( 'vessel.decks.create' ) }}'" class="px-4 py-2.5 bg-[#7e56d8] rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-[#7e56d8] text-white text-sm font-medium hover:bg-[#6840c6] transition-colors">
+    <button onclick="window.location='{{ route( 'vessel.decks.create' ) }}'" class="px-4 py-2.5 bg-primary-500 rounded-lg shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] border border-primary-500 text-slate-800 text-sm font-medium hover:bg-primary-600 transition-colors">
         <i class="fa-solid fa-plus mr-2"></i>
         Add Deck
     </button>

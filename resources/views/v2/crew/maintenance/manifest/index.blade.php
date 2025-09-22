@@ -25,11 +25,7 @@
 @endif
 
 {{-- Status Cards --}}
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-    @include ('components.equipment.operational-card')
-    @include ('components.equipment.action-needed-card')
-    @include ('components.equipment.out-of-service-card')
-</div>
+@include ('v2.crew.maintenance.manifest.status-cards.index')
 
 {{-- Table Controls --}}
 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -53,7 +49,7 @@
         <div class="flex gap-2">
 
             {{-- Filters --}}
-            <button class="px-4 py-2.5 bg-white border border-[#cfd4dc] rounded-lg text-sm text-[#344053] flex items-center gap-2">
+            <button class="px-4 py-2.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary-600 transition-colors">
                 <i data-fa-i2svg=""><svg class="svg-inline--fa fa-filter" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="filter"
                         role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
                         <path fill="currentColor"
@@ -65,14 +61,13 @@
 
             {{-- Table Controls --}}
             <button
-                class="px-4 py-2.5 border rounded-lg text-sm flex items-center gap-2
-                {{ $customizedColumns ? 'bg-[#f3e8ff] border-[#c084fc] text-[#7e22ce]' : 'bg-white border-[#cfd4dc] text-[#344053]' }}">
+                class="px-4 py-2.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary-600 transition-colors">
                 <i class="fa-solid fa-table-columns"></i>
                 Edit Columns
             </button>
 
             {{-- Export --}}
-            <button class="px-4 py-2.5 bg-white border border-[#cfd4dc] rounded-lg text-sm text-[#344053] flex items-center gap-2">
+            <button class="px-4 py-2.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary-600 transition-colors">
                 <i data-fa-i2svg=""><svg class="svg-inline--fa fa-download" aria-hidden="true" focusable="false" data-prefix="fas"
                         data-icon="download" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
                         <path fill="currentColor"
@@ -87,7 +82,7 @@
 
     {{-- Equipment Create --}}
     <button onclick="window.location='{{ route('equipment.create') }}'" id="add-equipment-btn"
-        class="px-4 py-2.5 bg-[#6840c6] text-white rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-[#52379e] transition-colors">
+        class="px-4 py-2.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium flex items-center gap-2 hover:bg-primary-600 transition-colors">
         <i data-fa-i2svg=""><svg class="svg-inline--fa fa-plus" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
                 <path fill="currentColor"

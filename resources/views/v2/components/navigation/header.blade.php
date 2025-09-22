@@ -51,13 +51,18 @@
                     @endif
                 >
                     @if(isset($tab['icon']) && !empty($tab['icon']))
+                        @php
+                            $iconName = $tab['icon'];
+                            $solidIconName = str_replace('.svg', '-solid.svg', $iconName);
+                        @endphp
                         <img 
-                            src="{{ asset('assets/media/icons/' . $tab['icon']) }}" 
-                            class="h-4 w-4 {{ $tab['active'] || $tab['id'] === 'workflow' ? 'text-slate-900' : 'text-slate-500' }}" 
+                            src="{{ asset('assets/media/icons/' . $iconName) }}" 
+                            data-solid-src="{{ asset('assets/media/icons/' . $solidIconName) }}"
+                            class="h-4 w-4 tab-icon {{ $tab['active'] || $tab['id'] === 'workflow' ? 'text-slate-900' : 'text-slate-500' }}" 
                             alt="{{ $tab['label'] }}" 
                         />
                     @endif
-                    <span>{{ $tab['label'] }}</span>
+                    <span class="tab-text">{{ $tab['label'] }}</span>
                 </button>
             @endforeach
         </div>
@@ -97,29 +102,29 @@
 @if($showSubHeader)
 <div id="sub-header" class="sticky top-0 z-10 px-3 sm:px-5 lg:px-8 py-3 border-b bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-2 flex-shrink-0">
     <!-- Breadcrumbs -->
-    <div class="flex items-center rounded-md bg-white" id="breadcrumb-container">
+    <div class="flex items-center rounded-lg bg-white" id="breadcrumb-container">
         @if(count($breadcrumbs) > 0)
             @foreach($breadcrumbs as $index => $crumb)
                 @if($index === 0)
-                    <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
+                    <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-lg border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft">
                         @if(isset($crumb['icon']))
                             <img src="{{ $crumb['icon'] }}" alt="{{ $crumb['label'] }}" class="w-3 h-3" />
                         @endif
                         <span>{{ $crumb['label'] }}</span>
                     </span>
                 @else
-                    <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-md border border-slate-200">
+                    <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-lg border border-l-0 border-slate-200">
                         {{ $crumb['label'] }}
                     </span>
                 @endif
             @endforeach
         @else
             <!-- Dynamic breadcrumb based on page and active tab -->
-            <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-md border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft" id="page-breadcrumb">
+            <span class="inline-flex items-center gap-1 sm:gap-2 text-xs px-2 sm:px-3 py-1.5 rounded-lg border border-primary-500 bg-accent-200/40 text-slate-900 z-10 shadow-soft" id="page-breadcrumb">
                 <img src="{{ $pageIcon ?? asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg') }}" alt="{{ $pageName ?? 'Page' }}" class="w-3 h-3" />
                 <span>{{ $pageName ?? 'Page' }}</span>
             </span>
-            <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-md border border-slate-200" id="current-tab-breadcrumb">{{ $activeTab ?? 'Tab' }}</span>
+            <span class="inline-flex items-center text-xs px-2 sm:px-3 pl-6 sm:pl-7 py-1.5 -ml-4 sm:-ml-5 text-slate-500 rounded-lg border border-l-0 border-slate-200" id="current-tab-breadcrumb">{{ $activeTab ?? 'Tab' }}</span>
         @endif
     </div>
 
@@ -154,6 +159,18 @@
 @endif
 
 <script>
+    // Handle tab icon switching for active states only
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize active tab icons
+        const activeTab = document.querySelector('[role="tab"][aria-selected="true"]');
+        if (activeTab) {
+            const activeIcon = activeTab.querySelector('.tab-icon');
+            if (activeIcon && activeIcon.dataset.solidSrc) {
+                activeIcon.src = activeIcon.dataset.solidSrc;
+            }
+        }
+    });
+
     function switchTab(tabId) {
         // Get all tab buttons and panels
         const tabButtons = document.querySelectorAll('[role="tab"]');
@@ -175,8 +192,8 @@
                 tab.classList.add('px-2', 'sm:px-3', 'py-1.5', 'text-xs', 'sm:text-sm', 'whitespace-nowrap', 'flex', 'items-center', 'gap-1', 'sm:gap-2', 'border', 'hover:bg-white', 'rounded-t-md', 'flex-shrink-0');
             }
             
-            // Update icon color
-            const icon = tab.querySelector('img');
+            // Update icon color and switch to normal icon for inactive tabs
+            const icon = tab.querySelector('.tab-icon');
             if (icon) {
                 if (isWorkflowTab) {
                     icon.classList.remove('text-slate-500');
@@ -184,6 +201,10 @@
                 } else {
                     icon.classList.remove('text-slate-900');
                     icon.classList.add('text-slate-500');
+                }
+                // Switch back to normal icon for inactive tabs
+                if (icon.dataset.solidSrc) {
+                    icon.src = icon.src.replace('-solid.svg', '.svg');
                 }
             }
         });
@@ -215,11 +236,15 @@
                 activeTab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-white text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
             }
             
-            // Update icon color for active tab
-            const activeIcon = activeTab.querySelector('img');
+            // Update icon color and switch to solid icon for active tab
+            const activeIcon = activeTab.querySelector('.tab-icon');
             if (activeIcon) {
                 activeIcon.classList.remove('text-slate-500');
                 activeIcon.classList.add('text-slate-900');
+                // Switch to solid icon for active tab
+                if (activeIcon.dataset.solidSrc) {
+                    activeIcon.src = activeIcon.dataset.solidSrc;
+                }
             }
         }
 

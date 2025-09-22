@@ -48,3 +48,15 @@
     --brand-100: #e0e7ff;
     --brand-50: #f0f4ff;
 }
+
+/* ===== TAB STYLES ===== */
+/* Tab button transitions */
+[role="tab"] {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Tab icon transitions */
+.tab-icon {
+    transition: all 0.2s ease-in-out;
+}
+

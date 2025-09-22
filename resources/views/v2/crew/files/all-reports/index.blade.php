@@ -20,7 +20,7 @@
         <p class="text-[#475466] mb-4">Complete equipment inventory with specifications and status</p>
         <div class="flex items-center justify-between">
             <span class="text-sm text-[#667084]">Last updated: 2 hours ago</span>
-            <button class="px-3 py-1.5 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8]">View</button>
+            <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">View</button>
         </div>
     </div>
 
@@ -34,7 +34,7 @@
         <p class="text-[#475466] mb-4">All deficiencies with status, age, and resolution tracking</p>
         <div class="flex items-center justify-between">
             <span class="text-sm text-[#667084]">Last updated: 1 hour ago</span>
-            <button class="px-3 py-1.5 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8]">View</button>
+            <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">View</button>
         </div>
     </div>
 
@@ -48,7 +48,7 @@
         <p class="text-[#475466] mb-4">Summary of all work orders with completion status</p>
         <div class="flex items-center justify-between">
             <span class="text-sm text-[#667084]">Last updated: 30 min ago</span>
-            <button class="px-3 py-1.5 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8]">View</button>
+            <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">View</button>
         </div>
     </div>
 
@@ -62,7 +62,7 @@
         <p class="text-[#475466] mb-4">Upcoming maintenance schedule by equipment category</p>
         <div class="flex items-center justify-between">
             <span class="text-sm text-[#667084]">Last updated: 4 hours ago</span>
-            <button class="px-3 py-1.5 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8]">View</button>
+            <button class="px-3 py-1.5 bg-primary-500 text-slate-800 rounded-lg text-sm font-medium hover:bg-primary-600 transition-colors">View</button>
         </div>
     </div>
 </div>

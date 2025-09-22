@@ -7,7 +7,7 @@
     </div>
 </div>
 
-@include ('components.maintenance.stat-cards')
+@include ('v2.crew.maintenance.index.stat-cards')
 
 {{-- Maintenance Index --}}
 <div id="maintenance-table" class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-hidden">
@@ -20,14 +20,12 @@
             {{-- Search --}}
             <div class="relative">
                 <input id="category-search" type="text" placeholder="Search by name..."
-                    class="pl-9 pr-4 py-2 border border-[#e4e7ec] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6840c6] focus:border-[#6840c6]">
+                    class="pl-9 pr-4 py-2 border border-[#e4e7ec] rounded-lg text-sm transition focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500">
                 <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#667084]"></i>
             </div>
 
-            <button onclick="window.location='{{ route('maintenance.create') }}'"
-                class="px-3 py-2 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8] flex items-center">
-                <i class="fa-solid fa-plus mr-2"></i>
-                Add New
+            <button onclick="window.location='{{ route('maintenance.create') }}'" class="px-3 py-2 bg-primary-500 text-slate-900 rounded-lg text-sm hover:bg-primary-600 transition flex items-center">
+                <i class="fa-solid fa-plus mr-2"></i> Add New
             </button>
         </div>
     </div>

@@ -63,7 +63,7 @@
             Once you create your first maintenance interval, work orders will begin generating automatically based on your vessel schedule.
         </p>
         <a href="#"
-            class="inline-flex items-center gap-2 px-4 py-2 mt-2 text-sm font-medium text-white bg-[#7e56d8] hover:bg-[#6840c6] rounded-lg transition">
+            class="inline-flex items-center gap-2 px-4 py-2 mt-2 text-sm font-medium text-slate-800 bg-primary-500 hover:bg-primary-600 rounded-lg transition">
             <i class="fa-solid fa-calendar-plus"></i> Create Interval
         </a>
     </div>
