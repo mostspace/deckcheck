@@ -101,7 +101,7 @@
                                 }
                             @endphp
 
-                            <a href="{{ route('schedule.index', $queryParams) }}"
+                            <a href="{{ route('maintenance.schedule.index', $queryParams) }}"
                                 class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
                               {{ $frequency === $freq ? 'bg-[#f9f5ff] text-[#6840c6]' : 'text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb]' }}">
                                 {{ ucfirst($freq) }}
@@ -111,7 +111,7 @@
 
                     {{-- ##Date Navigation --}}
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('schedule.index', array_merge($navParams, ['date' => $prevDate->toDateString()])) }}"
+                        <a href="{{ route('maintenance.schedule.index', array_merge($navParams, ['date' => $prevDate->toDateString()])) }}"
                             class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
                             <i class="fa-solid fa-chevron-left"></i>
                         </a>
@@ -122,7 +122,7 @@
                             {{ $formattedRange }}
                         </div>
 
-                        <a href="{{ route('schedule.index', array_merge($navParams, ['date' => $nextDate->toDateString()])) }}"
+                        <a href="{{ route('maintenance.schedule.index', array_merge($navParams, ['date' => $nextDate->toDateString()])) }}"
                             class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
                             <i class="fa-solid fa-chevron-right"></i>
                         </a>
@@ -143,7 +143,7 @@
                         @endphp
 
                         @foreach (['date' => 'None', 'category' => 'Category', 'location' => 'Location'] as $key => $label)
-                            <a href="{{ route('schedule.index', array_merge(request()->query(), ['group' => $key])) }}"
+                            <a href="{{ route('maintenance.schedule.index', array_merge(request()->query(), ['group' => $key])) }}"
                                 class="px-4 py-2 rounded-md border text-sm font-medium
                         {{ $group === $key ? 'text-[#6840c6] border-[#6840c6] bg-[#f9f5ff]' : 'text-[#344053] border-[#d0d5dd] hover:bg-[#f8f9fb]' }}">
                                 {{ $label }}

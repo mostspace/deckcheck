@@ -14,7 +14,7 @@ use App\Models\ApplicableEquipment;
 class IntervalController extends Controller
 {
     // Show Task
-    public function showTask(Interval $interval, Task $task)
+    public function showTask(Category $category, Interval $interval, Task $task)
     {
         // Make sure the task actually belongs to the interval
         if ($task->interval_id !== $interval->id) {
@@ -28,10 +28,10 @@ class IntervalController extends Controller
 
         //$interval->load('instructions'); // or whatever relations you want
 
-        return view('v1.maintenance.intervals.tasks.show', compact('task', 'interval'));
+        return view('maintenance.intervals.tasks.show', compact('task', 'interval'));
     }
 
-    public function createTask(Interval $interval)
+    public function createTask(Category $category, Interval $interval)
     {
         if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
             abort(403, 'Access denied to this interval');
@@ -73,7 +73,7 @@ class IntervalController extends Controller
             return [$key => collect($options)->pluck('label', 'value')];
         });
 
-        return view('v1.maintenance.intervals.tasks.create', compact(
+        return view('maintenance.intervals.tasks.create', compact(
             'interval',
             'staticConditions',
             'dynamicConditions',
@@ -225,7 +225,7 @@ class IntervalController extends Controller
         }
         if (!is_array($conditions)) $conditions = [];
 
-        return view('v1.maintenance.intervals.tasks.edit', compact(
+        return view('maintenance.intervals.tasks.edit', compact(
             'category',
             'interval',
             'task',
@@ -304,34 +304,6 @@ class IntervalController extends Controller
 
 
 
-    /* 
-    public function editTask(Category $category, Interval $interval, Task $task)
-    {
-        if ($interval->category_id !== $category->id || $interval->category->vessel_id !== auth()->user()->vessel_id || $task->interval_id !== $interval->id) {
-            abort(404);
-        }
-
-        return view('v1.maintenance.intervals.tasks.edit', compact('category', 'interval', 'task'));
-    }
-
-    public function updateTask(Request $request, Category $category, Interval $interval, Task $task)
-    {
-        if ($interval->category_id !== $category->id || $interval->category->vessel_id !== auth()->user()->vessel_id || $task->interval_id !== $interval->id) {
-            abort(404);
-        }
-
-        $data = $request->validate([
-            'description' => 'required|string',
-            'instructions' => 'nullable|string',
-            'applicable_to' => 'required|in:All Equipment,Specific Equipment,Conditional',
-        ]);
-
-        $task->update($data);
-
-        return redirect()
-            ->route('maintenance.intervals.show', ['category' => $category, 'interval' => $interval])
-            ->with('success', 'Task updated.');
-    }
 
     /**
      * Display a listing of the resource.

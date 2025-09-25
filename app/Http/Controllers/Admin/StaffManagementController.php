@@ -75,7 +75,7 @@ class StaffManagementController extends Controller
                 ->whereHas('boardings')->count(),
         ];
 
-        return view('v1.admin.staff.index', compact(
+        return view('admin.staff.index', compact(
             'staff',
             'systemRoles',
             'statusOptions',
@@ -108,7 +108,7 @@ class StaffManagementController extends Controller
             }
         });
 
-        return view('v1.admin.staff.show', compact('user'));
+        return view('admin.staff.show', compact('user'));
     }
 
     public function edit(User $user)
@@ -118,7 +118,7 @@ class StaffManagementController extends Controller
             abort(404, 'User not found');
         }
 
-        return view('v1.admin.staff.edit', compact('user'));
+        return view('admin.staff.edit', compact('user'));
     }
 
     public function update(Request $request, User $user)

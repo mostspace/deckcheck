@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\StaffManagementController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     
     Route::get('/', function () {
-        return view('v1.admin.dashboard');
+        return view('admin.dashboard');
     })->name('dashboard');
     
-    Route::get('/test', fn () => view('v1.admin.test'))
+    Route::get('/test', fn () => view('admin.test'))
         ->name('test');
 
     Route::get('/vessels', [VesselDataController::class, 'index'])

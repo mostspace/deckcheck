@@ -25,7 +25,7 @@ class CategoryController extends Controller
             $query->orderBy('display_order');
         }]);
 
-        return view('v1.maintenance.intervals.show', compact('interval', 'category'));
+        return view('maintenance.intervals.show', compact('interval', 'category'));
     }
 
     public function createInterval(Category $category)
@@ -34,7 +34,7 @@ class CategoryController extends Controller
             abort(403, 'Access denied to this category');
         }
 
-        return view('v1.maintenance.intervals.create', compact('category'));
+        return view('maintenance.intervals.create', compact('category'));
     }
 
     public function storeInterval(Request $request, Category $category)
@@ -88,7 +88,7 @@ class CategoryController extends Controller
             abort(403, 'Access denied to this category');
         }
 
-        return view('v1.maintenance.intervals.edit', compact('interval', 'category'));
+        return view('maintenance.intervals.edit', compact('interval', 'category'));
     }
 
     public function updateInterval(Request $request, Category $category, Interval $interval)
@@ -132,7 +132,7 @@ class CategoryController extends Controller
             $query->orderBy('display_order');
         }]);
 
-        return view('v1.maintenance.intervals.show', compact('interval', 'category'));
+        return view('maintenance.intervals.show', compact('interval', 'category'));
     }
 
     // Create & Store Interval
@@ -143,7 +143,7 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        return view('v1.maintenance.intervals.create', compact('category'));
+        return view('maintenance.intervals.create', compact('category'));
     }
     
     public function storeInterval(Request $request, Category $category)
@@ -200,7 +200,7 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        return view('v1.maintenance.intervals.edit', compact('interval', 'category'));
+        return view('maintenance.intervals.edit', compact('interval', 'category'));
     }
 
     public function updateInterval(Request $request, Category $category, Interval $interval)

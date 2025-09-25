@@ -29,6 +29,11 @@ package-lock.json
 /storage/framework/sessions
 /storage/framework/views
 
+# Laravel bootstrap cache
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
+/bootstrap/cache/routes-v*.php
+
 # IDEs & editors
 /.idea
 /.vscode

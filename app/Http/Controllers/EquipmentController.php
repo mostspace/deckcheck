@@ -82,7 +82,7 @@ class EquipmentController extends Controller
         //     'defaultColumns'
         // ));
 
-        return view('v2.pages.crew.inventory.equipment.index', compact(
+        return view('v2.pages.maintenance.manifest', compact(
             'equipment',
             'operationalCount',
             'inoperableCount',
@@ -121,7 +121,7 @@ class EquipmentController extends Controller
         $categories = Category::where('vessel_id', $vessel->id)->orderBy('name')->get();
         $decks = Deck::where('vessel_id', $vessel->id)->orderBy('name')->get();
 
-        return view('v1.inventory.equipment.create', compact('categories', 'decks'));
+        return view('inventory.equipment.create', compact('categories', 'decks'));
     }
 
     public function store(Request $request)
@@ -183,7 +183,7 @@ class EquipmentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('v1.inventory.equipment.show', compact(
+        return view('inventory.equipment.show', compact(
             'equipment',
             'categories',
             'decks',
@@ -305,7 +305,7 @@ class EquipmentController extends Controller
         $index = $request->input('index', 0);
         $decks = Deck::where('vessel_id', currentVessel()->id)->orderBy('name')->get();
 
-        return view('v1.partials.maintenance.category.bulk-row', compact('index', 'decks'));
+        return view('partials.maintenance.category.bulk-row', compact('index', 'decks'));
     }
 
 

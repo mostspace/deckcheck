@@ -109,7 +109,7 @@
                 title: "Maintenance",
                 links: [
                     { href: "{{ route('maintenance.index') }}", label: "Index", active: {{ request()->routeIs('maintenance.*') ? 'true' : 'false' }} },
-                    { href: "{{ route('schedule.index') }}", label: "Schedule", active: {{ request()->routeIs('maintenance.schedule*') ? 'true' : 'false' }} },
+                    { href: "{{ route('maintenance.schedule.index') }}", label: "Schedule", active: {{ request()->routeIs('maintenance.schedule*') ? 'true' : 'false' }} },
                     { href: "{{ route('deficiencies.index') }}", label: "Deficiencies", active: {{ request()->routeIs('deficiencies.*') ? 'true' : 'false' }} }
                 ]
             },

@@ -26,7 +26,7 @@ use App\Http\Controllers\{
 };
 
 // ------------------------------------  Public ----------------------------------------
-Route::view('/', 'v1.welcome');
+Route::view('/', 'welcome');
 Route::view('/dashboard', 'v2.pages.dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -60,12 +60,23 @@ Route::middleware('auth')->group(function () {
     // Maintenance (Categories → Intervals → Tasks)
     Route::prefix('maintenance')->name('maintenance.')->group(function () {
         Route::get('/', [VesselController::class, 'categories'])->name('index');
+        Route::get('/summary', [VesselController::class, 'categories'])->name('summary');
         Route::get('/create', [VesselController::class, 'createCategory'])->name('create');
         Route::post('/categories', [VesselController::class, 'storeCategory'])->name('store');
 
         Route::middleware('vessel.access')->group(function () {
             Route::get('/category/{category}/edit', [VesselController::class, 'editCategory'])->name('edit');
             Route::put('/category/{category}', [VesselController::class, 'updateCategory'])->name('update');
+            
+            // Schedule route must come before the catch-all {category} route
+            Route::prefix('schedule')->name('schedule.')->group(function () {
+                Route::get('/', [ScheduleController::class, 'index'])->name('index');
+                Route::prefix('flow')->name('flow.')->controller(WorkOrderFlowController::class)->group(function () {
+                    Route::get('/', 'start')->name('start');
+                    Route::get('/load/{workOrder}', 'load')->name('load');
+                });
+            });
+            
             Route::get('/{category}', [VesselController::class, 'showCategory'])->name('show');
 
             Route::prefix('categories/{category}/intervals')->name('intervals.')->group(function () {
@@ -185,15 +196,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/inventory/decks/{deck}/locations', [DeckController::class, 'locations'])
         ->name('decks.locations')
         ->middleware('vessel.access');
-
-    // Schedule
-    Route::prefix('maintenance/schedule')->name('schedule.')->group(function () {
-        Route::get('/', [ScheduleController::class, 'index'])->name('index');
-        Route::prefix('flow')->name('flow.')->controller(WorkOrderFlowController::class)->group(function () {
-            Route::get('/', 'start')->name('start');
-            Route::get('/load/{workOrder}', 'load')->name('load');
-        });
-    });
 
     // Task reorder
     Route::post('/intervals/{interval}/tasks/reorder', [TaskController::class, 'reorder'])

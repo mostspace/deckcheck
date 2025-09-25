@@ -212,7 +212,15 @@ class ScheduleController extends Controller
         // Pass Vessel Crew into View for Assignee Drop-Down
         $availableUsers = $vessel->users()->orderBy('first_name')->get();
 
-        return view('v1.maintenance.schedule.index', compact(
+        // Calculate formatted range for display
+        $formattedRange = match ($frequency) {
+            'daily' => $date->format('F j, Y'),
+            'weekly', 'bi-weekly' => $date->copy()->startOfWeek()->format('M j') . ' – ' . $date->copy()->endOfWeek()->format('M j, Y'),
+            'monthly', 'quarterly', 'bi-annually' => $date->format('F Y'),
+            default => $date->format('Y'),
+        };
+
+        return view('v2.pages.maintenance.schedule', compact(
             'frequency',
             'date',
             'visibleFrequencies',
@@ -220,7 +228,8 @@ class ScheduleController extends Controller
             'groups',
             'activeWorkOrders',
             'resolvedWorkOrders',
-            'availableUsers'
+            'availableUsers',
+            'formattedRange'
         ));
     }
 

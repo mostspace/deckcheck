@@ -6,7 +6,7 @@
 @endphp
 
 @section('form')
-    <form action="{{ route('intervals.update', [$category, $interval]) }}" method="POST" class="space-y-6">
+    <form action="{{ route('maintenance.intervals.update', [$category, $interval]) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
 

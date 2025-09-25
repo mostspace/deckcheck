@@ -42,7 +42,7 @@ class LocationController extends Controller
             abort(403, 'Access denied to this deck');
         }
 
-        return view('v1.vessel.decks.locations.create', compact('deck'));
+        return view('vessel.decks.locations.create', compact('deck'));
     }
 
     public function store(Request $request, Deck $deck)
@@ -104,7 +104,7 @@ class LocationController extends Controller
             abort(403, 'Access denied to this location');
         }
 
-        return view('v1.vessel.decks.locations.edit', compact('location'));
+        return view('vessel.decks.locations.edit', compact('location'));
     }
 
     /**

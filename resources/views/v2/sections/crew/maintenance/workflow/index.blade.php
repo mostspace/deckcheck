@@ -21,55 +21,10 @@
     $prevDate = $date->copy()->sub($step);
     $nextDate = $date->copy()->add($step);
 
-    $formattedRange = match ($frequency) {
-        'daily' => $date->format('F j, Y'),
-        'weekly', 'bi-weekly' => $date->copy()->startOfWeek()->format('M j') . ' – ' . $date->copy()->endOfWeek()->format('M j, Y'),
-        'monthly', 'quarterly', 'bi-annually' => $date->format('F Y'),
-        default => $date->format('Y'),
-    };
-@endphp
-
-@php
     $navParams = ['frequency' => $frequency, 'assigned' => request('assigned'), 'group' => $group];
 @endphp
 
-{{-- System Messages --}}
-@if (session('success'))
-    <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
-        {{ session('success') }}
-    </div>
-@endif
-
-{{-- Header --}}
-<div class="mb-6">
-
-    {{-- #Title Block --}}
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-            <h1 class="text-2xl font-semibold text-[#0f1728]">Schedule</h1>
-            <p class="text-[#475466]">List View of All Open Interval Maintenance</p>
-        </div>
-    </div>
-
-</div>
-
-{{-- Conditional Display for New Account / No Intervals Yet --}}
-@if (empty($visibleFrequencies))
-
-    <div class="border border-[#e4e7ec] rounded-lg p-12 flex flex-col items-center justify-center text-center text-sm text-[#475466] space-y-4">
-        <i class="fa-regular fa-calendar-xmark text-4xl text-[#d0d5dd]"></i>
-        <p class="font-medium text-[#344053] text-base">You haven't scheduled any maintenance intervals yet</p>
-        <p class="text-xs text-[#667084] max-w-xs">
-            Once you create your first maintenance interval, work orders will begin generating automatically based on your vessel schedule.
-        </p>
-        <a href="#"
-            class="inline-flex items-center gap-2 px-4 py-2 mt-2 text-sm font-medium text-slate-800 bg-primary-500 hover:bg-primary-600 rounded-lg transition">
-            <i class="fa-solid fa-calendar-plus"></i> Create Interval
-        </a>
-    </div>
-
-    {{-- Regular Content --}}
-@else
+{{-- Workflow content starts here --}}
     {{-- Interval Navigation --}}
     <div class="bg-white rounded-lg border border-[#e4e7ec] mb-6">
 
@@ -95,7 +50,7 @@
                             }
                         @endphp
 
-                        <a href="{{ route('schedule.index', $queryParams) }}"
+                        <a href="{{ route('maintenance.schedule.index', $queryParams) }}"
                             class="px-4 py-2 rounded-lg text-sm font-medium transition-colors
                           {{ $frequency === $freq ? 'bg-[#f9f5ff] text-[#6840c6]' : 'text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb]' }}">
                             {{ ucfirst($freq) }}
@@ -105,7 +60,7 @@
 
                 {{-- ##Date Navigation --}}
                 <div class="flex items-center gap-2">
-                    <a href="{{ route('schedule.index', array_merge($navParams, ['date' => $prevDate->toDateString()])) }}"
+                    <a href="{{ route('maintenance.schedule.index', array_merge($navParams, ['date' => $prevDate->toDateString()])) }}"
                         class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
                         <i class="fa-solid fa-chevron-left"></i>
                     </a>
@@ -116,7 +71,7 @@
                         {{ $formattedRange }}
                     </div>
 
-                    <a href="{{ route('schedule.index', array_merge($navParams, ['date' => $nextDate->toDateString()])) }}"
+                    <a href="{{ route('maintenance.schedule.index', array_merge($navParams, ['date' => $nextDate->toDateString()])) }}"
                         class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
                         <i class="fa-solid fa-chevron-right"></i>
                     </a>
@@ -137,7 +92,7 @@
                     @endphp
 
                     @foreach (['date' => 'None', 'category' => 'Category', 'location' => 'Location'] as $key => $label)
-                        <a href="{{ route('schedule.index', array_merge(request()->query(), ['group' => $key])) }}"
+                        <a href="{{ route('maintenance.schedule.index', array_merge(request()->query(), ['group' => $key])) }}"
                             class="px-4 py-2 rounded-md border text-sm font-medium
                         {{ $group === $key ? 'text-[#6840c6] border-[#6840c6] bg-[#f9f5ff]' : 'text-[#344053] border-[#d0d5dd] hover:bg-[#f8f9fb]' }}">
                             {{ $label }}
@@ -451,21 +406,7 @@
 
     @endif
     {{-- ─── END WORK ORDER CONDITIONAL FOR SELECTED INTERVAL ──────────────────────── --}}
-
-@endif
 {{-- ─── END VESSEL LEVEL WORK ORDER CONDITIONAL ───────────────────────────────────── --}}
 
 
-{{-- Slide-In Flow Modal --}}
-<div id="flow-slideout-wrapper" class="fixed inset-0 z-50 flex justify-end pointer-events-none overflow-hidden">
-
-    {{-- Overlay --}}
-    <div onclick="closeFlowModal()" class="hidden absolute inset-0 bg-black bg-opacity-30 transition-opacity duration-300 pointer-events-auto"
-        id="flow-slideout-overlay"></div>
-
-    {{-- Panel --}}
-    <div id="flow-slideout-panel"
-        class="w-full max-w-5xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 pointer-events-auto overflow-y-auto h-full">
-        {{-- Dynamic Content Goes Here --}}
-    </div>
-</div>
+{{-- Modal structure is now in the main schedule page --}}

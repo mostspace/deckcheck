@@ -42,7 +42,7 @@
             <div>
                 <div class="flex items-center space-x-2">
                     <h1 class="text-2xl font-semibold text-[#0f1728]">{{ $interval->description }}</h1>
-                    <button onclick="window.location='{{ route('intervals.edit', [$category, $interval]) }}'" class="text-[#6840c6] hover:text-[#7e56d8]">
+                    <button onclick="window.location='{{ route('maintenance.intervals.edit', [$category, $interval]) }}'" class="text-[#6840c6] hover:text-[#7e56d8]">
                         <i class="fa-solid fa-edit"></i>
                     </button>
                 </div>
@@ -79,7 +79,7 @@
                 <h2 class="text-lg font-semibold text-[#0f1728]">Tasks</h2>
                 <p class="text-sm text-[#475466] mt-1">Define specific tasks and conditions for this requirement</p>
             </div>
-            <button onclick="window.location='{{ route('maintenance.intervals.tasks.create', $interval) }}'"
+            <button onclick="window.location='{{ route('maintenance.intervals.tasks.create', [$category, $interval]) }}'"
                 class="px-4 py-2 bg-[#7e56d8] text-white rounded-lg hover:bg-[#6840c6] flex items-center gap-2">
                 <i class="fa-solid fa-plus"></i>
                 Add Task
