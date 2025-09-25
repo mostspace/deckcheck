@@ -94,7 +94,6 @@
                     <div>
                         <label for="email" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">Email</label>
                         <input id="email" name="email" type="email" required autofocus 
-                               value="alicesmith@gmail.com"
                                class="w-full px-3 py-2 rounded-lg border text-sm"
                                style="background-color: var(--input-bg); border-color: var(--input-border); color: var(--text-primary);">
                     </div>
