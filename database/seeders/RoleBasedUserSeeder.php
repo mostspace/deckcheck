@@ -13,14 +13,14 @@ class RoleBasedUserSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->command?->info('🚀 Creating role-based users...');
+        $this->command?->info('Creating role-based users...');
 
         // Create users with different roles
         $this->createSuperAdmin();
         $this->createStaff();
         $this->createDev();
 
-        $this->command?->info('✅ Role-based users created successfully!');
+        $this->command?->info('Role-based users created successfully!');
     }
 
 
@@ -51,7 +51,7 @@ class RoleBasedUserSeeder extends Seeder
         ];
 
         User::firstOrCreate(['email' => $userData['email']], $userData);
-        $this->command?->info('👑 Super Admin user created/updated');
+        $this->command?->info('Super Admin user created/updated');
     }
 
     /**
@@ -111,7 +111,7 @@ class RoleBasedUserSeeder extends Seeder
         ];
 
         User::firstOrCreate(['email' => $userData['email']], $userData);
-        $this->command?->info('💻 Dev user created/updated');
+        $this->command?->info('Dev user created/updated');
     }
 
 }
