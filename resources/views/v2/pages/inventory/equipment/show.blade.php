@@ -4,7 +4,7 @@
 
 @section('content')
 
-    @include('v2.components.maintenance.header', [
+    @include('v2.components.nav.header-routing', [
         'activeTab' => 'equipment',
         'context' => 'inventory',
         'enableRefererBreadcrumbs' => true,

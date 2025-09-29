@@ -24,14 +24,12 @@
             [
                 'id' => 'equipment',
                 'label' => 'Equipment',
-                'icon' => 'tab-equipment.svg',
                 'route' => 'inventory.index',
                 'active' => $activeTab === 'equipment'
             ],
             [
                 'id' => 'consumables',
                 'label' => 'Consumables',
-                'icon' => 'tab-consumables.svg',
                 'route' => 'inventory.consumables',
                 'active' => $activeTab === 'consumables'
             ]
