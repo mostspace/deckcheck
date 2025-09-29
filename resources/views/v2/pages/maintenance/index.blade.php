@@ -23,7 +23,7 @@
     @endphp
 
     {{-- Enhanced Maintenance Header --}}
-    @include('v2.components.maintenance.header', [
+    @include('v2.components.nav.header-routing', [
         'activeTab' => 'index',
         'breadcrumbs' => [
             ['label' => 'Maintenance', 'icon' => asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg')],
