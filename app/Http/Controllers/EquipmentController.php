@@ -121,7 +121,7 @@ class EquipmentController extends Controller
         $categories = Category::where('vessel_id', $vessel->id)->orderBy('name')->get();
         $decks = Deck::where('vessel_id', $vessel->id)->orderBy('name')->get();
 
-        return view('inventory.equipment.create', compact('categories', 'decks'));
+        return view('v2.pages.inventory.equipment.create', compact('categories', 'decks'));
     }
 
     public function store(Request $request)
@@ -183,7 +183,7 @@ class EquipmentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('inventory.equipment.show', compact(
+        return view('v2.pages.inventory.equipment.show', compact(
             'equipment',
             'categories',
             'decks',

@@ -1,52 +1,181 @@
 @props([
     'activeTab' => 'index',
+    'context' => 'maintenance', // 'maintenance' or 'inventory'
     'breadcrumbs' => [],
     'actions' => [],
     'showAnnouncement' => true,
-    'announcementText' => 'Some announcement or message'
+    'announcementText' => 'Some announcement or message',
+    'enableRefererBreadcrumbs' => false, // Enable smart referer-based breadcrumbs
+    'refererContext' => null // Additional context for referer logic (e.g., equipment, category)
 ])
 
 @php
+    use Illuminate\Support\Str;
+    
     $user = auth()->user();
     $vessel = currentVessel();
     
-    $tabs = [
-        [
-            'id' => 'summary',
-            'label' => 'Summary',
-            'icon' => 'tab-summary.svg',
-            'route' => 'maintenance.summary',
-            'active' => $activeTab === 'summary'
-        ],
-        [
-            'id' => 'index',
-            'label' => 'Index',
-            'icon' => 'tab-index.svg',
-            'route' => 'maintenance.index',
-            'active' => $activeTab === 'index'
-        ],
-        [
-            'id' => 'manifest',
-            'label' => 'Manifest',
-            'icon' => 'tab-manifest.svg',
-            'route' => 'equipment.index',
-            'active' => $activeTab === 'manifest'
-        ],
-        [
-            'id' => 'deficiencies',
-            'label' => 'Deficiencies',
-            'icon' => 'tab-deficiencies.svg',
-            'route' => 'deficiencies.index',
-            'active' => $activeTab === 'deficiencies'
-        ],
-        [
-            'id' => 'workflow',
-            'label' => 'Workflow',
-            'icon' => 'tab-workflow.svg',
-            'route' => 'maintenance.schedule.index',
-            'active' => $activeTab === 'workflow'
-        ]
-    ];
+    // Determine context based on explicit context parameter
+    $isInventory = $context === 'inventory';
+    
+    if ($isInventory) {
+        // Inventory tabs
+        $tabs = [
+            [
+                'id' => 'equipment',
+                'label' => 'Equipment',
+                'icon' => 'tab-equipment.svg',
+                'route' => 'inventory.index',
+                'active' => $activeTab === 'equipment'
+            ],
+            [
+                'id' => 'consumables',
+                'label' => 'Consumables',
+                'icon' => 'tab-consumables.svg',
+                'route' => 'inventory.consumables',
+                'active' => $activeTab === 'consumables'
+            ]
+        ];
+    } else {
+        // Maintenance tabs
+        $tabs = [
+            [
+                'id' => 'summary',
+                'label' => 'Summary',
+                'icon' => 'tab-summary.svg',
+                'route' => 'maintenance.summary',
+                'active' => $activeTab === 'summary'
+            ],
+            [
+                'id' => 'index',
+                'label' => 'Index',
+                'icon' => 'tab-index.svg',
+                'route' => 'maintenance.index',
+                'active' => $activeTab === 'index'
+            ],
+            [
+                'id' => 'manifest',
+                'label' => 'Manifest',
+                'icon' => 'tab-manifest.svg',
+                'route' => 'inventory.index',
+                'active' => $activeTab === 'manifest'
+            ],
+            [
+                'id' => 'deficiencies',
+                'label' => 'Deficiencies',
+                'icon' => 'tab-deficiencies.svg',
+                'route' => 'deficiencies.index',
+                'active' => $activeTab === 'deficiencies'
+            ],
+            [
+                'id' => 'workflow',
+                'label' => 'Workflow',
+                'icon' => 'tab-workflow.svg',
+                'route' => 'maintenance.schedule.index',
+                'active' => $activeTab === 'workflow'
+            ]
+        ];
+    }
+    
+    // Smart referer-based breadcrumbs
+    if ($enableRefererBreadcrumbs && count($breadcrumbs) === 0) {
+        // Get the Referer header
+        $referer = request()->headers->get('referer', '');
+        $refererPath = parse_url($referer, PHP_URL_PATH) ?: '';
+        
+        if ($isInventory && isset($refererContext['equipment'])) {
+            $equipment = $refererContext['equipment'];
+            
+            // Route paths (relative)
+            $maintenanceIndexPath = route('maintenance.index', [], false);
+            $categoryShowPathPattern = route('maintenance.show', ['category' => $equipment->category->id], false);
+            $equipmentIndexPath = route('inventory.index', [], false);
+            
+            if (Str::startsWith($refererPath, $maintenanceIndexPath)) {
+                $breadcrumbs = [
+                    ['label' => 'Maintenance', 'icon' => asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg'), 'url' => route('maintenance.index')],
+                    ['label' => $equipment->category->name, 'url' => route('maintenance.show', $equipment->category)],
+                    ['label' => $equipment->name, 'active' => true]
+                ];
+            } elseif (Str::startsWith($refererPath, $categoryShowPathPattern)) {
+                $breadcrumbs = [
+                    ['label' => $equipment->category->name, 'url' => route('maintenance.showCategory', $equipment->category)],
+                    ['label' => $equipment->name, 'active' => true]
+                ];
+            } elseif (Str::startsWith($refererPath, $equipmentIndexPath)) {
+                $breadcrumbs = [
+                    ['label' => 'Inventory', 'icon' => asset('assets/media/icons/sidebar-solid-archive-box.svg')],
+                    ['label' => 'Equipment', 'url' => route('inventory.index')],
+                    ['label' => $equipment->name, 'active' => true]
+                ];
+            } else {
+                $breadcrumbs = [
+                    ['label' => 'Inventory', 'icon' => asset('assets/media/icons/sidebar-solid-archive-box.svg')],
+                    ['label' => 'Equipment', 'url' => route('inventory.index')],
+                    ['label' => $equipment->name, 'active' => true]
+                ];
+            }
+        }
+        
+        // Handle interval context for frequency badges
+        if ($isInventory && isset($refererContext['interval'])) {
+            $interval = $refererContext['interval'];
+            $equipment = $interval->equipment;
+            
+            // Route paths (relative)
+            $maintenanceIndexPath = route('maintenance.index', [], false);
+            $categoryShowPathPattern = route('maintenance.show', ['category' => $equipment->category->id], false);
+            $equipmentIndexPath = route('inventory.index', [], false);
+            $intervalShowPath = route('equipment-intervals.show', $interval, false);
+            
+            if (Str::startsWith($refererPath, $maintenanceIndexPath)) {
+                $breadcrumbs = [
+                    ['label' => 'Maintenance', 'icon' => asset('assets/media/icons/sidebar-solid-wrench-scredriver.svg'), 'url' => route('maintenance.index')],
+                    ['label' => $equipment->category->name, 'url' => route('maintenance.show', $equipment->category)],
+                    ['label' => $equipment->name, 'url' => route('equipment.show', $equipment)],
+                    ['label' => ucfirst($interval->frequency) . ' ' . $interval->description, 'active' => true]
+                ];
+            } elseif (Str::startsWith($refererPath, $categoryShowPathPattern)) {
+                $breadcrumbs = [
+                    ['label' => $equipment->category->name, 'url' => route('maintenance.showCategory', $equipment->category)],
+                    ['label' => $equipment->name, 'url' => route('equipment.show', $equipment)],
+                    ['label' => ucfirst($interval->frequency) . ' ' . $interval->description, 'active' => true]
+                ];
+            } elseif (Str::startsWith($refererPath, $equipmentIndexPath)) {
+                $breadcrumbs = [
+                    ['label' => 'Inventory', 'icon' => asset('assets/media/icons/sidebar-solid-archive-box.svg')],
+                    ['label' => 'Equipment', 'url' => route('inventory.index')],
+                    ['label' => $equipment->name, 'url' => route('equipment.show', $equipment)],
+                    ['label' => ucfirst($interval->frequency) . ' ' . $interval->description, 'active' => true]
+                ];
+            } else {
+                $breadcrumbs = [
+                    ['label' => 'Inventory', 'icon' => asset('assets/media/icons/sidebar-solid-archive-box.svg')],
+                    ['label' => 'Equipment', 'url' => route('inventory.index')],
+                    ['label' => $equipment->name, 'url' => route('equipment.show', $equipment)],
+                    ['label' => ucfirst($interval->frequency) . ' ' . $interval->description, 'active' => true]
+                ];
+            }
+        }
+        
+        // Handle work order context - add "Record #X" to interval breadcrumbs
+        if ($isInventory && isset($refererContext['interval']) && request()->routeIs('work-orders.show')) {
+            // Add "Record #X" as the final breadcrumb
+            if (isset($breadcrumbs) && count($breadcrumbs) > 0) {
+                // Remove 'active' from the last breadcrumb and add URL
+                $lastBreadcrumb = array_pop($breadcrumbs);
+                if (isset($lastBreadcrumb['active']) && $lastBreadcrumb['active']) {
+                    $lastBreadcrumb['url'] = route('equipment-intervals.show', $refererContext['interval']);
+                    unset($lastBreadcrumb['active']);
+                }
+                $breadcrumbs[] = $lastBreadcrumb;
+                
+                // Get work order ID from the current request
+                $workOrderId = request()->route('workOrder')->id ?? 'Unknown';
+                $breadcrumbs[] = ['label' => 'Record #' . $workOrderId, 'active' => true];
+            }
+        }
+    }
 @endphp
 
 <!-- Enhanced Maintenance Header -->
@@ -77,7 +206,7 @@
         @endif
     
         <!-- Navigation Tabs -->
-        <div class="flex items-center overflow-x-auto no-scrollbar max-w-full -mb-px gap-0.5 sm:gap-1" role="tablist" aria-label="Maintenance tabs">
+        <div class="flex items-center overflow-x-auto no-scrollbar max-w-full -mb-px gap-0.5 sm:gap-1" role="tablist" aria-label="{{ $isInventory ? 'Inventory' : 'Maintenance' }} tabs">
             @foreach($tabs as $tab)
                 <a href="{{ route($tab['route']) }}" 
                    @if($tab['active'])

@@ -395,7 +395,7 @@ class VesselController extends Controller
         $decks = Deck::where('vessel_id', $category->vessel_id)->orderBy('name')->get();
 
         // return view('v1.maintenance.show', compact('category', 'decks'));
-        return view('v2.pages.crew.maintenance.show', compact('category', 'decks'));
+        return view('v2.pages.maintenance.category', compact('category', 'decks'));
     }
 
     // Create & Store New Category
@@ -419,7 +419,7 @@ class VesselController extends Controller
         }
 
         // return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
-        return view('v2.pages.crew.maintenance.create', compact('types', 'icons', 'vessel'));
+        return view('v2.pages.maintenance.create', compact('types', 'icons', 'vessel'));
     }
 
 
