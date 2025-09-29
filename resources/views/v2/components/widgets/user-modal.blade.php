@@ -45,7 +45,7 @@
                                     </div>
 
                                     @if ($isActive)
-                                        <div class="w-2 h-2 bg-[#12b669] rounded-full"></div>
+                                        <div class="w-3 h-3 bg-[#8BB31A] rounded-full border-[2px] border-white"></div>
                                     @endif
                                 </button>
                             </form>
