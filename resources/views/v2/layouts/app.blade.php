@@ -56,63 +56,9 @@
             <section class="relative flex-1 min-h-0">
                 <div id="main-content" class="h-full rounded-md bg-white overflow-y-auto">
                     <!-- @include('components.main.notification-button') -->
-                    @include('components.main.user-modal')
+                    @include('v2.components.widgets.user-modal')
                     @yield('content')                    
                 </div>
-
-                <!-- Right Drawer (responsive) -->
-                <!-- <aside id="infoDrawer" class="absolute top-0 right-0 w-full sm:max-w-sm h-full border-l hidden translate-x-full transition-transform duration-200 ease-out bg-[#F8F8F6] z-30 overflow-hidden">
-                    <div class="h-full overflow-y-auto">
-                        <div class="flex items-start justify-between p-4 sm:p-6 border-b border-slate-200">
-                            <div class="flex items-center gap-2">
-                                <img src="./assets/media/icons/tab-index-solid.svg" class="h-4 w-4 text-slate-800" />
-                                <h2 class="text-sm sm:text-base text-slate-800 font-semibold">Index page</h2>
-                            </div>
-                            <button id="btnCloseDrawer" class="p-1 rounded hover:bg-slate-200/60" aria-label="Close details">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 6l12 12M18 6 6 18"/></svg>
-                            </button>
-                        </div>
-                        
-                        <div class="space-y-4 sm:space-y-6 p-4 sm:p-6">
-                            <div>
-                                <div class="flex items-center gap-2 mb-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.28125 0.875C2.67719 0.875 2.1875 1.36469 2.1875 1.96875V12.0312C2.1875 12.6353 2.67719 13.125 3.28125 13.125H10.7188C11.3228 13.125 11.8125 12.6353 11.8125 12.0312V7.4375C11.8125 6.22938 10.8331 5.25 9.625 5.25H8.53125C7.92719 5.25 7.4375 4.76031 7.4375 4.15625V3.0625C7.4375 1.85438 6.45812 0.875 5.25 0.875H3.28125ZM4.375 8.75C4.375 8.50838 4.57088 8.3125 4.8125 8.3125H9.1875C9.42912 8.3125 9.625 8.50838 9.625 8.75C9.625 8.99162 9.42912 9.1875 9.1875 9.1875H4.8125C4.57088 9.1875 4.375 8.99162 4.375 8.75ZM4.8125 10.0625C4.57088 10.0625 4.375 10.2584 4.375 10.5C4.375 10.7416 4.57088 10.9375 4.8125 10.9375H7C7.24162 10.9375 7.4375 10.7416 7.4375 10.5C7.4375 10.2584 7.24162 10.0625 7 10.0625H4.8125Z" fill="#0F172A"/>
-                                        <path d="M7.56653 1.05928C8.03131 1.59628 8.3125 2.29655 8.3125 3.0625V4.15625C8.3125 4.27706 8.41044 4.375 8.53125 4.375H9.625C10.3909 4.375 11.0912 4.65619 11.6282 5.12097C11.1103 3.13826 9.54924 1.5772 7.56653 1.05928Z" fill="#0F172A"/>
-                                    </svg>
-                                    <h3 class="text-sm sm:text-base text-slate-800 font-semibold">Overview:</h3>
-                                </div>
-                                <ul class="space-y-2 text-xs sm:text-sm text-slate-600">
-                                    <li class="flex items-start gap-2">
-                                        <div class="w-1 h-1 bg-accent-500 rounded-full mt-2 flex-shrink-0"></div>
-                                        <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <div class="w-1 h-1 bg-accent-500 rounded-full mt-2 flex-shrink-0"></div>
-                                        <span>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>
-                                    </li>
-                                    <li class="flex items-start gap-2">
-                                        <div class="w-1 h-1 bg-accent-500 rounded-full mt-2 flex-shrink-0"></div>
-                                        <span>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            
-                            <div class="border-b border-slate-200"></div>
-                            
-                            <div>
-                                <div class="flex items-center gap-2 mb-3">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 12 12" fill="none">
-                                        <path d="M6 0.400391C9.09279 0.400391 11.5996 2.90721 11.5996 6C11.5996 9.09279 9.09279 11.5996 6 11.5996C2.90721 11.5996 0.400391 9.09279 0.400391 6C0.400391 2.90721 2.90721 0.400391 6 0.400391ZM5.2998 5.2998C5.00995 5.29991 4.77539 5.53531 4.77539 5.8252C4.7755 6.11499 5.01001 6.3495 5.2998 6.34961H5.47754C5.58924 6.34971 5.67235 6.45345 5.64844 6.5625L5.32715 8.00879C5.15715 8.77376 5.73886 9.49989 6.52246 9.5H6.7002C6.99006 9.4999 7.22461 9.26449 7.22461 8.97461C7.2244 8.6849 6.98992 8.4503 6.7002 8.4502H6.52246C6.41069 8.45009 6.32751 8.34643 6.35156 8.2373L6.67285 6.79102C6.84285 6.02604 6.26114 5.29991 5.47754 5.2998H5.2998ZM6 2.5C5.6134 2.5 5.2998 2.8136 5.2998 3.2002C5.29991 3.5867 5.61347 3.90039 6 3.90039C6.38653 3.90039 6.70009 3.5867 6.7002 3.2002C6.7002 2.8136 6.3866 2.5 6 2.5Z" fill="#0F172A"/>
-                                    </svg>
-                                    <h3 class="text-sm sm:text-base text-slate-800 font-semibold">Details:</h3>
-                                </div>
-                                <p class="text-xs sm:text-sm text-slate-600 leading-5 sm:leading-6">
-                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat.                </p>
-                            </div>
-                        </div>
-                    </div>
-                </aside> -->
             </section>
         </main>
 
