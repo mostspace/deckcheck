@@ -229,7 +229,7 @@
                         <tr class="hover:bg-[#f9f5ff]">
                             <td colspan="7" class="px-6 py-4 text-center text-sm text-[#667084]">
                                 No
-                                <a href="{{ route('equipment.index') }}" class="text-[#7e56d8]">equipment</a>
+                                <a href="{{ route('inventory.equipment') }}" class="text-[#7e56d8]">equipment</a>
                                 assigned to category yet.
                             </td>
                         </tr>

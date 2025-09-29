@@ -1,12 +1,27 @@
-@extends('layouts.form-page')
+@extends('v2.layouts.app')
 
-@php
-    $title = 'Add Equipment';
-    $subtitle = 'Quickly assign basic information to a new equipment item.';
-@endphp
+@section('title', 'Add Equipment')
 
-@section('form')
-    <form action="{{ route('equipment.store') }}" method="POST" class="space-y-6">
+@section('content')
+
+    @include('v2.components.maintenance.header', [
+        'activeTab' => 'equipment',
+        'context' => 'inventory',
+        'breadcrumbs' => [
+            ['label' => 'Inventory', 'icon' => asset('assets/media/icons/sidebar-solid-archive-box.svg')],
+            ['label' => 'Equipment', 'url' => route('inventory.equipment')],
+            ['label' => 'Add Equipment', 'active' => true]
+        ]
+    ])
+
+    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div class="max-w-2xl mx-auto">
+            <div class="mb-6">
+                <h1 class="text-2xl font-semibold text-[#0f1728]">Add Equipment</h1>
+                <p class="text-[#475466]">Quickly assign basic information to a new equipment item.</p>
+            </div>
+
+            <form action="{{ route('equipment.store') }}" method="POST" class="space-y-6">
         @csrf
 
         {{-- Category --}}
@@ -100,4 +115,7 @@
                 });
         });
     </script>
+            </form>
+        </div>
+    </div>
 @endsection

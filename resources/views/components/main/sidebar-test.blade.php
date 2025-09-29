@@ -116,7 +116,7 @@
             inventory: {
                 title: "Inventory",
                 links: [
-                    { href: "{{ route('equipment.index') }}", label: "Equipment", active: {{ request()->routeIs('equipment.*') ? 'true' : 'false' }} },
+                    { href: "{{ route('inventory.index') }}", label: "Equipment", active: {{ request()->routeIs('inventory.index') ? 'true' : 'false' }} },
                     { href: "#", label: "Consumables", active: false }
                 ]
             },

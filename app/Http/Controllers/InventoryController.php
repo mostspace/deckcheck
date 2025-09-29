@@ -70,13 +70,36 @@ class InventoryController extends Controller
             ->unique()
             ->values();
 
-        return view('v2.pages.crew.inventory.index', compact(
+        return view('v2.pages.inventory.equipment.index', compact(
             'equipment',
             'operationalCount',
             'inoperableCount',
             'staticFields',
             'attributeKeys',
             'defaultColumns'
+        ));
+    }
+
+    public function equipment()
+    {
+        // Redirect to index() method following RESTful convention
+        return redirect()->route('inventory.index');
+    }
+
+    public function consumables()
+    {
+        $vessel = currentVessel();
+
+        // TODO: Load consumables data when consumables model is implemented
+        // For now, return empty data
+        $consumables = collect([]);
+        $categories = collect([]);
+        $decks = collect([]);
+
+        return view('v2.pages.inventory.consumables', compact(
+            'consumables',
+            'categories',
+            'decks'
         ));
     }
 }

@@ -146,6 +146,11 @@ Route::middleware('auth')->group(function () {
             ->middleware('vessel.access');
     });
 
+    // ------------------------------------  Inventory Navigation Routes ----------------------------------------
+    Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index')->middleware('auth');
+    Route::get('/inventory/equipment', [InventoryController::class, 'equipment'])->name('inventory.equipment')->middleware('auth');
+    Route::get('/inventory/consumables', [InventoryController::class, 'consumables'])->name('inventory.consumables')->middleware('auth');
+
     // Files
     Route::prefix('files')->name('files.')->controller(ReportController::class)->group(function () {
         Route::get('/', 'index')->name('index');

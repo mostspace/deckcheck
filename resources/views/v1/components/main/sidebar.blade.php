@@ -149,11 +149,11 @@
 
             <ul x-show="open" x-collapse class="mt-2 ml-8 space-y-1 overflow-hidden" >
                 <li>
-                    <a href="{{ route('equipment.index') }}"
+                    <a href="{{ route('inventory.index') }}"
                         @class([
                         'block px-3 py-2 text-sm font-light rounded-lg transition',
                         'text-[#6840c6]'      => request()->routeIs('equipment.*'),
-                        'text-[#475466] hover:bg-[#f8f9fb]' => !request()->routeIs('equipment.index'),
+                        'text-[#475466] hover:bg-[#f8f9fb]' => !request()->routeIs('inventory.index'),
                         ]) >
                         Equipment
                     </a>
