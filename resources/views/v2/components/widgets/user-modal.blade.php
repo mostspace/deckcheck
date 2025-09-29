@@ -3,8 +3,8 @@
     <div class="relative bg-white rounded-xl shadow-[0px_8px_8px_-4px_rgba(16,24,40,0.03)] border border-[#e4e7ec] w-[400px] max-w-[90vw] p-[2px]">
         <!-- Modal Header -->
         <div class="h-36 bg-cover bg-end rounded-lg shadow-soft overflow-hidden" style="background-image: url('../../assets/media/images/6ac92bbdf9b2cd246f135736834eb1bd89727377.png');"></div>
-        <button id="close-modal" class="absolute w-10 h-10 right-4 top-4 p-2 rounded-full bg-white/80 hover:bg-white" aria-label="Close profile">
-            <i class="fa-solid fa-times"></i>
+        <button id="close-modal" class="absolute w-9 h-9 right-4 top-4 p-1 rounded-full bg-transparent transition-all duration-300 hover:bg-black/40 text-white" aria-label="Close profile">
+            <i class="fa-solid fa-times text-lg text-lg mt-1"></i>
         </button>
 
         <!-- Modal Content -->
@@ -84,32 +84,41 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="mt-6 rounded-lg border bg-slate-50 divide-y">
-
+            <div class="mt-6 rounded-lg border bg-[#F8F8F6] divide-y">
                 @if (in_array($user->system_role, ['superadmin', 'staff']))
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="w-full flex items-center px-4 py-3 text-sm text-[#344053] hover:bg-slate-200 transition-colors cursor-pointer rounded-t-lg">
-                        <i class="fa-solid fa-shield-halved w-4 h-4 mr-3 text-[#667084]"></i>
-                        Admin Center
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 p-4 hover:bg-slate-100 transition-colors rounded-t-lg">
+                        <span class="text-slate-500">
+                            <img src="./assets/media/icons/shield-check.svg" class="w-5 h-5" alt="Admin" />
+                        </span>
+                        <span class="flex-1 text-sm font-medium">Admin Center</span>
+                        <img src="./assets/media/icons/arrow-long-right.svg" class="w-4 h-4" alt="Arrow" />
                     </a>
                 @endif
 
-                <a href="{{ route('profile.edit') }}"
-                    class="w-full flex items-center px-4 py-3 text-sm text-[#344053] hover:bg-slate-200 transition-colors cursor-pointer">
-                    <i class="fa-solid fa-user w-4 h-4 mr-3 text-[#667084]"></i>
-                    Profile Settings
+                <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 p-4 hover:bg-slate-100 transition-colors">
+                    <span class="text-slate-500">
+                        <img src="./assets/media/icons/user-circle.svg" class="w-5 h-5" alt="Admin" />
+                    </span>
+                    <span class="flex-1 text-sm font-medium">Profile Settings</span>
+                    <img src="./assets/media/icons/arrow-long-right.svg" class="w-4 h-4" alt="Arrow" />
                 </a>
 
-                <button class="w-full flex items-center px-4 py-3 text-sm text-[#344053] hover:bg-slate-200 transition-colors cursor-pointer">
-                    <i class="fa-solid fa-question-circle w-4 h-4 mr-3 text-[#667084]"></i>
-                    Help Center
-                </button>
+                <a href="javascript:void(0)" class="flex items-center gap-3 p-4 hover:bg-slate-100 transition-colors">
+                    <span class="text-slate-500">
+                        <img src="./assets/media/icons/help-center-circle.svg" class="w-5 h-5" alt="Admin" />
+                    </span>
+                    <span class="flex-1 text-sm font-medium">Help Center</span>
+                    <img src="./assets/media/icons/arrow-long-right.svg" class="w-4 h-4" alt="Arrow" />
+                </a>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <button type="submit" class="w-full flex items-center px-4 py-3 text-sm text-[#f04438] hover:bg-[#fef3f2] rounded-b-lg">
-                        <i class="fa-solid fa-sign-out-alt w-4 h-4 mr-3"></i>
-                        Sign Out
+                    <button type="submit" class="w-full flex items-center justify-between gap-3 p-4 hover:bg-slate-100 transition-colors rounded-b-lg">
+                        <span class="flex items-center gap-3">
+                            <img src="./assets/media/icons/sign-out.svg" class="w-5 h-5 text-slate-500" alt="Admin" />
+                            <span class="flex-1 text-sm font-medium">Sign Out</span>
+                        </span>
+                        <img src="./assets/media/icons/arrow-long-right.svg" class="w-4 h-4" alt="Arrow" />
                     </button>
                 </form>
             </div>
