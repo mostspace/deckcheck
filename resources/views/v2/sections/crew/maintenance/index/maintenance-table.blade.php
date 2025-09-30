@@ -12,10 +12,15 @@
                 <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5F6472]"></i>
             </div>
 
-            <button onclick="window.location='{{ route('maintenance.create') }}'" class="px-3 py-2 h-9 bg-primary-500 text-slate-900 rounded-lg text-sm hover:bg-primary-600 transition flex items-center">
-                <i class="fa-solid fa-plus"></i> 
-                <span class="hidden sm:block ml-2">Add New</span>
-            </button>
+            <x-v2.components.ui.button
+                :href="route('maintenance.create')"
+                variant="primary"
+                size="sm"
+                class="h-9 flex items-center px-3 py-2 text-slate-900"
+                icon="fa-solid fa-plus"
+            >
+                <span class="hidden sm:block">Add New</span>
+            </x-v2.components.ui.button>
         </div>
     </div>
 

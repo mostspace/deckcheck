@@ -1,7 +1,9 @@
 @props([
     'variant' => 'primary',
     'size' => 'md',
-    'type' => 'button'
+    'type' => 'button',
+    'icon' => null,
+    'href' => null,
 ])
 
 @php
@@ -18,12 +20,23 @@ $sizeClasses = [
     'md' => 'px-4 py-2 text-sm',
     'lg' => 'px-6 py-3 text-base',
 ];
-$classes = $baseClasses . ' ' . $variantClasses[$variant] . ' ' . $sizeClasses[$size];
+$classes = $baseClasses . ' ' . ($variantClasses[$variant] ?? '') . ' ' . ($sizeClasses[$size] ?? '');
 @endphp
 
-<button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>
-    @if(isset($icon))
-        <i class="{{ $icon }} {{ isset($slot) && $slot->isNotEmpty() ? 'mr-2' : '' }}"></i>
-    @endif
-    {{ $slot }}
-</button>
+@if($href)
+    <a href="{{ $href }}" {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon)
+            <i class="{{ $icon }} {{ isset($slot) && $slot->isNotEmpty() ? 'mr-2' : '' }}"></i>
+        @endif
+        {{ $slot }}
+    </a>
+@else
+    <button type="{{ $type }}" {{ $attributes->merge(['class' => $classes]) }}>
+        @if($icon)
+            <i class="{{ $icon }} {{ isset($slot) && $slot->isNotEmpty() ? 'mr-2' : '' }}"></i>
+        @endif
+        {{ $slot }}
+    </button>
+@endif
+
+
