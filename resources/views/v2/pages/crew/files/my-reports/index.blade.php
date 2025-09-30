@@ -5,10 +5,9 @@
             <h1 class="text-2xl font-semibold text-[#0f1728]">My Reports</h1>
             <p class="text-[#475466]">Your custom reports and saved report configurations.</p>
         </div>
-        <button class="px-4 py-2 bg-[#6840c6] text-white rounded-lg text-sm font-medium hover:bg-[#5a35a8] transition-colors">
-            <i class="fa-solid fa-plus mr-2"></i>
+        <x-v2.components.ui.button type="button" icon="fa-solid fa-plus">
             Create Report
-        </button>
+        </x-v2.components.ui.button>
     </div>
 </div>
 
