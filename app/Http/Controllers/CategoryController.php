@@ -25,7 +25,7 @@ class CategoryController extends Controller
             $query->orderBy('display_order');
         }]);
 
-        return view('maintenance.intervals.show', compact('interval', 'category'));
+        return view('v2.pages.maintenance.intervals.show', compact('interval', 'category'));
     }
 
     public function createInterval(Category $category)
@@ -34,7 +34,7 @@ class CategoryController extends Controller
             abort(403, 'Access denied to this category');
         }
 
-        return view('maintenance.intervals.create', compact('category'));
+        return view('v2.pages.maintenance.intervals.create', compact('category'));
     }
 
     public function storeInterval(Request $request, Category $category)
@@ -44,7 +44,7 @@ class CategoryController extends Controller
         }
 
         $data = $request->validate([
-            'interval'    => 'required|in:Daily,Weekly,Monthly,Quarterly,Annual,Bi-Weekly,Bi-Annually,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
+            'interval'    => 'required|in:Daily,Bi-Weekly,Weekly,Monthly,Quarterly,Bi-Annually,Annual,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
             'facilitator' => 'required|in:Crew,Service Provider',
             'description' => 'nullable|string',
         ]);
@@ -88,7 +88,7 @@ class CategoryController extends Controller
             abort(403, 'Access denied to this category');
         }
 
-        return view('maintenance.intervals.edit', compact('interval', 'category'));
+        return view('v2.pages.maintenance.intervals.edit', compact('interval', 'category'));
     }
 
     public function updateInterval(Request $request, Category $category, Interval $interval)
@@ -102,7 +102,7 @@ class CategoryController extends Controller
         }
 
         $data = $request->validate([
-            'interval'    => 'required|in:Daily,Weekly,Monthly,Quarterly,Annual,Bi-Weekly,Bi-Annually,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
+            'interval'    => 'required|in:Daily,Bi-Weekly,Weekly,Monthly,Quarterly,Bi-Annually,Annual,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
             'facilitator' => 'required|in:Crew,Service Provider',
             'description' => 'nullable|string',
         ]);
@@ -132,7 +132,7 @@ class CategoryController extends Controller
             $query->orderBy('display_order');
         }]);
 
-        return view('maintenance.intervals.show', compact('interval', 'category'));
+        return view('v2.pages.maintenance.intervals.show', compact('interval', 'category'));
     }
 
     // Create & Store Interval
@@ -145,7 +145,7 @@ class CategoryController extends Controller
 
         return view('maintenance.intervals.create', compact('category'));
     }
-    
+
     public function storeInterval(Request $request, Category $category)
     {
         if ($category->vessel_id !== auth()->user()->vessel_id) {
@@ -200,7 +200,7 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        return view('maintenance.intervals.edit', compact('interval', 'category'));
+        return view('v2.pages.maintenance.intervals.edit', compact('interval', 'category'));
     }
 
     public function updateInterval(Request $request, Category $category, Interval $interval)
