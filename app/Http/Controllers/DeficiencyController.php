@@ -25,7 +25,7 @@ class DeficiencyController extends Controller
 
         // Calculate deficiency age distribution for open deficiencies
         $openDeficiencies = $deficiencies->where('status', 'open');
-        
+
         $ageDistribution = [
             'under_30_days' => 0,
             '30_to_90_days' => 0,
@@ -34,7 +34,7 @@ class DeficiencyController extends Controller
 
         foreach ($openDeficiencies as $deficiency) {
             $daysOpen = $deficiency->created_at->diffInDays(now());
-            
+
             if ($daysOpen < 30) {
                 $ageDistribution['under_30_days']++;
             } elseif ($daysOpen >= 30 && $daysOpen <= 90) {
@@ -113,14 +113,14 @@ class DeficiencyController extends Controller
         $users = $deficiency->equipment->vessel->users ?? collect();
 
         $deficiency->load([
-            'updates.createdBy', 
+            'updates.createdBy',
             'equipment',
             'assignedTo',
             'openedBy',
             'workOrder.tasks.completedBy',
         ]);
 
-        return view('maintenance.deficiencies.show', compact('deficiency', 'users'));
+        return view('v2.pages.maintenance.deficiencies.show', compact('deficiency', 'users'));
     }
 
     /**
@@ -163,7 +163,7 @@ class DeficiencyController extends Controller
     {
         //
     }
-   
+
     // Create & Store Update
     public function storeUpdate(Request $request, Deficiency $deficiency)
     {
@@ -225,6 +225,6 @@ class DeficiencyController extends Controller
             abort(403, 'Access denied to this vessel');
         }
     }
-    
+
 
 }
