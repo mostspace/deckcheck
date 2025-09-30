@@ -224,12 +224,19 @@
                             $iconName = $tab['icon'];
                             $solidIconName = str_replace('.svg', '-solid.svg', $iconName);
                         @endphp
-                        <img 
-                            src="{{ asset('assets/media/icons/' . $iconName) }}" 
-                            data-solid-src="{{ asset('assets/media/icons/' . $solidIconName) }}"
-                            class="h-4 w-4 tab-icon {{ $tab['active'] || $tab['id'] === 'workflow' ? 'text-slate-900' : 'text-slate-500' }}" 
-                            alt="{{ $tab['label'] }}" 
-                        />
+                        @if($tab['active'])
+                            <img 
+                                src="{{ asset('assets/media/icons/' . $solidIconName) }}" 
+                                class="h-4 w-4 tab-icon text-slate-900" 
+                                alt="{{ $tab['label'] }}" 
+                            />
+                        @else
+                            <img 
+                                src="{{ asset('assets/media/icons/' . $iconName) }}" 
+                                class="h-4 w-4 tab-icon text-slate-500" 
+                                alt="{{ $tab['label'] }}" 
+                            />
+                        @endif
                     @endif
                     <span class="tab-text">{{ $tab['label'] }}</span>
                 </a>
