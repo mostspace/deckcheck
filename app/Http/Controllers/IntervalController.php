@@ -26,9 +26,10 @@ class IntervalController extends Controller
             abort(403, 'Access denied to this interval');
         }
 
-        //$interval->load('instructions'); // or whatever relations you want
+        // Load the applicable equipment relationship
+        $task->load('applicableEquipment.equipment.category', 'applicableEquipment.equipment.deck', 'applicableEquipment.equipment.location');
 
-        return view('maintenance.intervals.tasks.show', compact('task', 'interval'));
+        return view('v2.pages.maintenance.intervals.tasks.show', compact('task', 'interval'));
     }
 
     public function createTask(Category $category, Interval $interval)
@@ -73,7 +74,7 @@ class IntervalController extends Controller
             return [$key => collect($options)->pluck('label', 'value')];
         });
 
-        return view('maintenance.intervals.tasks.create', compact(
+        return view('v2.pages.maintenance.intervals.tasks.create', compact(
             'interval',
             'staticConditions',
             'dynamicConditions',
@@ -225,7 +226,7 @@ class IntervalController extends Controller
         }
         if (!is_array($conditions)) $conditions = [];
 
-        return view('maintenance.intervals.tasks.edit', compact(
+        return view('v2.pages.maintenance.intervals.tasks.edit', compact(
             'category',
             'interval',
             'task',
