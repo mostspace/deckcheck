@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class AdminUserSeeder extends Seeder
 {
@@ -14,14 +16,13 @@ class AdminUserSeeder extends Seeder
             ['email' => 'rj@deckcheck.app'],
             [
                 'email' => 'rj@deckcheck.app',
-                'password' => Hash::make('password'), 
+                'password' => Hash::make('password'),
                 'first_name' => 'RJ',
                 'last_name' => 'Cremin',
                 'phone' => '2036158068',
-                'system_role' => 'superadmin'
+                'system_role' => 'superadmin',
             ]
 
-        
         );
     }
 }

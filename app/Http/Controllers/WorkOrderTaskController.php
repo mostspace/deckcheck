@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\WorkOrderTask;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Services\WorkOrderGenerationService;
 
 class WorkOrderTaskController extends Controller
 {
@@ -69,7 +70,7 @@ class WorkOrderTaskController extends Controller
     public function updateStatus(Request $request, WorkOrderTask $task)
     {
         // Ensure user has access to the vessel this task belongs to
-        if (!auth()->user()->hasSystemAccessToVessel($task->workOrder->equipmentInterval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($task->workOrder->equipmentInterval->equipment->vessel)) {
             abort(403, 'Access denied to this vessel');
         }
 
@@ -80,10 +81,10 @@ class WorkOrderTaskController extends Controller
         $isResolved = in_array($validated['status'], ['completed', 'flagged']);
 
         $task->update([
-            'status'        => $validated['status'],
-            'is_flagged'    => $validated['status'] === 'flagged',
-            'completed_at'  => $isResolved ? now() : null,
-            'completed_by'  => $isResolved ? auth()->id() : null,
+            'status' => $validated['status'],
+            'is_flagged' => $validated['status'] === 'flagged',
+            'completed_at' => $isResolved ? now() : null,
+            'completed_by' => $isResolved ? auth()->id() : null,
         ]);
 
         $workOrder = $task->workOrder()->with(['tasks', 'equipmentInterval.workOrders'])->first();
@@ -103,7 +104,4 @@ class WorkOrderTaskController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-
-
 }

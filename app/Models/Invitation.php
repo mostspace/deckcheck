@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Boarding;
-use App\Models\User;
 
 class Invitation extends Model
 {
@@ -26,5 +26,4 @@ class Invitation extends Model
         'accepted_at',
         'invited_by',
     ];
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -105,11 +107,11 @@ class Attachment extends Model
     {
         $query = static::where('attachable_id', $attachable->id)
             ->where('attachable_type', get_class($attachable));
-        
+
         if ($role) {
             $query->where('role', $role);
         }
-        
+
         return $query->max('ordering') + 1;
     }
 }

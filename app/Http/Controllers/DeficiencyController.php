@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Deficiency;
-use Illuminate\Http\Request;
-use App\Models\Equipment;
-use App\Models\WorkOrder;
-use App\Models\User;
 use App\Models\DeficiencyUpdate;
+use Illuminate\Http\Request;
 
 class DeficiencyController extends Controller
 {
@@ -29,7 +28,7 @@ class DeficiencyController extends Controller
         $ageDistribution = [
             'under_30_days' => 0,
             '30_to_90_days' => 0,
-            'over_90_days' => 0
+            'over_90_days' => 0,
         ];
 
         foreach ($openDeficiencies as $deficiency) {
@@ -50,28 +49,27 @@ class DeficiencyController extends Controller
             'data' => [
                 $ageDistribution['under_30_days'],
                 $ageDistribution['30_to_90_days'],
-                $ageDistribution['over_90_days']
+                $ageDistribution['over_90_days'],
             ],
-            'colors' => ['#12b76a', '#f79009', '#f04438']
+            'colors' => ['#12b76a', '#f79009', '#f04438'],
         ];
 
         return view('v2.pages.maintenance.deficiencies', compact('deficiencies', 'ageDistribution', 'chartData'));
     }
-
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        {
-            $vessel = currentVessel();
 
-            return view('deficiencies.create', [
-                'equipmentList' => $vessel->equipment,
-                'workOrders' => $vessel->workOrders ?? collect(),
-            ]);
-        }
+        $vessel = currentVessel();
+
+        return view('deficiencies.create', [
+            'equipmentList' => $vessel->equipment,
+            'workOrders' => $vessel->workOrders ?? collect(),
+        ]);
+
     }
 
     /**
@@ -80,11 +78,11 @@ class DeficiencyController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'equipment_id'  => 'required|exists:equipment,id',
+            'equipment_id' => 'required|exists:equipment,id',
             'work_order_id' => 'nullable|exists:work_orders,id',
-            'subject'       => 'required|string|max:255',
-            'description'   => 'nullable|string',
-            'priority'      => 'required|in:low,medium,high',
+            'subject' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'priority' => 'required|in:low,medium,high',
         ]);
 
         $validated['opened_by'] = auth()->id();
@@ -96,7 +94,7 @@ class DeficiencyController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Deficiency logged successfully!'
+                'message' => 'Deficiency logged successfully!',
             ]);
         }
 
@@ -155,7 +153,6 @@ class DeficiencyController extends Controller
         return back()->with('success', 'Assignee updated.');
     }
 
-
     /**
      * Remove the specified resource from storage.
      */
@@ -177,13 +174,13 @@ class DeficiencyController extends Controller
         ]);
 
         $update = new DeficiencyUpdate([
-            'deficiency_id'     => $deficiency->id,
-            'created_by'        => auth()->id(),
-            'comment'           => $request->input('comment'),
-            'previous_status'   => $deficiency->status,
-            'new_status'        => $request->input('new_status') !== $deficiency->status ? $request->input('new_status') : null,
+            'deficiency_id' => $deficiency->id,
+            'created_by' => auth()->id(),
+            'comment' => $request->input('comment'),
+            'previous_status' => $deficiency->status,
+            'new_status' => $request->input('new_status') !== $deficiency->status ? $request->input('new_status') : null,
             'previous_priority' => $deficiency->priority,
-            'new_priority'      => $request->input('new_priority') !== $deficiency->priority ? $request->input('new_priority') : null,
+            'new_priority' => $request->input('new_priority') !== $deficiency->priority ? $request->input('new_priority') : null,
         ]);
 
         // Only assign if something actually changed or comment was made
@@ -221,10 +218,8 @@ class DeficiencyController extends Controller
 
     protected function authorizeAccess(Deficiency $deficiency)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($deficiency->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($deficiency->equipment->vessel)) {
             abort(403, 'Access denied to this vessel');
         }
     }
-
-
 }

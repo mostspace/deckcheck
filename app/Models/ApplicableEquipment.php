@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Equipment;
-use App\Models\Task;
 
 class ApplicableEquipment extends Model
 {
@@ -19,8 +19,7 @@ class ApplicableEquipment extends Model
     }
 
     protected $fillable = [
-    'task_id',
-    'equipment_id',
+        'task_id',
+        'equipment_id',
     ];
-
 }

@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Laravel Directory Setup Script
  * Ensures all necessary directories exist before composer install
  */
-
 echo "Setting up Laravel directories...\n";
 
 $directories = [
@@ -17,7 +18,7 @@ $directories = [
 ];
 
 foreach ($directories as $directory) {
-    if (!is_dir($directory)) {
+    if (! is_dir($directory)) {
         if (mkdir($directory, 0755, true)) {
             echo "Created directory: $directory\n";
         } else {

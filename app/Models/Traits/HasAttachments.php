@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models\Traits;
 
 use App\Models\Attachment;
@@ -78,7 +80,7 @@ trait HasAttachments
         string $visibility = 'private'
     ): array {
         $attachments = [];
-        
+
         foreach ($uploadedFiles as $uploadedFile) {
             $attachments[] = $this->attachFile(
                 $uploadedFile,
@@ -88,7 +90,7 @@ trait HasAttachments
                 $visibility
             );
         }
-        
+
         return $attachments;
     }
 
@@ -98,17 +100,17 @@ trait HasAttachments
     public function removeAttachment(int $attachmentId): bool
     {
         $attachment = $this->attachments()->find($attachmentId);
-        
+
         if ($attachment) {
             // Delete the file from storage
             $attachment->file->deleteFile();
-            
+
             // Delete the attachment record
             $attachment->delete();
-            
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -119,13 +121,13 @@ trait HasAttachments
     {
         $attachments = $this->attachmentsByRole($role)->get();
         $count = 0;
-        
+
         foreach ($attachments as $attachment) {
             if ($this->removeAttachment($attachment->id)) {
                 $count++;
             }
         }
-        
+
         return $count;
     }
 
@@ -136,13 +138,13 @@ trait HasAttachments
     {
         $attachments = $this->attachments()->get();
         $count = 0;
-        
+
         foreach ($attachments as $attachment) {
             if ($this->removeAttachment($attachment->id)) {
                 $count++;
             }
         }
-        
+
         return $count;
     }
 

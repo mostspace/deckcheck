@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\Interval;
-use App\Models\Category;
-use App\Models\Task;
-use App\Models\Deck;
-use App\Models\Location;
-use Illuminate\Http\Request;
 use App\Models\ApplicableEquipment;
-
+use App\Models\Category;
+use App\Models\Deck;
+use App\Models\Interval;
+use App\Models\Location;
+use App\Models\Task;
+use Illuminate\Http\Request;
 
 class IntervalController extends Controller
 {
@@ -22,7 +23,7 @@ class IntervalController extends Controller
         }
 
         // Confirm the user has access to this vessel
-        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
             abort(403, 'Access denied to this interval');
         }
 
@@ -34,7 +35,7 @@ class IntervalController extends Controller
 
     public function createTask(Category $category, Interval $interval)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
             abort(403, 'Access denied to this interval');
         }
 
@@ -42,16 +43,16 @@ class IntervalController extends Controller
 
         // Static fields to be conditionally matched
         $staticConditions = [
-            'manufacturer' => $equipmentInCategory->pluck('manufacturer')->unique()->filter()->map(fn($val) => ['label' => $val, 'value' => $val])->values(),
-            'model' => $equipmentInCategory->pluck('model')->unique()->filter()->map(fn($val) => ['label' => $val, 'value' => $val])->values(),
+            'manufacturer' => $equipmentInCategory->pluck('manufacturer')->unique()->filter()->map(fn ($val) => ['label' => $val, 'value' => $val])->values(),
+            'model' => $equipmentInCategory->pluck('model')->unique()->filter()->map(fn ($val) => ['label' => $val, 'value' => $val])->values(),
         ];
 
         // Dynamic select fields using related models
         $staticConditions['deck_id'] = Deck::whereIn('id', $equipmentInCategory->pluck('deck_id')->filter()->unique())
-            ->get()->map(fn($deck) => ['label' => $deck->name, 'value' => $deck->id])->values();
+            ->get()->map(fn ($deck) => ['label' => $deck->name, 'value' => $deck->id])->values();
 
         $staticConditions['location_id'] = Location::whereIn('id', $equipmentInCategory->pluck('location_id')->filter()->unique())
-            ->get()->map(fn($loc) => ['label' => $loc->name, 'value' => $loc->id])->values();
+            ->get()->map(fn ($loc) => ['label' => $loc->name, 'value' => $loc->id])->values();
 
         // Dynamic user-defined attributes
         $dynamicRaw = [];
@@ -62,7 +63,7 @@ class IntervalController extends Controller
         }
 
         $dynamicConditions = collect($dynamicRaw)->map(function ($values) {
-            return collect($values)->unique()->filter()->map(fn($val) => ['label' => $val, 'value' => $val])->values();
+            return collect($values)->unique()->filter()->map(fn ($val) => ['label' => $val, 'value' => $val])->values();
         });
 
         // JSON-friendly format for dynamic JS injection
@@ -89,7 +90,7 @@ class IntervalController extends Controller
             abort(404);
         }
 
-        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
             abort(403, 'Access denied to this interval');
         }
 
@@ -120,7 +121,7 @@ class IntervalController extends Controller
         // Only save fully valid conditions
         if ($data['applicable_to'] === 'Conditional') {
             $conditions = collect($data['applicability_conditions'] ?? [])
-                ->filter(fn($row) => isset($row['key'], $row['value']) && $row['key'] !== '' && $row['value'] !== '')
+                ->filter(fn ($row) => isset($row['key'], $row['value']) && $row['key'] !== '' && $row['value'] !== '')
                 ->values()
                 ->all();
             $data['applicability_conditions'] = json_encode($conditions);
@@ -132,7 +133,7 @@ class IntervalController extends Controller
         $task = Task::create($data);
 
         // Save specific equipment (if applicable)
-        if ($data['applicable_to'] === 'Specific Equipment' && !empty($data['specific_equipment'])) {
+        if ($data['applicable_to'] === 'Specific Equipment' && ! empty($data['specific_equipment'])) {
             foreach ($data['specific_equipment'] as $equipmentId) {
                 $task->applicableEquipment()->create([
                     'equipment_id' => $equipmentId,
@@ -144,7 +145,6 @@ class IntervalController extends Controller
             ->route('maintenance.intervals.show', ['category' => $category, 'interval' => $interval])
             ->with('success', 'Task created.');
     }
-
 
     // Delete Task
     public function destroyTask(Category $category, Interval $interval, Task $task)
@@ -178,16 +178,16 @@ class IntervalController extends Controller
 
         // Static fields to be conditionally matched
         $staticConditions = [
-            'manufacturer' => $equipmentInCategory->pluck('manufacturer')->unique()->filter()->map(fn($val) => ['label' => $val, 'value' => $val])->values(),
-            'model' => $equipmentInCategory->pluck('model')->unique()->filter()->map(fn($val) => ['label' => $val, 'value' => $val])->values(),
+            'manufacturer' => $equipmentInCategory->pluck('manufacturer')->unique()->filter()->map(fn ($val) => ['label' => $val, 'value' => $val])->values(),
+            'model' => $equipmentInCategory->pluck('model')->unique()->filter()->map(fn ($val) => ['label' => $val, 'value' => $val])->values(),
         ];
 
         // Dynamic select fields using related models
         $staticConditions['deck_id'] = Deck::whereIn('id', $equipmentInCategory->pluck('deck_id')->filter()->unique())
-            ->get()->map(fn($deck) => ['label' => $deck->name, 'value' => $deck->id])->values();
+            ->get()->map(fn ($deck) => ['label' => $deck->name, 'value' => $deck->id])->values();
 
         $staticConditions['location_id'] = Location::whereIn('id', $equipmentInCategory->pluck('location_id')->filter()->unique())
-            ->get()->map(fn($loc) => ['label' => $loc->name, 'value' => $loc->id])->values();
+            ->get()->map(fn ($loc) => ['label' => $loc->name, 'value' => $loc->id])->values();
 
         // Dynamic user-defined attributes
         $dynamicRaw = [];
@@ -198,7 +198,7 @@ class IntervalController extends Controller
         }
 
         $dynamicConditions = collect($dynamicRaw)->map(function ($values) {
-            return collect($values)->unique()->filter()->map(fn($val) => ['label' => $val, 'value' => $val])->values();
+            return collect($values)->unique()->filter()->map(fn ($val) => ['label' => $val, 'value' => $val])->values();
         });
 
         $staticConditionsJson = collect($staticConditions)->mapWithKeys(function ($options, $key) {
@@ -217,14 +217,16 @@ class IntervalController extends Controller
         if (is_null($conditions)) {
             if (is_array($task->applicability_conditions)) {
                 $conditions = $task->applicability_conditions;
-            } elseif (is_string($task->applicability_conditions) && !empty($task->applicability_conditions)) {
+            } elseif (is_string($task->applicability_conditions) && ! empty($task->applicability_conditions)) {
                 $decoded = json_decode($task->applicability_conditions, true);
                 $conditions = is_array($decoded) ? $decoded : [];
             } else {
                 $conditions = [];
             }
         }
-        if (!is_array($conditions)) $conditions = [];
+        if (! is_array($conditions)) {
+            $conditions = [];
+        }
 
         return view('v2.pages.maintenance.intervals.tasks.edit', compact(
             'category',
@@ -239,7 +241,6 @@ class IntervalController extends Controller
         ));
     }
 
-
     public function updateTask(Request $request, Category $category, Interval $interval, Task $task)
     {
         if (
@@ -249,7 +250,7 @@ class IntervalController extends Controller
             abort(404);
         }
 
-        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
             abort(403, 'Access denied to this interval');
         }
 
@@ -275,7 +276,7 @@ class IntervalController extends Controller
         // Only save fully valid conditions
         if ($data['applicable_to'] === 'Conditional') {
             $conditions = collect($data['applicability_conditions'] ?? [])
-                ->filter(fn($row) => isset($row['key'], $row['value']) && $row['key'] !== '' && $row['value'] !== '')
+                ->filter(fn ($row) => isset($row['key'], $row['value']) && $row['key'] !== '' && $row['value'] !== '')
                 ->values()
                 ->all();
             $data['applicability_conditions'] = json_encode($conditions);
@@ -301,10 +302,6 @@ class IntervalController extends Controller
             ->route('maintenance.intervals.show', ['category' => $category, 'interval' => $interval])
             ->with('success', 'Task updated.');
     }
-
-
-
-
 
     /**
      * Display a listing of the resource.

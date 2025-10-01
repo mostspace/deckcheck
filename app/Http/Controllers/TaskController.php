@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\Task;
 use App\Models\Interval;
-use Illuminate\Http\Request;
+use App\Models\Task;
 use App\Services\WorkOrderGenerationService;
+use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-
     public function reorder(Request $request, Interval $interval)
     {
         // Check if user has access to this interval's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($interval->category->vessel)) {
             abort(403, 'Access denied to this interval');
         }
 
@@ -21,7 +22,7 @@ class TaskController extends Controller
         $data = $request->validate([
             'order' => 'required|array',
             'order.*.id' => 'required|integer|exists:tasks,id',
-            'order.*.display_order' => 'required|integer'
+            'order.*.display_order' => 'required|integer',
         ]);
 
         // update each task's display order
@@ -37,14 +38,10 @@ class TaskController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-       
-    }
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.

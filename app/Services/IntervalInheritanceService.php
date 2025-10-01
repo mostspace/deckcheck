@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Equipment;
 use App\Models\EquipmentInterval;
 use App\Models\Interval;
 use App\Models\WorkOrder;
-use App\Services\WorkOrderGenerationService;
 
 class IntervalInheritanceService
 {
@@ -14,8 +15,8 @@ class IntervalInheritanceService
     public function handle(Equipment $equipment): void
     {
         $intervals = Interval::with('tasks')
-                             ->where('category_id', $equipment->category_id)
-                             ->get();
+            ->where('category_id', $equipment->category_id)
+            ->get();
 
         foreach ($intervals as $interval) {
             $this->createEquipmentInterval($equipment, $interval);
@@ -25,26 +26,26 @@ class IntervalInheritanceService
     public function handleNewInterval(Interval $interval): void
     {
         Equipment::where('category_id', $interval->category_id)
-                 ->cursor()
-                 ->each(function (Equipment $equipment) use ($interval) {
-                     $this->createEquipmentInterval($equipment, $interval);
-                 });
+            ->cursor()
+            ->each(function (Equipment $equipment) use ($interval) {
+                $this->createEquipmentInterval($equipment, $interval);
+            });
     }
 
     // Create Equipment Interval
     protected function createEquipmentInterval(Equipment $equipment, Interval $interval): EquipmentInterval
     {
         $ei = EquipmentInterval::create([
-            'equipment_id'       => $equipment->id,
-            'interval_id'        => $interval->id,
-            'description'        => $interval->description,
-            'facilitator'        => $interval->facilitator,
-            'frequency'          => $interval->interval,
+            'equipment_id' => $equipment->id,
+            'interval_id' => $interval->id,
+            'description' => $interval->description,
+            'facilitator' => $interval->facilitator,
+            'frequency' => $interval->interval,
             'frequency_interval' => $this->mapToFrequencyString($interval->interval),
-            'is_active'          => true,
+            'is_active' => true,
             'first_completed_at' => null,
-            'last_completed_at'  => null,
-            'next_due_date'      => null,
+            'last_completed_at' => null,
+            'next_due_date' => null,
         ]);
 
         // your existing initial work order logic
@@ -57,20 +58,20 @@ class IntervalInheritanceService
     // Parse Frequency for Carbon
     protected function mapToFrequencyString(string $interval): string
     {
-        return match (strtolower($interval)) {
-            'daily'        => '1 day',
-            'weekly'       => '1 week',
-            'bi-weekly'    => '2 weeks',
-            'monthly'      => '1 month',
-            'quarterly'    => '3 months',
-            'bi-annually'  => '6 months',
-            'annual'       => '1 year',
-            '2-yearly'     => '2 years',
-            '3-yearly'     => '3 years',
-            '5-yearly'     => '5 years',
-            '6-yearly'     => '6 years',
-            '10-yearly'    => '10 years',
-            '12-yearly'    => '12 years',
+        return match (mb_strtolower($interval)) {
+            'daily' => '1 day',
+            'weekly' => '1 week',
+            'bi-weekly' => '2 weeks',
+            'monthly' => '1 month',
+            'quarterly' => '3 months',
+            'bi-annually' => '6 months',
+            'annual' => '1 year',
+            '2-yearly' => '2 years',
+            '3-yearly' => '3 years',
+            '5-yearly' => '5 years',
+            '6-yearly' => '6 years',
+            '10-yearly' => '10 years',
+            '12-yearly' => '12 years',
             default => throw new \InvalidArgumentException("Unrecognized interval: {$interval}"),
         };
     }
@@ -80,7 +81,7 @@ class IntervalInheritanceService
     {
         $eqIntervals = EquipmentInterval::where('interval_id', $interval->id)->get();
         $count = $eqIntervals->count();
-        $ids   = $eqIntervals->pluck('id')->all();
+        $ids = $eqIntervals->pluck('id')->all();
 
         // Deactivate them
         EquipmentInterval::whereIn('id', $ids)

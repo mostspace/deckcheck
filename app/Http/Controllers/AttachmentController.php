@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Attachment;
-use App\Models\File;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +29,7 @@ class AttachmentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -37,7 +38,7 @@ class AttachmentController extends Controller
             // Resolve the class from the string - handle both full class names and aliases
             $attachableType = $request->attachable_type;
             $attachableClass = null;
-            
+
             // Map common aliases to full class names
             $classMap = [
                 'Equipment' => 'App\Models\Equipment',
@@ -46,20 +47,20 @@ class AttachmentController extends Controller
                 'WorkOrder' => 'App\Models\WorkOrder',
                 'Deficiency' => 'App\Models\Deficiency',
             ];
-            
+
             if (isset($classMap[$attachableType])) {
                 $attachableClass = $classMap[$attachableType];
             } else {
                 // Try to use the string directly (for full class names)
                 $attachableClass = $attachableType;
             }
-            
-            if (!class_exists($attachableClass)) {
+
+            if (! class_exists($attachableClass)) {
                 throw new \Exception("Class '{$attachableClass}' not found");
             }
-            
+
             $attachableModel = $attachableClass::find($request->attachable_id);
-            
+
             $ordering = $request->ordering ?? Attachment::getNextOrdering(
                 $attachableModel,
                 $request->role
@@ -80,13 +81,13 @@ class AttachmentController extends Controller
             return response()->json([
                 'success' => true,
                 'attachment' => $attachment,
-                'message' => 'Attachment created successfully'
+                'message' => 'Attachment created successfully',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create attachment: ' . $e->getMessage()
+                'message' => 'Failed to create attachment: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -105,7 +106,7 @@ class AttachmentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -115,13 +116,13 @@ class AttachmentController extends Controller
             return response()->json([
                 'success' => true,
                 'attachment' => $attachment->fresh()->load(['file', 'createdBy']),
-                'message' => 'Attachment updated successfully'
+                'message' => 'Attachment updated successfully',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update attachment: ' . $e->getMessage()
+                'message' => 'Failed to update attachment: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -133,10 +134,10 @@ class AttachmentController extends Controller
     {
         try {
             // Check if user can delete this attachment
-            if (!$this->canDeleteAttachment($attachment)) {
+            if (! $this->canDeleteAttachment($attachment)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Access denied'
+                    'message' => 'Access denied',
                 ], 403);
             }
 
@@ -145,13 +146,13 @@ class AttachmentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Attachment deleted successfully'
+                'message' => 'Attachment deleted successfully',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to delete attachment: ' . $e->getMessage()
+                'message' => 'Failed to delete attachment: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -170,7 +171,7 @@ class AttachmentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -181,13 +182,13 @@ class AttachmentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Attachments reordered successfully'
+                'message' => 'Attachments reordered successfully',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to reorder attachments: ' . $e->getMessage()
+                'message' => 'Failed to reorder attachments: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -204,7 +205,7 @@ class AttachmentController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -222,13 +223,13 @@ class AttachmentController extends Controller
 
             return response()->json([
                 'success' => true,
-                'attachments' => $attachments
+                'attachments' => $attachments,
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to fetch attachments: ' . $e->getMessage()
+                'message' => 'Failed to fetch attachments: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -239,22 +240,22 @@ class AttachmentController extends Controller
     protected function canDeleteAttachment(Attachment $attachment): bool
     {
         $user = Auth::user();
-        
+
         // Admin users can delete any attachment
         if ($user->is_admin) {
             return true;
         }
-        
+
         // Users can delete attachments they created
         if ($user->id === $attachment->created_by) {
             return true;
         }
-        
+
         // Users can delete attachments from their vessel
         if ($attachment->file && $user->vessel_id === $attachment->file->vessel) {
             return true;
         }
-        
+
         return false;
     }
 }

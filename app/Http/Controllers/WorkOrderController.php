@@ -1,25 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
+use App\Models\Deficiency;
+use App\Models\EquipmentInterval;
+use App\Models\Vessel;
 use App\Models\WorkOrder;
 use Illuminate\Http\Request;
-use App\Models\Equipment;
-use App\Models\Deficiency;
-use App\Models\Vessel;
-use App\Models\EquipmentInterval;
-
 
 class WorkOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        
-    }
-
+    public function index() {}
 
     /**
      * Show the form for creating a new resource.
@@ -41,10 +37,10 @@ class WorkOrderController extends Controller
     public function show(WorkOrder $workOrder)
     {
         // Check if user has access to this work order's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
             abort(403, 'Access denied to this work order');
         }
-        
+
         $workOrder->load([
             'equipmentInterval.equipment.location.deck',
             'completedBy',
@@ -87,7 +83,7 @@ class WorkOrderController extends Controller
     public function assign(Request $request, WorkOrder $workOrder)
     {
         // Check if user has access to this work order's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
             abort(403, 'Access denied to this work order');
         }
 
@@ -120,7 +116,7 @@ class WorkOrderController extends Controller
     public function open(Request $request, WorkOrder $workOrder)
     {
         // Check if user has access to this work order's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
             abort(403, 'Access denied to this work order');
         }
 
@@ -134,12 +130,11 @@ class WorkOrderController extends Controller
         return response()->json(['success' => true]);
     }
 
-
     // Complete Work Order & Generate Deficiency if Needed
     public function complete(Request $request, WorkOrder $workOrder)
     {
         // Check if user has access to this work order's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
             abort(403, 'Access denied to this work order');
         }
 
@@ -162,14 +157,14 @@ class WorkOrderController extends Controller
 
         // Determine new status and timestamps
         $newStatus = 'completed';
-        $now       = now();
+        $now = now();
 
         // Build update payload
         $updateData = [
-            'status'       => $newStatus,
+            'status' => $newStatus,
             'completed_at' => $now,
             'completed_by' => auth()->id(),
-            'notes'        => $notes,
+            'notes' => $notes,
         ];
 
         // If this is the very first work order (due_date still null), stamp it now
@@ -183,8 +178,8 @@ class WorkOrderController extends Controller
         $interval = $workOrder->equipmentInterval;
 
         $interval->update([
-            'next_due_date'  => now()
-            
+            'next_due_date' => now(),
+
         ]);
 
         // Create a deficiency if any tasks were flagged
@@ -192,24 +187,24 @@ class WorkOrderController extends Controller
 
             try {
                 $deficiency = Deficiency::create([
-                    'display_id'     => 'DEF-' . date('Y') . '-' . str_pad(Deficiency::count() + 1, 4, '0', STR_PAD_LEFT),
-                    'equipment_id'   => $workOrder->equipmentInterval->equipment_id,
-                    'work_order_id'  => $workOrder->id,
-                    'opened_by'      => auth()->id(),
-                    'subject'        => 'Observations During ' . ($interval->frequency ? ucfirst($interval->frequency) : 'Maintenance') . ' ' . ($interval->interval->category->name ?? 'Task') . ' #' . $workOrder->id,
-                    'description'    => $notes,
-                    'priority'       => 'medium',
-                    'status'         => 'open',
+                    'display_id' => 'DEF-'.date('Y').'-'.mb_str_pad(Deficiency::count() + 1, 4, '0', STR_PAD_LEFT),
+                    'equipment_id' => $workOrder->equipmentInterval->equipment_id,
+                    'work_order_id' => $workOrder->id,
+                    'opened_by' => auth()->id(),
+                    'subject' => 'Observations During '.($interval->frequency ? ucfirst($interval->frequency) : 'Maintenance').' '.($interval->interval->category->name ?? 'Task').' #'.$workOrder->id,
+                    'description' => $notes,
+                    'priority' => 'medium',
+                    'status' => 'open',
                 ]);
             } catch (\Exception $e) {
                 \Log::error('Failed to create deficiency', [
                     'work_order_id' => $workOrder->id,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         } else {
             \Log::info('No flagged tasks, skipping deficiency creation', [
-                'work_order_id' => $workOrder->id
+                'work_order_id' => $workOrder->id,
             ]);
         }
 

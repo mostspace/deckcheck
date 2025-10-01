@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Vessel;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class UserManagementController extends Controller
 {
@@ -50,8 +51,8 @@ class UserManagementController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -65,7 +66,7 @@ class UserManagementController extends Controller
             'all' => 'All Users',
             'active' => 'Active Users',
             'inactive' => 'Inactive Users',
-            'crew' => 'Crew Members Only'
+            'crew' => 'Crew Members Only',
         ];
 
         // Get additional statistics
@@ -93,17 +94,17 @@ class UserManagementController extends Controller
             'boardings.vessel',
             'boardings' => function ($query) {
                 $query->orderBy('is_primary', 'desc')
-                      ->orderBy('joined_at', 'desc');
-            }
+                    ->orderBy('joined_at', 'desc');
+            },
         ]);
 
         // Ensure all date fields are properly cast
         $user->boardings->each(function ($boarding) {
-            if ($boarding->joined_at && !($boarding->joined_at instanceof \Carbon\Carbon)) {
-                $boarding->joined_at = \Carbon\Carbon::parse($boarding->joined_at);
+            if ($boarding->joined_at && ! ($boarding->joined_at instanceof Carbon)) {
+                $boarding->joined_at = Carbon::parse($boarding->joined_at);
             }
-            if ($boarding->terminated_at && !($boarding->terminated_at instanceof \Carbon\Carbon)) {
-                $boarding->terminated_at = \Carbon\Carbon::parse($boarding->terminated_at);
+            if ($boarding->terminated_at && ! ($boarding->terminated_at instanceof Carbon)) {
+                $boarding->terminated_at = Carbon::parse($boarding->terminated_at);
             }
         });
 

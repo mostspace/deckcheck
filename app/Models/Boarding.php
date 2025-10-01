@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Vessel;
-use App\Models\User;
-use App\Models\Invitation;
 
 class Boarding extends Model
 {
@@ -45,5 +44,4 @@ class Boarding extends Model
     {
         return $this->hasOne(Invitation::class);
     }
-
 }

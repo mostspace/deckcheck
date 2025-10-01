@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\File;
 use App\Models\Attachment;
+use App\Models\File;
 use App\Services\FileUploadService;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -35,23 +37,22 @@ class FileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
         try {
-            
-            
+
             // Debug logging for display name
             if (config('app.debug')) {
                 \Log::info('File upload request data', [
                     'display_name' => $request->get('display_name'),
                     'description' => $request->description,
                     'has_display_name' => $request->has('display_name'),
-                    'all_request_data' => $request->all()
+                    'all_request_data' => $request->all(),
                 ]);
             }
-            
+
             $file = $this->fileUploadService->uploadFile(
                 $request->file('file'),
                 $request->vessel_id,
@@ -70,7 +71,7 @@ class FileController extends Controller
                     // Resolve the class from the string - handle both full class names and aliases
                     $attachableType = $request->attachable_type;
                     $attachableClass = null;
-                    
+
                     // Map common aliases to full class names
                     $classMap = [
                         'Equipment' => 'App\Models\Equipment',
@@ -79,33 +80,32 @@ class FileController extends Controller
                         'WorkOrder' => 'App\Models\WorkOrder',
                         'Deficiency' => 'App\Models\Deficiency',
                     ];
-                    
+
                     if (isset($classMap[$attachableType])) {
                         $attachableClass = $classMap[$attachableType];
                     } else {
                         // Try to use the string directly (for full class names)
                         $attachableClass = $attachableType;
                     }
-                    
-                    if (!class_exists($attachableClass)) {
+
+                    if (! class_exists($attachableClass)) {
                         throw new \Exception("Class '{$attachableClass}' not found");
                     }
-                    
+
                     $attachableModel = $attachableClass::find($request->attachable_id);
-                    
-                    $attachment = \App\Models\Attachment::create([
+
+                    $attachment = Attachment::create([
                         'file_id' => $file->id,
                         'attachable_id' => $request->attachable_id,
                         'attachable_type' => $attachableClass, // Use the resolved class name, not the alias
                         'role' => $request->role,
                         'caption' => $request->caption,
-                        'ordering' => \App\Models\Attachment::getNextOrdering(
+                        'ordering' => Attachment::getNextOrdering(
                             $attachableModel,
                             $request->role
                         ),
                         'created_by' => Auth::id(),
                     ]);
-                    
 
                 } catch (\Exception $e) {
                     // Log error silently in production
@@ -116,13 +116,13 @@ class FileController extends Controller
                 'success' => true,
                 'file' => $file->load('uploadedBy'),
                 'attachment' => $attachment,
-                'message' => 'File uploaded successfully' . ($attachment ? ' and attached' : '')
+                'message' => 'File uploaded successfully'.($attachment ? ' and attached' : ''),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'File upload failed: ' . $e->getMessage()
+                'message' => 'File upload failed: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -138,12 +138,10 @@ class FileController extends Controller
             'visibility' => 'nullable|in:private,public',
         ]);
 
-
-
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -159,13 +157,13 @@ class FileController extends Controller
             // Create attachments if attachable information is provided
             $attachments = [];
             if ($request->has('attachable_id') && $request->has('attachable_type') && $request->has('role')) {
-                
+
                 foreach ($files as $file) {
                     try {
                         // Resolve the class from the string - handle both full class names and aliases
                         $attachableType = $request->attachable_type;
                         $attachableClass = null;
-                        
+
                         // Map common aliases to full class names
                         $classMap = [
                             'Equipment' => 'App\Models\Equipment',
@@ -174,35 +172,34 @@ class FileController extends Controller
                             'WorkOrder' => 'App\Models\WorkOrder',
                             'Deficiency' => 'App\Models\Deficiency',
                         ];
-                        
+
                         if (isset($classMap[$attachableType])) {
                             $attachableClass = $classMap[$attachableType];
                         } else {
                             // Try to use the string directly (for full class names)
                             $attachableClass = $attachableType;
                         }
-                        
-                        if (!class_exists($attachableClass)) {
+
+                        if (! class_exists($attachableClass)) {
                             throw new \Exception("Class '{$attachableClass}' not found");
                         }
-                        
+
                         $attachableModel = $attachableClass::find($request->attachable_id);
-                        
-                        $attachment = \App\Models\Attachment::create([
+
+                        $attachment = Attachment::create([
                             'file_id' => $file->id,
                             'attachable_id' => $request->attachable_id,
                             'attachable_type' => $attachableClass, // Use the resolved class name, not the alias
                             'role' => $request->role,
                             'caption' => $request->caption,
-                            'ordering' => \App\Models\Attachment::getNextOrdering(
+                            'ordering' => Attachment::getNextOrdering(
                                 $attachableModel,
                                 $request->role
                             ),
                             'created_by' => Auth::id(),
                         ]);
-                        
+
                         $attachments[] = $attachment;
-                        
 
                     } catch (\Exception $e) {
                         // Log error silently in production
@@ -211,7 +208,7 @@ class FileController extends Controller
             }
 
             // Load relationships on each file model
-            $filesWithRelations = collect($files)->map(function($file) {
+            $filesWithRelations = collect($files)->map(function ($file) {
                 return $file->load('uploadedBy');
             });
 
@@ -219,13 +216,13 @@ class FileController extends Controller
                 'success' => true,
                 'files' => $filesWithRelations,
                 'attachments' => $attachments,
-                'message' => count($files) . ' files uploaded successfully' . (count($attachments) > 0 ? ' and attached' : '')
+                'message' => count($files).' files uploaded successfully'.(count($attachments) > 0 ? ' and attached' : ''),
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'File upload failed: ' . $e->getMessage()
+                'message' => 'File upload failed: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -236,11 +233,11 @@ class FileController extends Controller
     public function view(File $file)
     {
         // Check if user has access to this file
-        if (!$this->canAccessFile($file)) {
+        if (! $this->canAccessFile($file)) {
             abort(403, 'Access denied');
         }
 
-        if (!$file->exists()) {
+        if (! $file->exists()) {
             abort(404, 'File not found');
         }
 
@@ -248,7 +245,7 @@ class FileController extends Controller
         if ($file->disk === 's3_private') {
             // Stream the file from S3 with proper headers
             $stream = Storage::disk($file->disk)->readStream($file->path);
-            
+
             return response()->stream(
                 function () use ($stream) {
                     fpassthru($stream);
@@ -256,10 +253,10 @@ class FileController extends Controller
                 200,
                 [
                     'Content-Type' => $file->mime_type,
-                    'Content-Disposition' => 'inline; filename="' . $file->display_name . '"',
+                    'Content-Disposition' => 'inline; filename="'.$file->display_name.'"',
                     'Cache-Control' => 'private, no-cache, no-store, must-revalidate',
                     'Pragma' => 'no-cache',
-                    'Expires' => '0'
+                    'Expires' => '0',
                 ]
             );
         }
@@ -272,7 +269,7 @@ class FileController extends Controller
 
         return response($contents)
             ->header('Content-Type', $file->mime_type)
-            ->header('Content-Disposition', 'inline; filename="' . $file->display_name . '"');
+            ->header('Content-Disposition', 'inline; filename="'.$file->display_name.'"');
     }
 
     /**
@@ -281,11 +278,11 @@ class FileController extends Controller
     public function download(File $file)
     {
         // Check if user has access to this file
-        if (!$this->canAccessFile($file)) {
+        if (! $this->canAccessFile($file)) {
             abort(403, 'Access denied');
         }
 
-        if (!$file->exists()) {
+        if (! $file->exists()) {
             abort(404, 'File not found');
         }
 
@@ -297,13 +294,13 @@ class FileController extends Controller
      */
     public function show(File $file): JsonResponse
     {
-        if (!$this->canAccessFile($file)) {
+        if (! $this->canAccessFile($file)) {
             abort(403, 'Access denied');
         }
 
         return response()->json([
             'success' => true,
-            'file' => $file->load(['uploadedBy', 'vessel', 'attachments'])
+            'file' => $file->load(['uploadedBy', 'vessel', 'attachments']),
         ]);
     }
 
@@ -312,7 +309,7 @@ class FileController extends Controller
      */
     public function update(Request $request, File $file): JsonResponse
     {
-        if (!$this->canAccessFile($file)) {
+        if (! $this->canAccessFile($file)) {
             abort(403, 'Access denied');
         }
 
@@ -325,7 +322,7 @@ class FileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -334,7 +331,7 @@ class FileController extends Controller
         return response()->json([
             'success' => true,
             'file' => $file->fresh(),
-            'message' => 'File updated successfully'
+            'message' => 'File updated successfully',
         ]);
     }
 
@@ -343,26 +340,26 @@ class FileController extends Controller
      */
     public function destroy(File $file): JsonResponse
     {
-        if (!$this->canAccessFile($file)) {
+        if (! $this->canAccessFile($file)) {
             abort(403, 'Access denied');
         }
 
         try {
             // Delete from storage
             $file->deleteFile();
-            
+
             // Delete the record
             $file->delete();
 
             return response()->json([
                 'success' => true,
-                'message' => 'File deleted successfully'
+                'message' => 'File deleted successfully',
             ]);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'File deletion failed: ' . $e->getMessage()
+                'message' => 'File deletion failed: '.$e->getMessage(),
             ], 500);
         }
     }
@@ -382,7 +379,7 @@ class FileController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -393,14 +390,14 @@ class FileController extends Controller
         // Apply filters
         if ($request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('original_name', 'like', '%' . $request->search . '%')
-                  ->orWhere('display_name', 'like', '%' . $request->search . '%')
-                  ->orWhere('description', 'like', '%' . $request->search . '%');
+                $q->where('original_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('display_name', 'like', '%'.$request->search.'%')
+                    ->orWhere('description', 'like', '%'.$request->search.'%');
             });
         }
 
         if ($request->type) {
-            $query->where('mime_type', 'like', $request->type . '%');
+            $query->where('mime_type', 'like', $request->type.'%');
         }
 
         if ($request->visibility) {
@@ -411,7 +408,7 @@ class FileController extends Controller
 
         return response()->json([
             'success' => true,
-            'files' => $files
+            'files' => $files,
         ]);
     }
 
@@ -421,22 +418,22 @@ class FileController extends Controller
     protected function canAccessFile(File $file): bool
     {
         $user = Auth::user();
-        
+
         // Admin users can access all files
         if ($user->is_admin) {
             return true;
         }
-        
+
         // Users can access files from their vessel
         if ($user->vessel_id === $file->vessel) {
             return true;
         }
-        
+
         // Users can access their own uploaded files
         if ($user->id === $file->uploaded_by) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -452,7 +449,7 @@ class FileController extends Controller
                 'max_file_size_bytes' => $this->fileUploadService->getMaxFileSizeHuman(),
                 'allowed_types' => $this->fileUploadService->getAllowedExtensions(),
                 'storage_disks' => ['s3_private', 's3_public'],
-            ]
+            ],
         ]);
     }
 }

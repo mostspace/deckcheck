@@ -1,18 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Vessel;
 use App\Models\Boarding;
-use App\Models\Deck;
-use App\Models\Location;
 use App\Models\Category;
+use App\Models\Deck;
 use App\Models\Equipment;
 use App\Models\Interval;
+use App\Models\Location;
 use App\Models\Task;
+use App\Models\Vessel;
+use Illuminate\Database\Seeder;
 
 class MockDataSeeder extends Seeder
 {
@@ -41,7 +41,6 @@ class MockDataSeeder extends Seeder
 
         $this->command?->info('✅ Mock data seeded successfully!');
     }
-
 
     /**
      * Create test vessel

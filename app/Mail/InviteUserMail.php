@@ -1,21 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Models\Invitation;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-
-use App\Models\Invitation;
 
 class InviteUserMail extends Mailable
 {
     use SerializesModels;
 
     public Invitation $invitation;
+
     public string $acceptUrl;
 
     /**
@@ -46,7 +46,7 @@ class InviteUserMail extends Mailable
             markdown: 'emails.invitations.invite-user',
             with: [
                 'invitation' => $this->invitation,
-                'acceptUrl'  => $this->acceptUrl,
+                'acceptUrl' => $this->acceptUrl,
             ],
         );
     }

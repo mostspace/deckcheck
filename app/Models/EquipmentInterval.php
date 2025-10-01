@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Equipment;
-use App\Models\Interval;
-use App\Models\WorkOrder;
 
 class EquipmentInterval extends Model
 {
@@ -49,5 +48,4 @@ class EquipmentInterval extends Model
     {
         return $this->hasMany(WorkOrder::class)->orderBy('due_date');
     }
-
 }

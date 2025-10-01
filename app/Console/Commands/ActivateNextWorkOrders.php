@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\WorkOrder;
-use Illuminate\Support\Carbon;
 use App\Services\WorkOrderGenerationService;
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class ActivateNextWorkOrders extends Command
 {
     protected $signature = 'work-orders:activate-next';
+
     protected $description = 'Activate the next scheduled work order when the current one reaches its due date';
 
     protected WorkOrderGenerationService $generator;
@@ -56,6 +59,7 @@ class ActivateNextWorkOrders extends Command
         }
 
         $this->info("Activated {$activatedCount} next work order(s) and generated follow-ups.");
+
         return 0;
     }
 }

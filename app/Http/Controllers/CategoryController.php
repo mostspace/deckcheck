@@ -1,23 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Interval;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use App\Services\IntervalInheritanceService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-
     public function showInterval(Category $category, Interval $interval)
     {
         if ($interval->category_id !== $category->id) {
             abort(404);
         }
 
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
@@ -30,7 +31,7 @@ class CategoryController extends Controller
 
     public function createInterval(Category $category)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
@@ -39,12 +40,12 @@ class CategoryController extends Controller
 
     public function storeInterval(Request $request, Category $category)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
         $data = $request->validate([
-            'interval'    => 'required|in:Daily,Bi-Weekly,Weekly,Monthly,Quarterly,Bi-Annually,Annual,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
+            'interval' => 'required|in:Daily,Bi-Weekly,Weekly,Monthly,Quarterly,Bi-Annually,Annual,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
             'facilitator' => 'required|in:Crew,Service Provider',
             'description' => 'nullable|string',
         ]);
@@ -64,7 +65,7 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
@@ -84,7 +85,7 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
@@ -97,12 +98,12 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
         $data = $request->validate([
-            'interval'    => 'required|in:Daily,Bi-Weekly,Weekly,Monthly,Quarterly,Bi-Annually,Annual,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
+            'interval' => 'required|in:Daily,Bi-Weekly,Weekly,Monthly,Quarterly,Bi-Annually,Annual,2-Yearly,3-Yearly,5-Yearly,6-Yearly,10-Yearly,12-Yearly',
             'facilitator' => 'required|in:Crew,Service Provider',
             'description' => 'nullable|string',
         ]);
@@ -113,7 +114,6 @@ class CategoryController extends Controller
             ->route('maintenance.intervals.show', [$category, $interval])
             ->with('success', 'Interval updated.');
     }
-
 
     // Pre-Boarding Scope:
     /*public function showInterval(Category $category, Interval $interval)

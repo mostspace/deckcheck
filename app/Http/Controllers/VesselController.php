@@ -1,45 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\Vessel;
-use App\Models\User;
-use App\Models\Deck;
-use App\Models\Location;
 use App\Models\Category;
+use App\Models\Deck;
 use App\Models\Interval;
+use App\Models\Location;
+use App\Models\User;
+use App\Models\Vessel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\DriverManager;
 
 class VesselController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $vessel = currentVessel();
-        
+
         // If no vessel is selected and user is a system user, redirect to dashboard
-        if (!$vessel && auth()->user() && in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev'])) {
+        if (! $vessel && auth()->user() && in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev'])) {
             return redirect()->route('dashboard')->with('info', 'No vessel selected. Use the user modal or admin vessel list to select a vessel to view.');
         }
-        
+
         // If no vessel is selected for regular users, show an error
-        if (!$vessel) {
+        if (! $vessel) {
             abort(404, 'No vessel assigned.');
         }
 
         // Get users for the crew tab
         $users = $vessel->users;
-        
+
         // Get decks for the deck plan tab
         $decks = $vessel->decks()->with('locations')->get();
 
@@ -59,7 +55,7 @@ class VesselController extends Controller
         // eager‐load if you like: $vessel->load('users');
         $users = $vessel->users;
 
-        return view('vessel.crew', compact('vessel','users'));
+        return view('vessel.crew', compact('vessel', 'users'));
     }
 
     // Display Deck Plan for Vessel
@@ -93,7 +89,7 @@ class VesselController extends Controller
             ->categories()
             ->orderByDesc('created_at')
             ->with('intervals')
-            ->withCount('equipment') 
+            ->withCount('equipment')
             ->get();
 
         $totalEquipment = $categories->sum('equipment_count');
@@ -106,16 +102,16 @@ class VesselController extends Controller
 
         // Calculate deficiency age distribution for open deficiencies
         $openDeficiencies = $deficiencies->where('status', 'open');
-        
+
         $ageDistribution = [
             'under_30_days' => 0,
             '30_to_90_days' => 0,
-            'over_90_days' => 0
+            'over_90_days' => 0,
         ];
 
         foreach ($openDeficiencies as $deficiency) {
             $daysOpen = $deficiency->created_at->diffInDays(now());
-            
+
             if ($daysOpen < 30) {
                 $ageDistribution['under_30_days']++;
             } elseif ($daysOpen >= 30 && $daysOpen <= 90) {
@@ -131,19 +127,19 @@ class VesselController extends Controller
             'data' => [
                 $ageDistribution['under_30_days'],
                 $ageDistribution['30_to_90_days'],
-                $ageDistribution['over_90_days']
+                $ageDistribution['over_90_days'],
             ],
-            'colors' => ['#12b76a', '#f79009', '#f04438']
+            'colors' => ['#12b76a', '#f79009', '#f04438'],
         ];
 
         // Get schedule data for the schedule tab
         $request = request();
-        
+
         // Loop Work Orders, Pass Used Frequencies into Array for Dynamic Display
         $rawFrequencies = \App\Models\WorkOrder::with('equipmentInterval')
-            ->whereHas('equipmentInterval.equipment', fn($q) => $q->where('vessel_id', $vessel->id))
+            ->whereHas('equipmentInterval.equipment', fn ($q) => $q->where('vessel_id', $vessel->id))
             ->get()
-            ->map(fn($wo) => strtolower($wo->equipmentInterval?->frequency))
+            ->map(fn ($wo) => mb_strtolower($wo->equipmentInterval?->frequency))
             ->filter()
             ->unique()
             ->values()
@@ -159,8 +155,8 @@ class VesselController extends Controller
 
         // Update Array with Display Order
         $visibleFrequencies = collect($rawFrequencies)
-            ->filter(fn($f) => isset($order[$f]))
-            ->sortBy(fn($f) => $order[$f])
+            ->filter(fn ($f) => isset($order[$f]))
+            ->sortBy(fn ($f) => $order[$f])
             ->values()
             ->toArray();
 
@@ -185,20 +181,20 @@ class VesselController extends Controller
 
         // Query Work Orders for Selected Frequency & Date Range
         $query = \App\Models\WorkOrder::with(['equipmentInterval.equipment.location.deck', 'assignee'])
-            ->whereHas('equipmentInterval', fn($q) => $q->where('frequency', $frequency))
-            ->whereHas('equipmentInterval.equipment', fn($q) => $q->where('vessel_id', $vessel->id))
+            ->whereHas('equipmentInterval', fn ($q) => $q->where('frequency', $frequency))
+            ->whereHas('equipmentInterval.equipment', fn ($q) => $q->where('vessel_id', $vessel->id))
             ->where(function (\Illuminate\Database\Eloquent\Builder $q) use ($start, $end) {
                 $q->where(function (\Illuminate\Database\Eloquent\Builder $sub) use ($start, $end) {
                     $sub->whereNotIn('status', ['completed', 'deferred'])
                         ->where(function (\Illuminate\Database\Eloquent\Builder $inner) use ($start, $end) {
                             $inner->whereBetween('due_date', [$start, $end])
-                                ->orWhereNull('due_date'); 
+                                ->orWhereNull('due_date');
                         });
                 })
-                ->orWhere(function (\Illuminate\Database\Eloquent\Builder $sub) use ($start, $end) {
-                    $sub->whereIn('status', ['completed', 'deferred'])
-                        ->whereBetween('due_date', [$start, $end]);
-                });
+                    ->orWhere(function (\Illuminate\Database\Eloquent\Builder $sub) use ($start, $end) {
+                        $sub->whereIn('status', ['completed', 'deferred'])
+                            ->whereBetween('due_date', [$start, $end]);
+                    });
             });
 
         // If Toggled: Filter by Assignee = Current User
@@ -210,8 +206,8 @@ class VesselController extends Controller
         $allWorkOrders = $query->get();
 
         // Separate into Arrays for Active & Resolved
-        $activeWorkOrders = $allWorkOrders->filter(fn($wo) => !in_array($wo->status, ['completed', 'deferred']));
-        $resolvedWorkOrders = $allWorkOrders->filter(fn($wo) => in_array($wo->status, ['completed', 'deferred']));
+        $activeWorkOrders = $allWorkOrders->filter(fn ($wo) => ! in_array($wo->status, ['completed', 'deferred']));
+        $resolvedWorkOrders = $allWorkOrders->filter(fn ($wo) => in_array($wo->status, ['completed', 'deferred']));
 
         // Default Grouping by Date
         $group = $request->input('group', 'date');
@@ -222,7 +218,7 @@ class VesselController extends Controller
             $activeWorkOrders = $activeWorkOrders->groupBy(function ($wo) {
                 return $wo->equipmentInterval->equipment->category->name ?? 'Uncategorized';
             });
-            
+
             $resolvedWorkOrders = $resolvedWorkOrders->groupBy(function ($wo) {
                 return $wo->equipmentInterval->equipment->category->name ?? 'Uncategorized';
             });
@@ -241,12 +237,14 @@ class VesselController extends Controller
             $activeWorkOrders = $activeWorkOrders->groupBy(function ($wo) {
                 $deck = $wo->equipmentInterval->equipment->location->deck->name ?? 'Unknown Deck';
                 $location = $wo->equipmentInterval->equipment->location->name ?? 'Unknown Location';
+
                 return "{$deck} > {$location}";
             });
-            
+
             $resolvedWorkOrders = $resolvedWorkOrders->groupBy(function ($wo) {
                 $deck = $wo->equipmentInterval->equipment->location->deck->name ?? 'Unknown Deck';
                 $location = $wo->equipmentInterval->equipment->location->name ?? 'Unknown Location';
+
                 return "{$deck} > {$location}";
             });
 
@@ -254,7 +252,7 @@ class VesselController extends Controller
             $act = $activeWorkOrders->groupBy(function ($wo, $key) {
                 return explode(' > ', $key)[0];
             });
-            
+
             $res = $resolvedWorkOrders->groupBy(function ($wo, $key) {
                 return explode(' > ', $key)[0];
             });
@@ -303,21 +301,21 @@ class VesselController extends Controller
 
         // Static DB columns (key => label) for equipment manifest
         $staticFields = [
-            'category'             => 'Category',
-            'deck'                 => 'Deck',
-            'location'             => 'Location',
-            'internal_id'          => 'Internal ID',
-            'name'                 => 'Name',
-            'manufacturer'         => 'Manufacturer',
-            'model'                => 'Model',
-            'serial_number'        => 'Serial Number',
-            'preferred_vendor'     => 'Preferred Vendor',
-            'comments'             => 'Comments',
-            'in_service'           => 'In Service',
-            'manufacturing_date'   => 'Manufacturing Date',
-            'purchase_date'        => 'Purchase Date',
-            'expiry_date'          => 'Expiry Date',
-            'status'               => 'Status',
+            'category' => 'Category',
+            'deck' => 'Deck',
+            'location' => 'Location',
+            'internal_id' => 'Internal ID',
+            'name' => 'Name',
+            'manufacturer' => 'Manufacturer',
+            'model' => 'Model',
+            'serial_number' => 'Serial Number',
+            'preferred_vendor' => 'Preferred Vendor',
+            'comments' => 'Comments',
+            'in_service' => 'In Service',
+            'manufacturing_date' => 'Manufacturing Date',
+            'purchase_date' => 'Purchase Date',
+            'expiry_date' => 'Expiry Date',
+            'status' => 'Status',
             'removed_from_service' => 'Removed From Service',
         ];
 
@@ -344,10 +342,10 @@ class VesselController extends Controller
 
         // Determine which view to return based on the route
         $routeName = request()->route()->getName();
-        
+
         if ($routeName === 'maintenance.summary') {
             return view('v2.pages.maintenance.summary', compact(
-                'vessel', 'categories', 'totalEquipment', 
+                'vessel', 'categories', 'totalEquipment',
                 'deficiencies', 'ageDistribution', 'chartData',
                 'frequency', 'date', 'visibleFrequencies', 'group', 'groups',
                 'activeWorkOrders', 'resolvedWorkOrders', 'availableUsers',
@@ -355,10 +353,10 @@ class VesselController extends Controller
                 'operationalCount', 'inoperableCount', 'attentionNeededCount'
             ));
         }
-        
+
         // Default to index view
         return view('v2.pages.maintenance.index', compact(
-            'vessel', 'categories', 'totalEquipment', 
+            'vessel', 'categories', 'totalEquipment',
             'deficiencies', 'ageDistribution', 'chartData',
             'frequency', 'date', 'visibleFrequencies', 'group', 'groups',
             'activeWorkOrders', 'resolvedWorkOrders', 'availableUsers',
@@ -371,14 +369,14 @@ class VesselController extends Controller
     public function showCategory(Category $category)
     {
         // Check if user has access to this category's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
         $category->loadCount('equipment')->load([
-            'equipment' => function($q) {
+            'equipment' => function ($q) {
                 $q->with(['deck', 'location'])
-                ->orderBy('name');
+                    ->orderBy('name');
             },
 
             'intervals' => function ($query) {
@@ -410,18 +408,17 @@ class VesselController extends Controller
         preg_match('/^enum\((.*)\)$/', $enumRaw, $matches);
 
         $icons = isset($matches[1])
-            ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
+            ? array_map(fn ($v) => mb_trim($v, "'"), explode(',', $matches[1]))
             : [];
 
         $vessel = currentVessel();
-        if (!$vessel) {
+        if (! $vessel) {
             abort(404, 'No vessel assigned.');
         }
 
         // return view('v1.maintenance.create', compact('types', 'icons', 'vessel'));
         return view('v2.pages.maintenance.create', compact('types', 'icons', 'vessel'));
     }
-
 
     public function storeCategory(Request $request)
     {
@@ -431,7 +428,7 @@ class VesselController extends Controller
         preg_match('/^enum\((.*)\)$/', $enumRaw, $matches);
 
         $iconOptions = isset($matches[1])
-            ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
+            ? array_map(fn ($v) => mb_trim($v, "'"), explode(',', $matches[1]))
             : [];
 
         // Validate input
@@ -444,7 +441,7 @@ class VesselController extends Controller
 
         // Check if user has access to the specified vessel
         $vessel = Vessel::findOrFail($data['vessel_id']);
-        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($vessel)) {
             abort(403, 'Access denied to this vessel');
         }
 
@@ -457,7 +454,7 @@ class VesselController extends Controller
     // Edit & Update Category
     public function editCategory(Category $category)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
@@ -466,7 +463,7 @@ class VesselController extends Controller
         $enumRaw = DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'icon'")->Type;
         preg_match('/^enum\((.*)\)$/', $enumRaw, $matches);
         $icons = isset($matches[1])
-            ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
+            ? array_map(fn ($v) => mb_trim($v, "'"), explode(',', $matches[1]))
             : [];
 
         // return view('v1.maintenance.edit', compact('category', 'types', 'icons'));
@@ -475,14 +472,14 @@ class VesselController extends Controller
 
     public function updateCategory(Request $request, Category $category)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($category->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($category->vessel)) {
             abort(403, 'Access denied to this category');
         }
 
         $enumRaw = DB::selectOne("SHOW COLUMNS FROM categories WHERE Field = 'icon'")->Type;
         preg_match('/^enum\((.*)\)$/', $enumRaw, $matches);
         $iconOptions = isset($matches[1])
-            ? array_map(fn($v) => trim($v, "'"), explode(',', $matches[1]))
+            ? array_map(fn ($v) => mb_trim($v, "'"), explode(',', $matches[1]))
             : [];
 
         $data = $request->validate([
@@ -502,7 +499,7 @@ class VesselController extends Controller
     public function showDeck(Deck $deck)
     {
         // Check if user has access to this deck's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($deck->vessel)) {
             abort(403, 'Access denied to this deck');
         }
 
@@ -512,16 +509,16 @@ class VesselController extends Controller
         return view('vessel.decks.show', compact('deck'));
     }
 
-   // Create & Store New Deck
+    // Create & Store New Deck
     public function createDeck()
     {
         $vessel = currentVessel();
-        if (!$vessel) {
+        if (! $vessel) {
             abort(404, 'No vessel assigned.');
         }
 
         // Check if user has access to this vessel
-        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($vessel)) {
             abort(403, 'Access denied to this vessel');
         }
 
@@ -531,7 +528,7 @@ class VesselController extends Controller
     public function storeDeck(Request $request)
     {
         $data = $request->validate([
-        'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         $vessel = currentVessel();
@@ -541,7 +538,7 @@ class VesselController extends Controller
         }
 
         // Check if user has access to this vessel
-        if (!auth()->user()->hasSystemAccessToVessel($vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($vessel)) {
             abort(403, 'Access denied to this vessel');
         }
 
@@ -572,10 +569,7 @@ class VesselController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Vessel $vessel)
-    {
-        
-    }
+    public function show(Vessel $vessel) {}
 
     /**
      * Show the form for editing the specified resource.

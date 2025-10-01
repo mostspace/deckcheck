@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
@@ -70,7 +72,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/check-auth', function () {
     return auth()->check()
-        ? 'Logged in as: ' . auth()->user()->email
+        ? 'Logged in as: '.auth()->user()->email
         : 'Not authenticated';
 });
-

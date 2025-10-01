@@ -1,18 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\Equipment;
 use App\Models\Category;
 use App\Models\Deck;
-use App\Models\Location;
-use Illuminate\Http\Request;
-
+use App\Models\Equipment;
 use App\Services\IntervalInheritanceService;
+use Illuminate\Http\Request;
 
 class EquipmentController extends Controller
 {
-
     public function index()
     {
         $vessel = currentVessel();
@@ -34,21 +33,21 @@ class EquipmentController extends Controller
 
         // Static DB columns (key => label)
         $staticFields = [
-            'category'             => 'Category',
-            'deck'                 => 'Deck',
-            'location'             => 'Location',
-            'internal_id'          => 'Internal ID',
-            'name'                 => 'Name',
-            'manufacturer'         => 'Manufacturer',
-            'model'                => 'Model',
-            'serial_number'        => 'Serial Number',
-            'preferred_vendor'     => 'Preferred Vendor',
-            'comments'             => 'Comments',
-            'in_service'           => 'In Service',
-            'manufacturing_date'   => 'Manufacturing Date',
-            'purchase_date'        => 'Purchase Date',
-            'expiry_date'          => 'Expiry Date',
-            'status'               => 'Status',
+            'category' => 'Category',
+            'deck' => 'Deck',
+            'location' => 'Location',
+            'internal_id' => 'Internal ID',
+            'name' => 'Name',
+            'manufacturer' => 'Manufacturer',
+            'model' => 'Model',
+            'serial_number' => 'Serial Number',
+            'preferred_vendor' => 'Preferred Vendor',
+            'comments' => 'Comments',
+            'in_service' => 'In Service',
+            'manufacturing_date' => 'Manufacturing Date',
+            'purchase_date' => 'Purchase Date',
+            'expiry_date' => 'Expiry Date',
+            'status' => 'Status',
             'removed_from_service' => 'Removed From Service',
         ];
 
@@ -98,6 +97,7 @@ class EquipmentController extends Controller
         // If "Restore Defaults" was clicked
         if ($request->has('reset')) {
             session()->forget('visible_columns');
+
             return redirect()->route('equipment.index')->with('success', 'Column preferences reset to default.');
         }
 
@@ -111,7 +111,6 @@ class EquipmentController extends Controller
 
         return redirect()->route('equipment.index')->with('success', 'Visible columns updated.');
     }
-
 
     // Create & Store Equipment
     public function create()
@@ -128,9 +127,9 @@ class EquipmentController extends Controller
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'deck_id'     => 'required|exists:decks,id',
+            'deck_id' => 'required|exists:decks,id',
             'location_id' => 'required|exists:locations,id',
-            'name'        => 'required|string',
+            'name' => 'required|string',
             'internal_id' => 'nullable|string',
         ]);
 
@@ -147,22 +146,21 @@ class EquipmentController extends Controller
             ->with('success', 'Equipment added and maintenance intervals inherited.');
     }
 
-
     // Equipment Detail Page
     public function show(Equipment $equipment)
     {
         // Check if user has access to this equipment's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
             abort(403, 'Access denied to this equipment');
         }
 
         $categories = Category::where('vessel_id', $equipment->vessel_id)
-                            ->orderBy('name')
-                            ->get();
+            ->orderBy('name')
+            ->get();
 
         $decks = Deck::where('vessel_id', $equipment->vessel_id)
-                    ->orderBy('name')
-                    ->get();
+            ->orderBy('name')
+            ->get();
 
         // Only load locations for the equipment's current deck
         $locations = $equipment->deck
@@ -175,7 +173,7 @@ class EquipmentController extends Controller
             'intervals.workOrders' => function ($query) {
                 $query->with('tasks');
             },
-            'attachments.file'
+            'attachments.file',
         ]);
 
         // Load deficiencies for this equipment, ordered by created_at (newest first)
@@ -197,16 +195,16 @@ class EquipmentController extends Controller
     public function updateBasic(Request $request, Equipment $equipment)
     {
         // Check if user has access to this equipment's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
             abort(403, 'Access denied to this equipment');
         }
 
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
-            'deck_id'     => 'nullable|exists:decks,id',
+            'name' => 'required|string|max:255',
+            'deck_id' => 'nullable|exists:decks,id',
             'location_id' => 'nullable|exists:locations,id',
-            'status'      => 'nullable|string|max:50',
-            'hero_photo'  => 'nullable|image|max:2048',
+            'status' => 'nullable|string|max:50',
+            'hero_photo' => 'nullable|image|max:2048',
         ]);
 
         // Handle file upload
@@ -226,20 +224,20 @@ class EquipmentController extends Controller
     public function updateData(Request $request, Equipment $equipment)
     {
         // Check if user has access to this equipment's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
             abort(403, 'Access denied to this equipment');
         }
 
         // 1. Validate only the fields in your modal
         $validated = $request->validate([
-            'manufacturer'       => 'nullable|string|max:255',
-            'model'              => 'nullable|string|max:255',
-            'serial_number'      => 'nullable|string|max:255',
-            'internal_id'        => 'nullable|string|max:255',
-            'purchase_date'      => 'nullable|date',
+            'manufacturer' => 'nullable|string|max:255',
+            'model' => 'nullable|string|max:255',
+            'serial_number' => 'nullable|string|max:255',
+            'internal_id' => 'nullable|string|max:255',
+            'purchase_date' => 'nullable|date',
             'manufacturing_date' => 'nullable|date',
-            'in_service'         => 'nullable|date',
-            'expiry_date'        => 'nullable|date',
+            'in_service' => 'nullable|date',
+            'expiry_date' => 'nullable|date',
         ]);
 
         // 2. Mass‐assign the validated data
@@ -256,12 +254,12 @@ class EquipmentController extends Controller
     public function updateAttributes(Request $request, Equipment $equipment)
     {
         // Check if user has access to this equipment's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($equipment->vessel)) {
             abort(403, 'Access denied to this equipment');
         }
 
         $data = $request->validate([
-            'attributes_json'   => 'nullable|array',
+            'attributes_json' => 'nullable|array',
             'attributes_json.*' => 'nullable|string|max:255',
         ]);
 
@@ -307,7 +305,6 @@ class EquipmentController extends Controller
 
         return view('partials.maintenance.category.bulk-row', compact('index', 'decks'));
     }
-
 
     /**
      * Show the form for editing the specified resource.

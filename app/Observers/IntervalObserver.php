@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Observers;
 
 use App\Models\Interval;
-use App\Models\Equipment;
 use App\Services\IntervalInheritanceService;
 
 class IntervalObserver
