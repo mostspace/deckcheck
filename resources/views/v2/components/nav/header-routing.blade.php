@@ -209,7 +209,7 @@
         @if ($showAnnouncement)
             <div class="absolute left-4 right-4 top-2 sm:left-6 sm:right-auto">
                 <div id="announcement"
-                    class="relative flex min-w-0 max-w-[calc(100vw-8rem)] shrink items-center gap-1.5 overflow-hidden rounded-md border-primary-300 bg-accent-200/40 px-2 py-1 text-xs text-slate-900 transition-all sm:max-w-md sm:gap-2 sm:px-2.5 sm:text-sm">
+                    class="relative flex min-w-0 max-w-[calc(100vw-8rem)] shrink items-center gap-1.5 overflow-hidden rounded-md border-primary-300 bg-accent-200/40 px-2 py-1 text-xs text-slate-900 transition-all duration-300 ease-out opacity-0 translate-y-2 sm:max-w-md sm:gap-2 sm:px-2.5 sm:text-sm">
                     <span class="absolute bottom-0 left-0 top-0 w-1 rounded-l bg-primary-500"></span>
                     <img src="{{ asset('assets/media/icons/pin-list.svg') }}" alt="pin list"
                         class="h-3 w-3 shrink-0 sm:h-4 sm:w-4" />
@@ -387,12 +387,25 @@
             const announcement = document.getElementById('announcement');
 
             if (dismissBtn && announcement) {
+                // Smooth entrance
+                requestAnimationFrame(() => {
+                    announcement.classList.remove('opacity-0', 'translate-y-2');
+                    announcement.classList.add('opacity-100', 'translate-y-0');
+                });
+
+                // Smooth dismissal
                 dismissBtn.addEventListener('click', function() {
-                    announcement.style.transition = 'opacity 0.3s ease-out';
-                    announcement.style.opacity = '0';
-                    setTimeout(() => {
+                    announcement.classList.remove('opacity-100', 'translate-y-0');
+                    announcement.classList.add('opacity-0', 'translate-y-2');
+
+                    const handleTransitionEnd = () => {
+                        announcement.removeEventListener('transitionend', handleTransitionEnd);
                         announcement.remove();
-                    }, 300);
+                    };
+
+                    announcement.addEventListener('transitionend', handleTransitionEnd);
+                    // Fallback in case transitionend doesn't fire
+                    setTimeout(handleTransitionEnd, 350);
                 });
             }
 
