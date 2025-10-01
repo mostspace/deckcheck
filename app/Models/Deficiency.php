@@ -1,12 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Equipment;
-use App\Models\WorkOrder;
-use App\Models\User;
-use App\Models\DeficiencyUpdate;
 
 class Deficiency extends Model
 {
@@ -48,14 +46,14 @@ class Deficiency extends Model
             if (empty($deficiency->display_id)) {
                 // Get the vessel from the equipment
                 $vessel = $deficiency->equipment->vessel;
-                
+
                 // Find the highest display_id for this vessel and increment
                 $lastDeficiency = static::whereHas('equipment', function ($query) use ($vessel) {
                     $query->where('vessel_id', $vessel->id);
                 })->orderByRaw('CAST(display_id AS UNSIGNED) DESC')->first();
 
                 if ($lastDeficiency && is_numeric($lastDeficiency->display_id)) {
-                    $deficiency->display_id = (int)$lastDeficiency->display_id + 1;
+                    $deficiency->display_id = (int) $lastDeficiency->display_id + 1;
                 } else {
                     $deficiency->display_id = 1;
                 }
@@ -63,7 +61,7 @@ class Deficiency extends Model
         });
     }
 
-     protected $fillable = [
+    protected $fillable = [
         'display_id',
         'equipment_id',
         'work_order_id',
@@ -76,5 +74,5 @@ class Deficiency extends Model
         'status',
         'resolved_at',
         'detail',
-     ];
+    ];
 }

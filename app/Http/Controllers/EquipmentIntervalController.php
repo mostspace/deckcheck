@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\EquipmentInterval;
@@ -37,7 +39,7 @@ class EquipmentIntervalController extends Controller
     public function show(EquipmentInterval $interval)
     {
         // Check if user has access to this equipment's vessel
-        if (!auth()->user()->hasSystemAccessToVessel($interval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($interval->equipment->vessel)) {
             abort(403, 'Access denied to this equipment interval');
         }
 
@@ -46,13 +48,12 @@ class EquipmentIntervalController extends Controller
 
         // Optional: eager load assignees on the work orders to avoid N+1
         $interval->load('workOrders.assignee');
-        
+
         // Eager-load work orders and tasks
         $interval->load('equipment');
         $interval->load('workOrders.assignee');
         $interval->load([
-            'workOrders.tasks' => fn($query) =>
-                $query->orderBy('sequence_position'),
+            'workOrders.tasks' => fn ($query) => $query->orderBy('sequence_position'),
         ]);
 
         return view('v2.pages.inventory.equipment.intervals.show', compact('interval', 'users'));

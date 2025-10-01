@@ -18,13 +18,13 @@
             '5-Yearly',
             '6-Yearly',
             '10-Yearly',
-            '12-Yearly',
+            '12-Yearly'
         ];
     @endphp
 
     {{-- Header --}}
     <div class="mb-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h1 class="text-2xl font-semibold text-[#0f1728]">Maintenance Index</h1>
                 <p class="text-[#475466]">Overview of equipment maintenance requirements.</p>
@@ -32,26 +32,25 @@
         </div>
     </div>
 
-
     @include ('components.maintenance.stat-cards')
 
     {{-- Maintenance Index --}}
-    <div id="maintenance-table" class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-hidden">
+    <div id="maintenance-table" class="overflow-hidden rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
         {{-- Header & Controls --}}
-        <div class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+        <div class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-4">
             <h2 class="text-lg font-semibold text-[#0f1728]">Maintenance Requirements</h2>
             <div class="flex items-center space-x-2">
 
                 {{-- Search --}}
                 <div class="relative">
                     <input id="category-search" type="text" placeholder="Search by name..."
-                        class="pl-9 pr-4 py-2 border border-[#e4e7ec] rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#6840c6] focus:border-[#6840c6]">
-                    <i class="fa-solid fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-[#667084]"></i>
+                        class="rounded-lg border border-[#e4e7ec] py-2 pl-9 pr-4 text-sm focus:border-[#6840c6] focus:outline-none focus:ring-1 focus:ring-[#6840c6]">
+                    <i class="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 transform text-[#667084]"></i>
                 </div>
 
                 <button onclick="window.location='{{ route('maintenance.create') }}'"
-                    class="px-3 py-2 bg-[#6840c6] text-white rounded-lg text-sm hover:bg-[#5a35a8] flex items-center">
+                    class="flex items-center rounded-lg bg-[#6840c6] px-3 py-2 text-sm text-white hover:bg-[#5a35a8]">
                     <i class="fa-solid fa-plus mr-2"></i>
                     Add New
                 </button>
@@ -64,20 +63,20 @@
             <table class="w-full">
 
                 <thead>
-                    <tr class="bg-[#f8f9fb] text-[#475466] text-xs uppercase">
+                    <tr class="bg-[#f8f9fb] text-xs uppercase text-[#475466]">
                         <th class="px-6 py-3 text-left font-medium">
                             <button data-sort-key="name" type="button"
-                                class="sort-button flex items-center text-xs font-medium text-[#6840c6] hover:text-[#7e56d8] uppercase tracking-wider">
+                                class="sort-button flex items-center text-xs font-medium uppercase tracking-wider text-[#6840c6] hover:text-[#7e56d8]">
                                 Category
-                                <i class="fa-solid fa-sort ml-1 text-xs transition-colors text-[#475466]"></i>
+                                <i class="fa-solid fa-sort ml-1 text-xs text-[#475466] transition-colors"></i>
                             </button>
                         </th>
 
                         <th class="px-6 py-3 text-left font-medium">
                             <button data-sort-key="type" type="button"
-                                class="sort-button flex items-center text-xs font-medium text-[#6840c6] hover:text-[#7e56d8] uppercase tracking-wider">
+                                class="sort-button flex items-center text-xs font-medium uppercase tracking-wider text-[#6840c6] hover:text-[#7e56d8]">
                                 Type
-                                <i class="fa-solid fa-sort ml-1 text-xs transition-colors text-[#475466]"></i>
+                                <i class="fa-solid fa-sort ml-1 text-xs text-[#475466] transition-colors"></i>
                             </button>
                         </th>
 
@@ -92,12 +91,13 @@
 
                     @forelse ($categories as $category)
 
-                        <tr class="hover:bg-[#f9f5ff]" data-name="{{ strtolower($category->name) }}" data-type="{{ strtolower($category->type) }}">
+                        <tr class="hover:bg-[#f9f5ff]" data-name="{{ strtolower($category->name) }}"
+                            data-type="{{ strtolower($category->type) }}">
                             <td class="px-6 py-4">
                                 <div class="flex items-center">
-                                    <div class="flex items-center name">
-                                        <div class="w-8 h-8 bg-[#f9f5ff] rounded-md flex items-center justify-center mr-3">
-                                            <i class="text-[#6840c6] fa-solid {{ $category->icon }}"></i>
+                                    <div class="name flex items-center">
+                                        <div class="mr-3 flex h-8 w-8 items-center justify-center rounded-md bg-[#f9f5ff]">
+                                            <i class="fa-solid {{ $category->icon }} text-[#6840c6]"></i>
                                         </div>
                                         <span class="text-sm text-[#344053]">{{ $category->name ?? '—' }}</span>
                                     </div>
@@ -118,7 +118,7 @@
 
                                     @if ($count > 0)
                                         <span
-                                            class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ frequency_label_class($freq) }}">
+                                            class="{{ frequency_label_class($freq) }} inline-flex items-center rounded-full px-2 py-1 text-xs font-medium">
                                             {{ $freq }}: {{ $count }}
                                         </span>
                                     @endif
@@ -131,7 +131,7 @@
 
                                     {{-- View Category --}}
                                     <button onclick="window.location='{{ route('maintenance.show', $category) }}'"
-                                        class="p-2 text-sm text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded">
+                                        class="rounded p-2 text-sm text-[#667084] hover:bg-[#f8f9fb] hover:text-[#344053]">
                                         <i class="fa-solid fa-eye"></i>
                                     </button>
 
@@ -141,7 +141,8 @@
 
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-sm text-[#667084]">No requirements defined for this vessel.</td>
+                            <td colspan="5" class="px-6 py-4 text-center text-sm text-[#667084]">No requirements defined
+                                for this vessel.</td>
                         </tr>
                     @endforelse
 
@@ -174,62 +175,60 @@
     </script>
 
     {{-- Column Sort --}}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const buttons = document.querySelectorAll('.sort-button');
-    const tableBody = document.getElementById('category-list');
-    let currentSortKey = null;
-    let ascending = true;
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const buttons = document.querySelectorAll('.sort-button');
+            const tableBody = document.getElementById('category-list');
+            let currentSortKey = null;
+            let ascending = true;
 
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
-            const sortKey = button.dataset.sortKey;
-            ascending = (currentSortKey === sortKey) ? !ascending : true;
-            currentSortKey = sortKey;
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const sortKey = button.dataset.sortKey;
+                    ascending = (currentSortKey === sortKey) ? !ascending : true;
+                    currentSortKey = sortKey;
 
-            const rows = Array.from(tableBody.querySelectorAll('tr'));
+                    const rows = Array.from(tableBody.querySelectorAll('tr'));
 
-            rows.sort((a, b) => {
-                let aVal = a.dataset[sortKey] || '';
-                let bVal = b.dataset[sortKey] || '';
+                    rows.sort((a, b) => {
+                        let aVal = a.dataset[sortKey] || '';
+                        let bVal = b.dataset[sortKey] || '';
 
-                aVal = aVal.toLowerCase();
-                bVal = bVal.toLowerCase();
+                        aVal = aVal.toLowerCase();
+                        bVal = bVal.toLowerCase();
 
-                return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (ascending ? 1 : -1);
+                        return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (ascending ? 1 : -
+                            1);
+                    });
+
+                    rows.forEach(row => tableBody.appendChild(row));
+
+                    // Reset all sort icons
+                    buttons.forEach(btn => {
+                        const icon = btn.querySelector('svg');
+                        if (icon) {
+                            icon.classList.remove('fa-arrow-up-short-wide',
+                                'fa-arrow-down-wide-short');
+                            icon.classList.add('fa-sort');
+                            icon.classList.remove('text-[#6840c6]');
+                            icon.classList.add('text-[#475466]');
+                        }
+                    });
+
+                    // Update clicked button's icon
+                    const icon = button.querySelector('svg');
+                    if (icon) {
+                        icon.classList.remove('fa-sort', 'text-[#475466]');
+                        icon.classList.add(
+                            ascending ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short',
+                            'text-[#6840c6]'
+                        );
+                    } else {
+                        console.warn('Icon not found in clicked sort button:', button);
+                    }
+                });
             });
-
-            rows.forEach(row => tableBody.appendChild(row));
-
-            // Reset all sort icons
-            buttons.forEach(btn => {
-                const icon = btn.querySelector('svg');
-                if (icon) {
-                    icon.classList.remove('fa-arrow-up-short-wide', 'fa-arrow-down-wide-short');
-                    icon.classList.add('fa-sort');
-                    icon.classList.remove('text-[#6840c6]');
-                    icon.classList.add('text-[#475466]');
-                }
-            });
-
-            // Update clicked button's icon
-            const icon = button.querySelector('svg');
-            if (icon) {
-                icon.classList.remove('fa-sort', 'text-[#475466]');
-                icon.classList.add(
-                    ascending ? 'fa-arrow-up-short-wide' : 'fa-arrow-down-wide-short',
-                    'text-[#6840c6]'
-                );
-            } else {
-                console.warn('Icon not found in clicked sort button:', button);
-            }
         });
-    });
-});
-</script>
-
-
-
-
+    </script>
 
 @endsection

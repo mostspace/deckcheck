@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\Admin\StaffManagementController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\VesselDataController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Admin\VesselDataController;
-use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\Admin\StaffManagementController;
-
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    
+
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('dashboard');
-    
+
     Route::get('/test', fn () => view('admin.test'))
         ->name('test');
 
@@ -47,23 +48,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     Route::get('/users', [UserManagementController::class, 'index'])
         ->name('users.index');
-    
+
     Route::get('/users/{user}', [UserManagementController::class, 'show'])
         ->name('users.show');
 
     // Staff Management Routes
     Route::get('/staff', [StaffManagementController::class, 'index'])
         ->name('staff.index');
-    
+
     Route::get('/staff/{user}', [StaffManagementController::class, 'show'])
         ->name('staff.show');
-    
+
     Route::get('/staff/{user}/edit', [StaffManagementController::class, 'edit'])
         ->name('staff.edit');
-    
+
     Route::put('/staff/{user}', [StaffManagementController::class, 'update'])
         ->name('staff.update');
 
 });
-
-

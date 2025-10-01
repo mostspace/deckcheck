@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\EquipmentInterval;
+use App\Models\Task;
 use App\Models\WorkOrder;
 use App\Models\WorkOrderTask;
-use App\Models\Task;
-use Illuminate\Support\Carbon;
 use Carbon\CarbonInterval;
+use Illuminate\Support\Carbon;
 
 class WorkOrderGenerationService
 {
@@ -16,9 +18,9 @@ class WorkOrderGenerationService
     {
         $workOrder = WorkOrder::create([
             'equipment_interval_id' => $interval->id,
-            'due_date'              => null,
-            'status'                => 'Open',
-            'notes'                 => null,
+            'due_date' => null,
+            'status' => 'Open',
+            'notes' => null,
         ]);
 
         $this->createWorkOrderTasks($workOrder);
@@ -26,7 +28,7 @@ class WorkOrderGenerationService
         return $workOrder;
     }
 
-    // Handle the first completion event and schedule future work orders.    
+    // Handle the first completion event and schedule future work orders.
     public function handleFirstCompletion(EquipmentInterval $interval): void
     {
         $now = Carbon::now();
@@ -54,9 +56,9 @@ class WorkOrderGenerationService
 
             $workOrder = WorkOrder::create([
                 'equipment_interval_id' => $interval->id,
-                'due_date'              => $dueDate,
-                'status'                => $i === 1 ? 'open' : 'scheduled',
-                'notes'                 => null,
+                'due_date' => $dueDate,
+                'status' => $i === 1 ? 'open' : 'scheduled',
+                'notes' => null,
             ]);
 
             $this->createWorkOrderTasks($workOrder);
@@ -77,7 +79,9 @@ class WorkOrderGenerationService
         $interval = $workOrder->equipmentInterval;
         $template = $interval?->interval;
 
-        if (! $template || ! $equipment) return;
+        if (! $template || ! $equipment) {
+            return;
+        }
 
         $tasks = $template->tasks;
 
@@ -136,10 +140,10 @@ class WorkOrderGenerationService
             }
 
             WorkOrderTask::create([
-                'work_order_id'      => $workOrder->id,
-                'name'               => $task->description,
-                'instructions'       => $task->instructions,
-                'sequence_position'  => $task->display_order ?? 0,
+                'work_order_id' => $workOrder->id,
+                'name' => $task->description,
+                'instructions' => $task->instructions,
+                'sequence_position' => $task->display_order ?? 0,
             ]);
         }
     }
@@ -173,10 +177,10 @@ class WorkOrderGenerationService
     public function refreshTasksForInterval(int $intervalId): void
     {
         // 1) Grab all pending work orders for this interval template
-        $pending = WorkOrder::whereHas('equipmentInterval', function($q) use ($intervalId) {
-                $q->where('interval_id', $intervalId);
-            })
-            ->whereNotIn('status', ['completed','deferred','in-progress'])
+        $pending = WorkOrder::whereHas('equipmentInterval', function ($q) use ($intervalId) {
+            $q->where('interval_id', $intervalId);
+        })
+            ->whereNotIn('status', ['completed', 'deferred', 'in-progress'])
             ->get();
 
         if ($pending->isEmpty()) {
@@ -192,7 +196,6 @@ class WorkOrderGenerationService
             $this->createWorkOrderTasks($wo);
         }
     }
-
 
     /* VERSION CONTROL
 

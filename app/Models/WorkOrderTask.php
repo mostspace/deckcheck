@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\WorkOrder;
-use App\Models\User;
 
 class WorkOrderTask extends Model
-
 {
     protected $fillable = [
         'work_order_id',

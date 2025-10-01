@@ -1,43 +1,45 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Middleware;
 
+use App\Models\Vessel;
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\Vessel;
 
 class VesselAccess
 {
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
-        
-        if (!$user) {
+
+        if (! $user) {
             abort(401, 'Unauthenticated');
         }
-        
+
         // Get vessel from route parameter - handle different route types
         $vesselId = $this->extractVesselId($request);
-        
-        if (!$vesselId) {
+
+        if (! $vesselId) {
             return $next($request);
         }
-        
+
         // Find the vessel
         $vessel = Vessel::find($vesselId);
-        
-        if (!$vessel) {
+
+        if (! $vessel) {
             abort(404, 'Vessel not found');
         }
-        
+
         // Check if user has access to this vessel
-        if (!$user->hasSystemAccessToVessel($vessel)) {
+        if (! $user->hasSystemAccessToVessel($vessel)) {
             abort(403, 'Access denied to this vessel');
         }
-        
+
         return $next($request);
     }
-    
+
     /**
      * Extract vessel ID from different route parameter types
      */
@@ -47,11 +49,11 @@ class VesselAccess
         if ($vesselId = $request->route('vessel')) {
             return $vesselId;
         }
-        
+
         if ($vesselId = $request->route('id')) {
             return $vesselId;
         }
-        
+
         // Work order routes - extract vessel from work order
         if ($workOrder = $request->route('workOrder')) {
             try {
@@ -62,11 +64,11 @@ class VesselAccess
             } catch (\Exception $e) {
                 \Log::warning('Failed to extract vessel ID from work order', [
                     'work_order_id' => $workOrder,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
-        
+
         // Task routes - extract vessel from task's work order
         if ($task = $request->route('task')) {
             try {
@@ -77,11 +79,11 @@ class VesselAccess
             } catch (\Exception $e) {
                 \Log::warning('Failed to extract vessel ID from task', [
                     'task_id' => $task,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
-        
+
         // Equipment routes
         if ($equipment = $request->route('equipment')) {
             try {
@@ -92,11 +94,11 @@ class VesselAccess
             } catch (\Exception $e) {
                 \Log::warning('Failed to extract vessel ID from equipment', [
                     'equipment_id' => $equipment,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
-        
+
         // Equipment interval routes
         if ($interval = $request->route('interval')) {
             try {
@@ -107,11 +109,11 @@ class VesselAccess
             } catch (\Exception $e) {
                 \Log::warning('Failed to extract vessel ID from equipment interval', [
                     'interval_id' => $interval,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
-        
+
         // Category routes - extract vessel from category
         if ($category = $request->route('category')) {
             try {
@@ -122,11 +124,11 @@ class VesselAccess
             } catch (\Exception $e) {
                 \Log::warning('Failed to extract vessel ID from category', [
                     'category_id' => $category,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
-        
+
         return null;
     }
 }

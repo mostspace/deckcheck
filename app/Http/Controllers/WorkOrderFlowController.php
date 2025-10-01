@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\WorkOrder;
 use App\Models\Vessel;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Carbon;
+use App\Models\WorkOrder;
+use Illuminate\Http\Request;
 
 class WorkOrderFlowController extends Controller
 {
-
     /**
      * Start the work order completion flow.
      * Accepts a list of work order IDs (ordered) and displays the first one.
@@ -32,14 +31,14 @@ class WorkOrderFlowController extends Controller
                 'tasks.completedBy',
             ])
             ->get()
-            ->filter(function($wo) use ($vessel) {
+            ->filter(function ($wo) {
                 return auth()->user()->hasSystemAccessToVessel($wo->equipmentInterval->equipment->vessel);
             })
-            ->sortBy(fn($wo) => array_search($wo->id, $workOrderIds))
+            ->sortBy(fn ($wo) => array_search($wo->id, $workOrderIds))
             ->values();
 
         $currentWorkOrder = $workOrders->firstWhere('id', $currentId) ?? $workOrders->first();
-        $currentIndex = $workOrders->search(fn($wo) => $wo->id === $currentWorkOrder->id);
+        $currentIndex = $workOrders->search(fn ($wo) => $wo->id === $currentWorkOrder->id);
 
         $dateRangeLabel = $request->input('dateRangeLabel');
         $groupName = $request->input('groupName');
@@ -80,11 +79,8 @@ class WorkOrderFlowController extends Controller
      */
     private function authorizeFlow(WorkOrder $workOrder)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($workOrder->equipmentInterval->equipment->vessel)) {
             abort(403, 'Access denied to this vessel');
         }
     }
-
-
-
 }

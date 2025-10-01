@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Vessel;
-use App\Models\Interval;
-use App\Models\Equipment;
 
 class Category extends Model
 {
@@ -25,10 +24,9 @@ class Category extends Model
     }
 
     protected $fillable = [
-    'name',
-    'vessel_id',
-    'type',
-    'icon',
+        'name',
+        'vessel_id',
+        'type',
+        'icon',
     ];
-
 }

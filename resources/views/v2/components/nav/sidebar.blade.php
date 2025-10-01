@@ -5,40 +5,60 @@
 @endphp
 
 <!-- Sidebar (desktop) -->
-<aside id="sidebar" aria-label="Main navigation" class="hidden md:flex bg-brand-900 text-slate-200 flex-col relative z-20 h-full gap-4 py-4">
+<aside id="sidebar" aria-label="Main navigation"
+    class="bg-brand-900 relative z-20 hidden h-full flex-col gap-4 py-4 text-slate-200 md:flex">
     <div class="flex items-center justify-center">
-        <button onclick="window.location.href='{{ route('dashboard') }}'" class="h-10 w-10 rounded-full bg-slate-700/70 flex items-center justify-center text-lg font-bold hover:bg-slate-600/70 transition-colors cursor-pointer hover:text-primary">D</button>
+        <button onclick="window.location.href='{{ route('dashboard') }}'"
+            class="hover:text-primary flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-slate-700/70 text-lg font-bold transition-colors hover:bg-slate-600/70">D</button>
     </div>
 
     <div class="flex justify-center px-2.5">
-        <div class="w-full h-px bg-white/20"></div>
+        <div class="h-px w-full bg-white/20"></div>
     </div>
 
-    <nav id="sidebar-menu" class="flex-1 self-center space-y-4 mt-2 pl-2 relative menu" data-current-route="{{ $currentRoute }}" data-current-path="{{ $currentPath }}"></nav>
+    <nav id="sidebar-menu" class="menu relative mt-2 flex-1 space-y-4 self-center pl-2"
+        data-current-route="{{ $currentRoute }}" data-current-path="{{ $currentPath }}"></nav>
 
-    <div class="flex flex-col items-center space-y-4 sm:space-y-6 px-2.5">
-        <button class="group relative w-9 h-9 grid place-items-center rounded-md transition-colors border border-transparent hover:bg-white/10 hover:text-brand-900 hover:shadow-soft hover:border-white/20" aria-label="Preferences">
+    <div class="flex flex-col items-center space-y-4 px-2.5 sm:space-y-6">
+        <button
+            class="hover:text-brand-900 hover:shadow-soft group relative grid h-9 w-9 place-items-center rounded-md border border-transparent transition-colors hover:border-white/20 hover:bg-white/10"
+            aria-label="Preferences">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 16 18" fill="none">
-                <path d="M5.99461 2.28338C6.06995 1.83132 6.46106 1.5 6.91935 1.5H9.08099C9.53927 1.5 9.93039 1.83132 10.0057 2.28338L10.1837 3.35092C10.2356 3.66262 10.4439 3.92226 10.7204 4.0753C10.7822 4.10952 10.8433 4.14486 10.9037 4.18131C11.1745 4.34487 11.504 4.39572 11.8003 4.28471L12.8143 3.90481C13.2435 3.74404 13.726 3.91709 13.9551 4.31398L15.0359 6.18601C15.2651 6.5829 15.1737 7.08728 14.8199 7.37855L13.9829 8.06756C13.7392 8.26823 13.6183 8.5781 13.6242 8.89377C13.6248 8.9291 13.6252 8.96451 13.6252 9C13.6252 9.03548 13.6248 9.07089 13.6242 9.10621C13.6183 9.42189 13.7392 9.73176 13.9829 9.93243L14.8199 10.6214C15.1737 10.9127 15.2651 11.4171 15.0359 11.814L13.9551 13.686C13.726 14.0829 13.2435 14.256 12.8143 14.0952L11.8003 13.7153C11.504 13.6043 11.1745 13.6551 10.9037 13.8187C10.8433 13.8551 10.7822 13.8905 10.7204 13.9247C10.4439 14.0777 10.2356 14.3374 10.1837 14.6491L10.0057 15.7166C9.93039 16.1687 9.53927 16.5 9.08099 16.5H6.91935C6.46106 16.5 6.06995 16.1687 5.99461 15.7166L5.81668 14.6491C5.76473 14.3374 5.55642 14.0777 5.27995 13.9247C5.21814 13.8905 5.15704 13.8551 5.09668 13.8187C4.82581 13.6551 4.49637 13.6043 4.20007 13.7153L3.18601 14.0952C2.75685 14.256 2.27436 14.0829 2.04522 13.686L0.964399 11.814C0.735255 11.4171 0.826633 10.9127 1.18045 10.6215L2.01741 9.93244C2.26117 9.73177 2.382 9.4219 2.37615 9.10623C2.3755 9.0709 2.37517 9.03549 2.37517 9C2.37517 8.96452 2.3755 8.92911 2.37615 8.89379C2.382 8.57811 2.26117 8.26824 2.01741 8.06758L1.18045 7.37856C0.826633 7.08729 0.735255 6.58291 0.964398 6.18602L2.04522 4.31399C2.27436 3.9171 2.75685 3.74405 3.18601 3.90483L4.20006 4.28472C4.49636 4.39573 4.8258 4.34487 5.09667 4.18132C5.15703 4.14487 5.21813 4.10952 5.27995 4.0753C5.55642 3.92226 5.76473 3.66262 5.81668 3.35092L5.99461 2.28338Z" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10.5 8.99993C10.5 10.3806 9.38069 11.4999 7.99998 11.4999C6.61926 11.4999 5.49998 10.3806 5.49998 8.99993C5.49998 7.61922 6.61926 6.49993 7.99998 6.49993C9.38069 6.49993 10.5 7.61922 10.5 8.99993Z" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <path
+                    d="M5.99461 2.28338C6.06995 1.83132 6.46106 1.5 6.91935 1.5H9.08099C9.53927 1.5 9.93039 1.83132 10.0057 2.28338L10.1837 3.35092C10.2356 3.66262 10.4439 3.92226 10.7204 4.0753C10.7822 4.10952 10.8433 4.14486 10.9037 4.18131C11.1745 4.34487 11.504 4.39572 11.8003 4.28471L12.8143 3.90481C13.2435 3.74404 13.726 3.91709 13.9551 4.31398L15.0359 6.18601C15.2651 6.5829 15.1737 7.08728 14.8199 7.37855L13.9829 8.06756C13.7392 8.26823 13.6183 8.5781 13.6242 8.89377C13.6248 8.9291 13.6252 8.96451 13.6252 9C13.6252 9.03548 13.6248 9.07089 13.6242 9.10621C13.6183 9.42189 13.7392 9.73176 13.9829 9.93243L14.8199 10.6214C15.1737 10.9127 15.2651 11.4171 15.0359 11.814L13.9551 13.686C13.726 14.0829 13.2435 14.256 12.8143 14.0952L11.8003 13.7153C11.504 13.6043 11.1745 13.6551 10.9037 13.8187C10.8433 13.8551 10.7822 13.8905 10.7204 13.9247C10.4439 14.0777 10.2356 14.3374 10.1837 14.6491L10.0057 15.7166C9.93039 16.1687 9.53927 16.5 9.08099 16.5H6.91935C6.46106 16.5 6.06995 16.1687 5.99461 15.7166L5.81668 14.6491C5.76473 14.3374 5.55642 14.0777 5.27995 13.9247C5.21814 13.8905 5.15704 13.8551 5.09668 13.8187C4.82581 13.6551 4.49637 13.6043 4.20007 13.7153L3.18601 14.0952C2.75685 14.256 2.27436 14.0829 2.04522 13.686L0.964399 11.814C0.735255 11.4171 0.826633 10.9127 1.18045 10.6215L2.01741 9.93244C2.26117 9.73177 2.382 9.4219 2.37615 9.10623C2.3755 9.0709 2.37517 9.03549 2.37517 9C2.37517 8.96452 2.3755 8.92911 2.37615 8.89379C2.382 8.57811 2.26117 8.26824 2.01741 8.06758L1.18045 7.37856C0.826633 7.08729 0.735255 6.58291 0.964398 6.18602L2.04522 4.31399C2.27436 3.9171 2.75685 3.74405 3.18601 3.90483L4.20006 4.28472C4.49636 4.39573 4.8258 4.34487 5.09667 4.18132C5.15703 4.14487 5.21813 4.10952 5.27995 4.0753C5.55642 3.92226 5.76473 3.66262 5.81668 3.35092L5.99461 2.28338Z"
+                    stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                <path
+                    d="M10.5 8.99993C10.5 10.3806 9.38069 11.4999 7.99998 11.4999C6.61926 11.4999 5.49998 10.3806 5.49998 8.99993C5.49998 7.61922 6.61926 6.49993 7.99998 6.49993C9.38069 6.49993 10.5 7.61922 10.5 8.99993Z"
+                    stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            <span class="tooltip-arrow pointer-events-none absolute left-full ml-2 px-3 py-1.5 rounded-md bg-primary text-brand-900 text-xs font-medium whitespace-nowrap opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition z-20">Preferences</span>
+            <span
+                class="tooltip-arrow bg-primary text-brand-900 pointer-events-none absolute left-full z-20 ml-2 -translate-x-1 whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">Preferences</span>
         </button>
-        <button class="group relative w-9 h-9 grid place-items-center rounded-md transition-colors border border-transparent hover:bg-white/10 hover:text-brand-900 hover:shadow-soft hover:border-white/20" aria-label="Help">
+        <button
+            class="hover:text-brand-900 hover:shadow-soft group relative grid h-9 w-9 place-items-center rounded-md border border-transparent transition-colors hover:border-white/20 hover:bg-white/10"
+            aria-label="Help">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <circle cx="9.99939" cy="9.99951" r="7.5" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="9.99939" cy="9.99951" r="3" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12.2499 7.74951L15.2499 4.74951" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M4.74939 15.25L7.74939 12.25" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M7.74988 7.74951L4.74988 4.74951" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15.2505 15.25L12.2505 12.25" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="9.99939" cy="9.99951" r="7.5" stroke="#ffffff" stroke-width="1.25"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <circle cx="9.99939" cy="9.99951" r="3" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M12.2499 7.74951L15.2499 4.74951" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M4.74939 15.25L7.74939 12.25" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M7.74988 7.74951L4.74988 4.74951" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                <path d="M15.2505 15.25L12.2505 12.25" stroke="#ffffff" stroke-width="1.25" stroke-linecap="round"
+                    stroke-linejoin="round" />
             </svg>
-            <span class="tooltip-arrow pointer-events-none absolute left-full ml-2 px-3 py-1.5 rounded-md bg-primary text-brand-900 text-xs font-medium whitespace-nowrap opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition z-20">Help</span>
+            <span
+                class="tooltip-arrow bg-primary text-brand-900 pointer-events-none absolute left-full z-20 ml-2 -translate-x-1 whitespace-nowrap rounded-md px-3 py-1.5 text-xs font-medium opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">Help</span>
         </button>
-        <div class="w-full h-px bg-white/20 my-2"></div>
+        <div class="my-2 h-px w-full bg-white/20"></div>
         <div class="flex items-center justify-center">
-            <button id="btnOpenProfile" class="rounded-md border-2 border-accent-300 h-10 w-10 overflow-hidden">
-                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}" alt="Profile" class="w-full h-full object-cover" />
+            <button id="btnOpenProfile" class="h-10 w-10 overflow-hidden rounded-md border-2 border-accent-300">
+                <img src="{{ $user->profile_pic ? Storage::url($user->profile_pic) : asset('images/placeholders/user.png') }}"
+                    alt="Profile" class="h-full w-full object-cover" />
             </button>
         </div>
     </div>

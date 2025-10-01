@@ -1,12 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Equipment;
-use App\Models\Category;
-use App\Models\Deck;
-use App\Models\Location;
-use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
@@ -31,21 +29,21 @@ class InventoryController extends Controller
 
         // Static DB columns (key => label)
         $staticFields = [
-            'category'             => 'Category',
-            'deck'                 => 'Deck',
-            'location'             => 'Location',
-            'internal_id'          => 'Internal ID',
-            'name'                 => 'Name',
-            'manufacturer'         => 'Manufacturer',
-            'model'                => 'Model',
-            'serial_number'        => 'Serial Number',
-            'preferred_vendor'     => 'Preferred Vendor',
-            'comments'             => 'Comments',
-            'in_service'           => 'In Service',
-            'manufacturing_date'   => 'Manufacturing Date',
-            'purchase_date'        => 'Purchase Date',
-            'expiry_date'          => 'Expiry Date',
-            'status'               => 'Status',
+            'category' => 'Category',
+            'deck' => 'Deck',
+            'location' => 'Location',
+            'internal_id' => 'Internal ID',
+            'name' => 'Name',
+            'manufacturer' => 'Manufacturer',
+            'model' => 'Model',
+            'serial_number' => 'Serial Number',
+            'preferred_vendor' => 'Preferred Vendor',
+            'comments' => 'Comments',
+            'in_service' => 'In Service',
+            'manufacturing_date' => 'Manufacturing Date',
+            'purchase_date' => 'Purchase Date',
+            'expiry_date' => 'Expiry Date',
+            'status' => 'Status',
             'removed_from_service' => 'Removed From Service',
         ];
 

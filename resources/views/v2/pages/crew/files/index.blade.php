@@ -14,8 +14,8 @@
         'activeTab' => 'All Reports'
     ])
 
-    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-        
+    <div class="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+
         {{-- All Reports Tab Panel --}}
         <div id="panel-all_reports" class="tab-panel" role="tabpanel" aria-labelledby="tab-all_reports">
             @include('v2.pages.crew.files.all-reports.index')
@@ -25,6 +25,6 @@
         <div id="panel-my_reports" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-my_reports">
             @include('v2.pages.crew.files.my-reports.index')
         </div>
-        
+
     </div>
 @endsection

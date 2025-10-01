@@ -1,16 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Vessel;
-use App\Models\WorkOrder;
-use App\Models\Deficiency;
-use App\Models\DeficiencyUpdate;
-use App\Models\Invitation;
 
 class User extends Authenticatable
 {
@@ -42,7 +39,7 @@ class User extends Authenticatable
         'agreed_ip',
         'agreed_user_agent',
         'terms_version',
-    
+
     ];
 
     /**
@@ -64,8 +61,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'date_of_birth'     => 'date',
-            'password'          => 'hashed',
+            'date_of_birth' => 'date',
+            'password' => 'hashed',
         ];
     }
 
@@ -78,7 +75,7 @@ class User extends Authenticatable
 
     public function workOrders()
     {
-        return $this-> hasMany(WorkOrder::class);
+        return $this->hasMany(WorkOrder::class);
     }
 
     public function assignedWorkOrders()
@@ -111,7 +108,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Vessel::class, 'boardings')
             ->withPivot([
                 'id',
-                'status', 'is_primary', 'is_crew', 'access_level', 'department', 'role', 'crew_number', 'joined_at', 'terminated_at'
+                'status', 'is_primary', 'is_crew', 'access_level', 'department', 'role', 'crew_number', 'joined_at', 'terminated_at',
             ])
             ->withTimestamps();
     }
@@ -143,24 +140,25 @@ class User extends Authenticatable
             \Log::info('System user vessel access granted', [
                 'user_id' => $this->id,
                 'user_role' => $this->system_role,
-                'vessel_id' => $vessel->id
+                'vessel_id' => $vessel->id,
             ]);
+
             return true;
         }
-        
+
         // Regular users need explicit boarding records
         $hasAccess = $this->boardings()
             ->where('vessel_id', $vessel->id)
             ->where('status', 'active')
             ->exists();
-            
+
         \Log::info('Regular user vessel access check', [
             'user_id' => $this->id,
             'user_role' => $this->system_role,
             'vessel_id' => $vessel->id,
-            'has_access' => $hasAccess
+            'has_access' => $hasAccess,
         ]);
-        
+
         return $hasAccess;
     }
 
@@ -172,18 +170,20 @@ class User extends Authenticatable
             \Log::info('System user accessible vessels', [
                 'user_id' => $this->id,
                 'user_role' => $this->system_role,
-                'vessels_count' => $vessels->count()
+                'vessels_count' => $vessels->count(),
             ]);
+
             return $vessels;
         }
-        
+
         // Regular users only get vessels they're boarded on
         $vessels = $this->vessels()->where('status', 'active')->get();
         \Log::info('Regular user accessible vessels', [
             'user_id' => $this->id,
             'user_role' => $this->system_role,
-            'vessels_count' => $vessels->count()
+            'vessels_count' => $vessels->count(),
         ]);
+
         return $vessels;
     }
 
@@ -196,7 +196,4 @@ class User extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
-
 }
-
- 

@@ -8,23 +8,23 @@
 @section('form')
     <form action="{{ route('maintenance.store') }}" method="POST" class="space-y-6">
         @csrf
-        
+
         {{-- Hidden Vessel ID --}}
         <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
 
         {{-- Location Name --}}
         <div>
-            <label for="name" class="block text-sm font-medium text-[#344053] mb-2">Name</label>
+            <label for="name" class="mb-2 block text-sm font-medium text-[#344053]">Name</label>
             <input name="name" id="name" value="{{ old('name') }}" type="text"
-                class="w-full px-3.5 py-2.5 bg-white rounded-lg border border-[#cfd4dc] text-[#0f1728] text-base focus:border-[#6840c6] focus:outline-none placeholder-[#667084]"
+                class="w-full rounded-lg border border-[#cfd4dc] bg-white px-3.5 py-2.5 text-base text-[#0f1728] placeholder-[#667084] focus:border-[#6840c6] focus:outline-none"
                 placeholder="Enter category name">
         </div>
 
         {{-- Type --}}
         <div>
-            <label for="type" class="block text-sm font-medium text-[#344053] mb-2">Type</label>
+            <label for="type" class="mb-2 block text-sm font-medium text-[#344053]">Type</label>
             <select name="type" id="type"
-                class="appearance-none w-full px-3.5 pr-10 py-2.5 bg-white rounded-lg border border-[#cfd4dc] text-[#344053] text-sm focus:outline-none focus:ring-2 focus:ring-[#6840c6] focus:border-transparent">
+                class="w-full appearance-none rounded-lg border border-[#cfd4dc] bg-white px-3.5 py-2.5 pr-10 text-sm text-[#344053] focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#6840c6]">
                 <option value="">Select type...</option>
 
                 @foreach ($types as $type)
@@ -38,24 +38,21 @@
 
         {{-- Icon Picker --}}
         <div>
-            <label class="block text-sm font-medium text-[#344053] mb-2">Select Icon</label>
+            <label class="mb-2 block text-sm font-medium text-[#344053]">Select Icon</label>
 
             <input type="hidden" name="icon" id="icon-input" value="{{ old('icon') }}">
 
-            <div id="icon-picker" class="w-1/3 grid grid-cols-8 gap-4">
+            <div id="icon-picker" class="grid w-1/3 grid-cols-8 gap-4">
                 @foreach ($icons as $icon)
-                    <div 
-                        class="relative w-8 h-8 bg-white rounded-md flex items-center justify-center cursor-pointer border transition-all
-                                {{ old('icon') === $icon ? 'bg-indigo-50' : 'border-[#fff]' }}"
-                        data-icon="{{ $icon }}"
-                        onclick="selectIcon(this)"
-                    >
+                    <div class="{{ old('icon') === $icon ? 'bg-indigo-50' : 'border-[#fff]' }} relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-md border bg-white transition-all"
+                        data-icon="{{ $icon }}" onclick="selectIcon(this)">
                         {{-- Actual icon --}}
-                        <i class="fa-solid {{ $icon }} text-[16px] {{ old('icon') === $icon ? 'text-indigo-600' : 'text-[#6840c6]' }}"></i>
+                        <i
+                            class="fa-solid {{ $icon }} {{ old('icon') === $icon ? 'text-indigo-600' : 'text-[#6840c6]' }} text-[16px]"></i>
 
                         {{-- Checkmark overlay --}}
                         @if (old('icon') === $icon)
-                            <div class="absolute -top-1.5 -right-1.5  text-white rounded-full text-[10px]">
+                            <div class="absolute -right-1.5 -top-1.5 rounded-full text-[10px] text-white">
                                 <i class="fa-solid fa-circle-check"></i>
                             </div>
                         @endif
@@ -64,19 +61,19 @@
             </div>
 
             @error('icon')
-                <p class="text-sm text-red-600 mt-2">{{ $message }}</p>
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         {{-- Buttons --}}
         <div class="flex justify-end space-x-4">
             <a href="{{ route('maintenance.index') }}"
-                class="px-4 py-2.5 bg-white text-[#344053] border border-[#cfd4dc] rounded-lg text-sm font-medium hover:bg-[#f9fafb] transition-colors">
+                class="rounded-lg border border-[#cfd4dc] bg-white px-4 py-2.5 text-sm font-medium text-[#344053] transition-colors hover:bg-[#f9fafb]">
                 Cancel
             </a>
 
             <button type="submit"
-                class="px-4 py-2.5 bg-[#7e56d8] rounded-lg shadow border border-[#7e56d8] text-white text-sm font-medium hover:bg-[#6840c6] transition-colors">
+                class="rounded-lg border border-[#7e56d8] bg-[#7e56d8] px-4 py-2.5 text-sm font-medium text-white shadow transition-colors hover:bg-[#6840c6]">
                 <i class="fa-solid fa-plus mr-2"></i>
                 Save Category
             </button>
@@ -85,8 +82,8 @@
 
     {{-- Script --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            window.selectIcon = function (element) {
+        document.addEventListener('DOMContentLoaded', function() {
+            window.selectIcon = function(element) {
                 // Deselect all
                 document.querySelectorAll('#icon-picker div[data-icon]').forEach(div => {
                     div.classList.remove('bg-violet-50', 'border-indigo-500');
@@ -114,7 +111,8 @@
 
                 // Add checkmark
                 const checkmark = document.createElement('div');
-                checkmark.className = 'checkmark absolute -top-1.5 -right-1.5 text-green-600 rounded-full bg-white text-[12px]';
+                checkmark.className =
+                    'checkmark absolute -top-1.5 -right-1.5 text-green-600 rounded-full bg-white text-[12px]';
                 checkmark.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
                 element.appendChild(checkmark);
 
@@ -122,6 +120,4 @@
             };
         });
     </script>
-
-
 @endsection

@@ -1,6 +1,7 @@
-<div id="inviteUserModal" class="fixed inset-0 z-50 flex flex-col bg-white transform translate-x-full transition-transform duration-300 ease-in-out">
+<div id="inviteUserModal"
+    class="fixed inset-0 z-50 flex translate-x-full transform flex-col bg-white transition-transform duration-300 ease-in-out">
     {{-- HEADER --}}
-    <header class="flex items-center justify-between px-6 py-4 border-b">
+    <header class="flex items-center justify-between border-b px-6 py-4">
         <h2 class="text-2xl font-semibold text-[#0f1728]">
             Invite Crew Member
         </h2>
@@ -12,49 +13,50 @@
     </header>
 
     {{-- FORM --}}
-    <form id="inviteUserForm" action="{{ route('vessel.invitations.store', $vessel) }}" method="POST" class="flex-1 flex flex-col overflow-hidden">
+    <form id="inviteUserForm" action="{{ route('vessel.invitations.store', $vessel) }}" method="POST"
+        class="flex flex-1 flex-col overflow-hidden">
         @csrf
 
         {{-- FORM BODY --}}
-        <div class="flex-1 overflow-y-auto px-6 py-4 flex items-center justify-center">
+        <div class="flex flex-1 items-center justify-center overflow-y-auto px-6 py-4">
             <div class="w-full max-w-2xl space-y-6">
 
                 {{-- NAME ROW --}}
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                     {{-- First Name --}}
                     <div>
-                        <label class="block text-sm font-medium text-[#344053] mb-1">First Name</label>
+                        <label class="mb-1 block text-sm font-medium text-[#344053]">First Name</label>
                         <input type="text" name="first_name" required placeholder="First name"
-                            class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800 placeholder-gray-400">
+                            class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 placeholder-gray-400 focus:border-purple-500 focus:ring-0">
                     </div>
 
                     {{-- Last Name --}}
                     <div>
-                        <label class="block text-sm font-medium text-[#344053] mb-1">Last Name</label>
+                        <label class="mb-1 block text-sm font-medium text-[#344053]">Last Name</label>
                         <input type="text" name="last_name" required placeholder="Last name"
-                            class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800 placeholder-gray-400">
+                            class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 placeholder-gray-400 focus:border-purple-500 focus:ring-0">
                     </div>
                 </div>
 
                 {{-- Email --}}
                 <div>
-                    <label class="block text-sm font-medium text-[#344053] mb-1">Email</label>
+                    <label class="mb-1 block text-sm font-medium text-[#344053]">Email</label>
                     <input type="email" name="email" required placeholder="you@example.com"
-                        class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800 placeholder-gray-400">
+                        class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 placeholder-gray-400 focus:border-purple-500 focus:ring-0">
                 </div>
 
                 {{-- Phone --}}
                 <div>
-                    <label class="block text-sm font-medium text-[#344053] mb-1">Phone Number</label>
+                    <label class="mb-1 block text-sm font-medium text-[#344053]">Phone Number</label>
                     <input type="text" name="phone" placeholder="Add Phone Number"
-                        class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800 placeholder-gray-400">
+                        class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 placeholder-gray-400 focus:border-purple-500 focus:ring-0">
                 </div>
 
                 {{-- Department --}}
                 <div>
-                    <label class="block text-sm font-medium text-[#344053] mb-1">Department</label>
+                    <label class="mb-1 block text-sm font-medium text-[#344053]">Department</label>
                     <select name="department"
-                        class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800">
+                        class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 focus:border-purple-500 focus:ring-0">
                         <option value="">Select department</option>
                         <option value="bridge">Bridge</option>
                         <option value="interior">Interior</option>
@@ -66,16 +68,16 @@
 
                 {{-- Title --}}
                 <div>
-                    <label class="block text-sm font-medium text-[#344053] mb-1">Title</label>
+                    <label class="mb-1 block text-sm font-medium text-[#344053]">Title</label>
                     <input type="text" name="role" placeholder="Add Title"
-                        class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800 placeholder-gray-400">
+                        class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 placeholder-gray-400 focus:border-purple-500 focus:ring-0">
                 </div>
 
                 {{-- Access Level --}}
                 <div>
-                    <label class="block text-sm font-medium text-[#344053] mb-1">Permissions</label>
+                    <label class="mb-1 block text-sm font-medium text-[#344053]">Permissions</label>
                     <select name="access_level" required
-                        class="w-full bg-transparent border-b border-gray-300 focus:border-purple-500 focus:ring-0 py-2 text-gray-800">
+                        class="w-full border-b border-gray-300 bg-transparent py-2 text-gray-800 focus:border-purple-500 focus:ring-0">
                         <option value="">Select access level</option>
                         <option value="crew">Crew</option>
                         <option value="admin">Admin</option>
@@ -92,19 +94,18 @@
                     </div>
                 @endcan
 
-
             </div>
         </div>
 
-
         {{-- FOOTER --}}
-        <footer class="flex-shrink-0 flex items-center justify-between px-6 py-4 border-t bg-white">
+        <footer class="flex flex-shrink-0 items-center justify-between border-t bg-white px-6 py-4">
             <button type="button" id="cancelInviteModal"
-                class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-100 transition">
+                class="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:bg-gray-100">
                 Cancel
             </button>
 
-            <button type="submit" form="inviteUserForm" class="px-5 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition">
+            <button type="submit" form="inviteUserForm"
+                class="rounded-lg bg-purple-600 px-5 py-2 text-sm text-white transition hover:bg-purple-700">
                 Send Invitation
             </button>
         </footer>

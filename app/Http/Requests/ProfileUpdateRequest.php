@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Requests;
 
 use App\Models\User;
@@ -22,14 +24,13 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name'    => ['nullable', 'string', 'max:255'],
-            'last_name'     => ['nullable', 'string', 'max:255'],
-            'email'         => ['required', 'email', 'max:255', Rule::unique('users')->ignore($this->user()->id)],
-            'phone'         => ['nullable', 'phone:AUTO', 'max:25'],
+            'first_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($this->user()->id)],
+            'phone' => ['nullable', 'phone:AUTO', 'max:25'],
             'date_of_birth' => ['nullable', 'date'],
-            'nationality'   => ['nullable', Rule::in(['US', 'GB', 'CA', 'AU', 'NZ'])],
-            'profile_pic'   => ['nullable', 'image', 'max:2048'],
+            'nationality' => ['nullable', Rule::in(['US', 'GB', 'CA', 'AU', 'NZ'])],
+            'profile_pic' => ['nullable', 'image', 'max:2048'],
         ];
     }
-
 }

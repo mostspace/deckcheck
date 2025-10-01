@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class File extends Model
 {
@@ -79,7 +81,7 @@ class File extends Model
         if ($this->disk === 's3_public') {
             return Storage::disk($this->disk)->url($this->path);
         }
-        
+
         return null; // Private files don't have public URLs
     }
 
@@ -98,7 +100,7 @@ class File extends Model
         if ($this->exists()) {
             return Storage::disk($this->disk)->delete($this->path);
         }
-        
+
         return true;
     }
 
@@ -107,7 +109,7 @@ class File extends Model
         if ($this->exists()) {
             return Storage::disk($this->disk)->get($this->path);
         }
-        
+
         return null;
     }
 
@@ -116,7 +118,7 @@ class File extends Model
         if ($this->exists()) {
             return Storage::disk($this->disk)->download($this->path, $this->original_name);
         }
-        
+
         abort(404);
     }
 
@@ -129,9 +131,9 @@ class File extends Model
         string $visibility = 'private',
         ?string $description = null
     ): self {
-        $path = $uploadedFile->store('vessels/' . $vesselId . '/uploads', $disk);
+        $path = $uploadedFile->store('vessels/'.$vesselId.'/uploads', $disk);
         $sha256 = hash_file('sha256', $uploadedFile->getRealPath());
-        
+
         return static::create([
             'disk' => $disk,
             'path' => $path,
@@ -172,11 +174,11 @@ class File extends Model
     {
         $bytes = $this->size;
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        
+
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;
         }
-        
-        return round($bytes, 2) . ' ' . $units[$i];
+
+        return round($bytes, 2).' '.$units[$i];
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\DeficiencyUpdate;
@@ -80,7 +82,7 @@ class DeficiencyUpdateController extends Controller
      */
     protected function authorizeDeficiencyUpdate(DeficiencyUpdate $deficiencyUpdate)
     {
-        if (!auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
+        if (! auth()->user()->hasSystemAccessToVessel($deficiencyUpdate->deficiency->equipment->vessel)) {
             abort(403, 'Access denied to this vessel');
         }
     }

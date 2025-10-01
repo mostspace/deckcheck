@@ -18,7 +18,7 @@
             '5-Yearly',
             '6-Yearly',
             '10-Yearly',
-            '12-Yearly',
+            '12-Yearly'
         ];
     @endphp
 
@@ -40,23 +40,23 @@
         ]
     ])
 
-    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div class="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         {{-- Flash Messages --}}
-        @if(session('success'))
-            <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
+        @if (session('success'))
+            <div class="mb-6 rounded-lg border border-green-300 bg-green-100 p-4 text-sm text-green-800">
                 {{ session('success') }}
             </div>
         @endif
 
-        @if(session('error'))
-            <div class="mb-6 p-4 bg-red-100 border border-red-300 text-red-800 rounded-lg text-sm">
+        @if (session('error'))
+            <div class="mb-6 rounded-lg border border-red-300 bg-red-100 p-4 text-sm text-red-800">
                 {{ session('error') }}
             </div>
         @endif
 
         {{-- Main Content --}}
-        <div class="h-full bg-white overflow-y-auto flex flex-col gap-4 sm:gap-6">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div class="flex h-full flex-col gap-4 overflow-y-auto bg-white sm:gap-6">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 class="text-2xl font-semibold text-[#0f1728]">Maintenance Index</h1>
                     <p class="text-[#475466]">Overview of equipment maintenance requirements.</p>
@@ -114,7 +114,8 @@
                         aVal = aVal.toLowerCase();
                         bVal = bVal.toLowerCase();
 
-                        return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (ascending ? 1 : -1);
+                        return (aVal > bVal ? 1 : aVal < bVal ? -1 : 0) * (ascending ? 1 : -
+                            1);
                     });
 
                     rows.forEach(row => tableBody.appendChild(row));
@@ -123,7 +124,8 @@
                     buttons.forEach(btn => {
                         const icon = btn.querySelector('i');
                         if (icon) {
-                            icon.classList.remove('fa-arrow-up-short-wide', 'fa-arrow-down-wide-short');
+                            icon.classList.remove('fa-arrow-up-short-wide',
+                                'fa-arrow-down-wide-short');
                             icon.classList.add('fa-sort');
                             icon.classList.remove('text-[#6840c6]');
                             icon.classList.add('text-[#475466]');

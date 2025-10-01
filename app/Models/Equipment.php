@@ -1,17 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Vessel;
-use App\Models\Category;
-use App\Models\Deck;
-use App\Models\Location;
-use App\Models\EquipmentInterval;
-use App\Models\WorkOrder;
-use App\Models\Deficiency;
 use App\Models\Traits\HasAttachments;
-
+use Illuminate\Database\Eloquent\Model;
 
 class Equipment extends Model
 {
@@ -52,37 +46,34 @@ class Equipment extends Model
         return $this->hasMany(Deficiency::class);
     }
 
-  
-
     protected $fillable = [
-    'vessel_id',
-    'category_id',
-    'deck_id',
-    'location_id',
-    'internal_id',
-    'name',
-    'manufacturer',
-    'model',
-    'serial_number',
-    'preferred_vendor',
-    'hero_photo',
-    'comments',
-    'attributes_json',
-    'manufacturing_date',
-    'purchase_date',
-    'expiry_date',
-    'in_service',
-    'removed_from_service',
-    'status',
+        'vessel_id',
+        'category_id',
+        'deck_id',
+        'location_id',
+        'internal_id',
+        'name',
+        'manufacturer',
+        'model',
+        'serial_number',
+        'preferred_vendor',
+        'hero_photo',
+        'comments',
+        'attributes_json',
+        'manufacturing_date',
+        'purchase_date',
+        'expiry_date',
+        'in_service',
+        'removed_from_service',
+        'status',
     ];
 
-protected $casts = [
-    'manufacturing_date' => 'date',
-    'purchase_date' => 'date',
-    'expiry_date' => 'date',
-    'in_service' => 'date',
-    'removed_from_service' => 'date',
-    'attributes_json' => 'array',
-];
-
+    protected $casts = [
+        'manufacturing_date' => 'date',
+        'purchase_date' => 'date',
+        'expiry_date' => 'date',
+        'in_service' => 'date',
+        'removed_from_service' => 'date',
+        'attributes_json' => 'array',
+    ];
 }

@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use App\Models\WorkOrder;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class MarkOverdueWorkOrders extends Command
 {
     protected $signature = 'work-orders:mark-overdue';
+
     protected $description = 'Mark open work orders as overdue if their due date has passed';
 
     public function handle(): int
     {
-        $now = \Carbon\Carbon::now()->startOfDay();
+        $now = Carbon::now()->startOfDay();
 
-        $count = \App\Models\WorkOrder::whereIn('status', ['open', 'in_progress', 'flagged'])
+        $count = WorkOrder::whereIn('status', ['open', 'in_progress', 'flagged'])
             ->whereNotNull('due_date')
             ->whereDate('due_date', '<', $now)
             ->update(['status' => 'overdue']);
@@ -24,5 +27,4 @@ class MarkOverdueWorkOrders extends Command
 
         return 0;
     }
-
 }

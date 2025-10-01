@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class StaffManagementController extends Controller
 {
@@ -46,8 +48,8 @@ class StaffManagementController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('first_name', 'like', "%{$search}%")
-                  ->orWhere('last_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('last_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
@@ -62,7 +64,7 @@ class StaffManagementController extends Controller
             'active' => 'Active Vessel Access',
             'inactive' => 'Inactive Vessel Access',
             'vessel_access' => 'Has Vessel Access',
-            'no_vessel_access' => 'No Vessel Access'
+            'no_vessel_access' => 'No Vessel Access',
         ];
 
         // Get additional statistics (only for staff members)
@@ -86,7 +88,7 @@ class StaffManagementController extends Controller
     public function show(User $user)
     {
         // Ensure only staff members can be viewed
-        if (!in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
+        if (! in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
             abort(404, 'User not found');
         }
 
@@ -94,17 +96,17 @@ class StaffManagementController extends Controller
             'boardings.vessel',
             'boardings' => function ($query) {
                 $query->orderBy('is_primary', 'desc')
-                      ->orderBy('joined_at', 'desc');
-            }
+                    ->orderBy('joined_at', 'desc');
+            },
         ]);
 
         // Ensure all date fields are properly cast
         $user->boardings->each(function ($boarding) {
-            if ($boarding->joined_at && !($boarding->joined_at instanceof \Carbon\Carbon)) {
-                $boarding->joined_at = \Carbon\Carbon::parse($boarding->joined_at);
+            if ($boarding->joined_at && ! ($boarding->joined_at instanceof Carbon)) {
+                $boarding->joined_at = Carbon::parse($boarding->joined_at);
             }
-            if ($boarding->terminated_at && !($boarding->terminated_at instanceof \Carbon\Carbon)) {
-                $boarding->terminated_at = \Carbon\Carbon::parse($boarding->terminated_at);
+            if ($boarding->terminated_at && ! ($boarding->terminated_at instanceof Carbon)) {
+                $boarding->terminated_at = Carbon::parse($boarding->terminated_at);
             }
         });
 
@@ -114,7 +116,7 @@ class StaffManagementController extends Controller
     public function edit(User $user)
     {
         // Ensure only staff members can be edited
-        if (!in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
+        if (! in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
             abort(404, 'User not found');
         }
 
@@ -124,14 +126,14 @@ class StaffManagementController extends Controller
     public function update(Request $request, User $user)
     {
         // Ensure only staff members can be updated
-        if (!in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
+        if (! in_array($user->system_role, ['superadmin', 'staff', 'dev'])) {
             abort(404, 'User not found');
         }
 
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,'.$user->id,
             'phone' => 'nullable|string|max:255',
             'system_role' => 'required|in:superadmin,staff,dev',
         ]);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Observers;
 
 use App\Models\Task;
@@ -28,6 +30,4 @@ class TaskObserver
         app(WorkOrderGenerationService::class)
             ->refreshTasksForInterval($task->interval_id);
     }
-    
-
 }

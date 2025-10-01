@@ -1,18 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Category;
-use App\Models\Task;
-use App\Models\EquipmentInterval;
-
 
 class Interval extends Model
 {
-
-    
-    public function category() 
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
@@ -28,9 +24,9 @@ class Interval extends Model
     }
 
     protected $fillable = [
-    'description',
-    'category_id',
-    'interval',
-    'facilitator',
+        'description',
+        'category_id',
+        'interval',
+        'facilitator',
     ];
 }

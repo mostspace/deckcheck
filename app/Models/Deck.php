@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Vessel;
-use App\Models\Location;
-use App\Models\Equipment;
 
 class Deck extends Model
 {
@@ -15,15 +14,15 @@ class Deck extends Model
     }
 
     protected $fillable = [
-    'name',
-    'display_order',
-    'vessel_id',
+        'name',
+        'display_order',
+        'vessel_id',
     ];
 
     public function locations()
     {
         return $this->hasMany(Location::class)
-                    ->orderBy('display_order');
+            ->orderBy('display_order');
     }
 
     public function equipment()

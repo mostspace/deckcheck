@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 
 class RoleBasedUserSeeder extends Seeder
 {
@@ -22,7 +24,6 @@ class RoleBasedUserSeeder extends Seeder
 
         $this->command?->info('Role-based users created successfully!');
     }
-
 
     /**
      * Create Super Admin user
@@ -113,5 +114,4 @@ class RoleBasedUserSeeder extends Seeder
         User::firstOrCreate(['email' => $userData['email']], $userData);
         $this->command?->info('Dev user created/updated');
     }
-
 }

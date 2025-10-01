@@ -6,7 +6,8 @@
 
     @php
         $visibleColumns = session('visible_columns', $defaultColumns);
-        $customizedColumns = array_diff($visibleColumns, $defaultColumns) || array_diff($defaultColumns, $visibleColumns);
+        $customizedColumns =
+            array_diff($visibleColumns, $defaultColumns) || array_diff($defaultColumns, $visibleColumns);
     @endphp
 
     {{-- Enhanced Maintenance Header --}}
@@ -27,10 +28,10 @@
         ]
     ])
 
-    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div class="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         {{-- Header --}}
         <div class="mb-6">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 class="text-2xl font-semibold text-[#0f1728]">Equipment</h1>
                     <p class="text-[#475466]">Manage and track vessel equipment inventory.</p>
@@ -40,7 +41,7 @@
 
         {{-- System Messages --}}
         @if (session('success'))
-            <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
+            <div class="mb-6 rounded-lg border border-green-300 bg-green-100 p-4 text-sm text-green-800">
                 {{ session('success') }}
             </div>
         @endif

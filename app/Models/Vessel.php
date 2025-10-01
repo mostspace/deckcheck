@@ -1,13 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Deck;
-use App\Models\Category;
-use App\Models\Equipment;
-
 
 class Vessel extends Model
 {
@@ -50,7 +47,7 @@ class Vessel extends Model
     public function decks()
     {
         return $this->hasMany(Deck::class)
-                    ->orderBy('display_order');
+            ->orderBy('display_order');
     }
 
     public function categories()
@@ -85,7 +82,7 @@ class Vessel extends Model
     {
         return $this->belongsToMany(User::class, 'boardings')
             ->withPivot([
-                'status', 'is_primary', 'is_crew', 'access_level', 'department', 'role', 'crew_number', 'joined_at', 'terminated_at'
+                'status', 'is_primary', 'is_crew', 'access_level', 'department', 'role', 'crew_number', 'joined_at', 'terminated_at',
             ])
             ->withTimestamps();
     }
@@ -95,7 +92,4 @@ class Vessel extends Model
         return $this->belongsToMany(User::class, 'boardings')
             ->where('status', 'active');
     }
-
-
 }
-

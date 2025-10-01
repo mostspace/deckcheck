@@ -5,17 +5,19 @@
 @section('content')
 
     <!-- Fullscreen Centered Container -->
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <!-- Registration Container -->
-        <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-lg">
 
             <!-- Progress Indicator -->
-            <div class="bg-[#f8f9fb] p-6 border-b border-[#e4e7ec]">
+            <div class="border-b border-[#e4e7ec] bg-[#f8f9fb] p-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="relative w-12 h-12">
-                            <div class="w-12 h-12 rounded-full border-4 border-[#7e56d8] border-r-transparent animate-spin"></div>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-medium">
+                        <div class="relative h-12 w-12">
+                            <div class="h-12 w-12 animate-spin rounded-full border-4 border-[#7e56d8] border-r-transparent">
+                            </div>
+                            <div
+                                class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-sm font-medium">
                                 2/3
                             </div>
                         </div>
@@ -24,44 +26,48 @@
                 </div>
             </div>
 
-         {{--   @include('components.registration.inviting-vessel-summary') --}}
+            {{--   @include('components.registration.inviting-vessel-summary') --}}
 
             <!-- Form Content -->
             <div class="p-6">
 
-                <form method="POST" action="{{ route('invitations.accept.avatar.store') }}" enctype="multipart/form-data" class="space-y-6">
+                <form method="POST" action="{{ route('invitations.accept.avatar.store') }}" enctype="multipart/form-data"
+                    class="space-y-6">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
 
                     <!-- Profile Photo Upload -->
-                    <div class="flex-col justify-start items-start gap-1.5 flex" id="profile-photo-field">
-                        <label class="text-[#344053] text-sm font-medium">Profile Photo</label>
+                    <div class="flex flex-col items-start justify-start gap-1.5" id="profile-photo-field">
+                        <label class="text-sm font-medium text-[#344053]">Profile Photo</label>
                         <div id="dropzone"
-                            class="w-full p-6 bg-white rounded-lg border border-[#e4e7ec] border-dashed flex flex-col items-center justify-center gap-4 cursor-pointer">
-                            <div id="avatarPreview" class="w-24 h-24 rounded-full bg-[#f2f3f6] overflow-hidden flex items-center justify-center">
-                                <i class="fa-regular fa-user text-[#667084] text-4xl"></i>
+                            class="flex w-full cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-dashed border-[#e4e7ec] bg-white p-6">
+                            <div id="avatarPreview"
+                                class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-[#f2f3f6]">
+                                <i class="fa-regular fa-user text-4xl text-[#667084]"></i>
                             </div>
                             <div class="text-center">
-                                <p class="text-[#344053] font-medium mb-1">
+                                <p class="mb-1 font-medium text-[#344053]">
                                     <span class="text-[#6840c6]">Click to upload</span> or drag and drop
                                 </p>
-                                <p class="text-[#475466] text-sm">SVG, PNG, JPG or GIF (max. 800x800px)</p>
+                                <p class="text-sm text-[#475466]">SVG, PNG, JPG or GIF (max. 800x800px)</p>
                             </div>
-                            <input type="file" id="profile-photo" name="avatar" class="hidden" accept="image/*" required>
+                            <input type="file" id="profile-photo" name="avatar" class="hidden" accept="image/*"
+                                required>
                         </div>
                     </div>
 
                     <!-- Form Actions -->
-                    <div class="p-6 bg-white border-t border-[#e4e7ec] flex justify-between" id="form-actions">
+                    <div class="flex justify-between border-t border-[#e4e7ec] bg-white p-6" id="form-actions">
                         <a href="{{ route('invitations.accept', ['token' => $token]) }}">
-                            <div class="px-[18px] py-2.5 bg-white rounded-lg border border-[#cfd4dc] flex items-center gap-2">
+                            <div
+                                class="flex items-center gap-2 rounded-lg border border-[#cfd4dc] bg-white px-[18px] py-2.5">
                                 <i class="fa-solid fa-arrow-left text-[#344053]"></i>
-                                <span class="text-[#344053] text-base font-medium">Back</span>
+                                <span class="text-base font-medium text-[#344053]">Back</span>
                             </div>
                         </a>
 
                         <button type="submit" id="submitButton" disabled
-                            class="px-[18px] py-2.5 bg-[#7e56d8] rounded-lg border border-[#7e56d8] text-white font-medium flex items-center gap-2 opacity-50 cursor-not-allowed">
+                            class="flex cursor-not-allowed items-center gap-2 rounded-lg border border-[#7e56d8] bg-[#7e56d8] px-[18px] py-2.5 font-medium text-white opacity-50">
                             Continue
                             <i class="fa-solid fa-arrow-right text-white"></i>
                         </button>
@@ -124,11 +130,11 @@
         function previewImage(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                avatarPreview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-full">`;
+                avatarPreview.innerHTML =
+                    `<img src="${e.target.result}" class="w-full h-full object-cover rounded-full">`;
             };
             reader.readAsDataURL(file);
         }
     </script>
-
 
 @endsection

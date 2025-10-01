@@ -20,7 +20,7 @@
             '5-yearly' => '1 year',
             '6-yearly' => '1 year',
             '10-yearly' => '1 year',
-            '12-yearly' => '1 year',
+            '12-yearly' => '1 year'
         ];
 
         $step = CarbonInterval::createFromDateString($durationMap[$frequency] ?? '1 day');
@@ -29,9 +29,11 @@
 
         $formattedRange = match ($frequency) {
             'daily' => $date->format('F j, Y'),
-            'weekly', 'bi-weekly' => $date->copy()->startOfWeek()->format('M j') . ' – ' . $date->copy()->endOfWeek()->format('M j, Y'),
+            'weekly', 'bi-weekly' => $date->copy()->startOfWeek()->format('M j') .
+                ' – ' .
+                $date->copy()->endOfWeek()->format('M j, Y'),
             'monthly', 'quarterly', 'bi-annually' => $date->format('F Y'),
-            default => $date->format('Y'),
+            default => $date->format('Y')
         };
     @endphp
 
@@ -48,17 +50,17 @@
         ]
     ])
 
-    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div class="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         {{-- System Messages --}}
         @if (session('success'))
-            <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
+            <div class="mb-6 rounded-lg border border-green-300 bg-green-100 p-4 text-sm text-green-800">
                 {{ session('success') }}
             </div>
         @endif
 
         {{-- Header --}}
         <div class="mb-6">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 class="text-2xl font-semibold text-[#0f1728]">Schedule</h1>
                     <p class="text-[#475466]">List View of All Open Interval Maintenance</p>
@@ -68,14 +70,16 @@
 
         {{-- Conditional Display for New Account / No Intervals Yet --}}
         @if (empty($visibleFrequencies))
-            <div class="border border-[#e4e7ec] rounded-lg p-12 flex flex-col items-center justify-center text-center text-sm text-[#475466] space-y-4">
+            <div
+                class="flex flex-col items-center justify-center space-y-4 rounded-lg border border-[#e4e7ec] p-12 text-center text-sm text-[#475466]">
                 <i class="fa-regular fa-calendar-xmark text-4xl text-[#d0d5dd]"></i>
-                <p class="font-medium text-[#344053] text-base">You haven't scheduled any maintenance intervals yet</p>
-                <p class="text-xs text-[#667084] max-w-xs">
-                    Once you create your first maintenance interval, work orders will begin generating automatically based on your vessel schedule.
+                <p class="text-base font-medium text-[#344053]">You haven't scheduled any maintenance intervals yet</p>
+                <p class="max-w-xs text-xs text-[#667084]">
+                    Once you create your first maintenance interval, work orders will begin generating automatically based
+                    on your vessel schedule.
                 </p>
                 <a href="#"
-                    class="inline-flex items-center gap-2 px-4 py-2 mt-2 text-sm font-medium text-slate-800 bg-primary-500 hover:bg-primary-600 rounded-lg transition">
+                    class="mt-2 inline-flex items-center gap-2 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-slate-800 transition hover:bg-primary-600">
                     <i class="fa-solid fa-calendar-plus"></i> Create Interval
                 </a>
             </div>
@@ -86,9 +90,10 @@
     </div>
 
     {{-- Flow Modal Structure --}}
-    <div id="flow-slideout-wrapper" class="fixed inset-0 z-50 pointer-events-none">
-        <div id="flow-slideout-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
-        <div id="flow-slideout-panel" class="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out">
+    <div id="flow-slideout-wrapper" class="pointer-events-none fixed inset-0 z-50">
+        <div id="flow-slideout-overlay" class="fixed inset-0 hidden bg-black bg-opacity-50"></div>
+        <div id="flow-slideout-panel"
+            class="fixed right-0 top-0 h-full w-full max-w-2xl translate-x-full transform bg-white shadow-xl transition-transform duration-300 ease-in-out">
             {{-- Modal content will be loaded here via JavaScript --}}
         </div>
     </div>
@@ -271,17 +276,21 @@
                             const completeBtn = container.querySelector('button[data-status="completed"]');
                             const flagBtn = container.querySelector('button[data-status="flagged"]');
 
-                            completeBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
-                            flagBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
+                            completeBtn.className =
+                                'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
+                            flagBtn.className =
+                                'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
                             completeBtn.disabled = false;
                             flagBtn.disabled = false;
 
                             if (status === 'completed') {
-                                completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]', 'text-white');
+                                completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]',
+                                    'text-white');
                                 completeBtn.classList.remove('text-[#027947]', 'hover:bg-[#d0fadf]', 'bg-[#ebfdf2]');
                                 completeBtn.disabled = true;
                             } else if (status === 'flagged') {
-                                flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]', 'text-white');
+                                flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]',
+                                    'text-white');
                                 flagBtn.classList.remove('text-[#b42318]', 'hover:bg-[#fee4e2]', 'bg-[#fef3f2]');
                                 flagBtn.disabled = true;
                             }
@@ -450,7 +459,8 @@
                     fetch(completeForm.action, {
                             method: 'POST',
                             headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content'),
                                 'Accept': 'application/json'
                             },
                             body: formData

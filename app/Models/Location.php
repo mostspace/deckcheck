@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Deck;
-use App\Models\Equipment;
-
 
 class Location extends Model
 {
@@ -20,10 +19,9 @@ class Location extends Model
     }
 
     protected $fillable = [
-    'name',
-    'description',
-    'display_order',
-    'deck_id',
-];
+        'name',
+        'description',
+        'display_order',
+        'deck_id',
+    ];
 }
- 

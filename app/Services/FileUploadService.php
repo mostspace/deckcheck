@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\File;
-use App\Models\Attachment;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -25,19 +26,19 @@ class FileUploadService
         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
         'text/plain',
         'text/csv',
-        
+
         // Images
         'image/jpeg',
         'image/png',
         'image/gif',
         'image/webp',
         'image/svg+xml',
-        
+
         // Archives
         'application/zip',
         'application/x-rar-compressed',
         'application/x-7z-compressed',
-        
+
         // CAD/Technical
         'application/dxf',
         'application/dwg',
@@ -113,7 +114,7 @@ class FileUploadService
         string $visibility = 'private'
     ): array {
         $files = [];
-        
+
         foreach ($uploadedFiles as $uploadedFile) {
             $files[] = $this->uploadFile(
                 $uploadedFile,
@@ -123,7 +124,7 @@ class FileUploadService
                 $visibility
             );
         }
-        
+
         return $files;
     }
 
@@ -136,17 +137,17 @@ class FileUploadService
         if ($uploadedFile->getSize() > $this->maxFileSize) {
             throw new ValidationException(
                 Validator::make([], [])->errors()->add(
-                    'file', 
+                    'file',
                     "File size ({$this->formatFileSize($uploadedFile->getSize())}) exceeds maximum allowed size ({$this->formatFileSize($this->maxFileSize)})"
                 )
             );
         }
-        
+
         $validator = Validator::make(['file' => $uploadedFile], [
             'file' => [
                 'required',
                 'file',
-                'mimes:' . implode(',', $this->getAllowedExtensions()),
+                'mimes:'.implode(',', $this->getAllowedExtensions()),
             ],
         ]);
 
@@ -162,7 +163,7 @@ class FileUploadService
     {
         $date = now()->format('Y/m/d');
         $extension = $uploadedFile->getClientOriginalExtension();
-        
+
         return "vessels/{$vesselId}/uploads/{$date}";
     }
 
@@ -172,14 +173,14 @@ class FileUploadService
     protected function getAllowedExtensions(): array
     {
         $extensions = [];
-        
+
         foreach ($this->allowedMimeTypes as $mimeType) {
             $extension = $this->getExtensionFromMimeType($mimeType);
             if ($extension) {
                 $extensions[] = $extension;
             }
         }
-        
+
         return array_unique($extensions);
     }
 
@@ -210,7 +211,7 @@ class FileUploadService
             'application/dwg' => 'dwg',
             'model/vnd.dwf' => 'dwf',
         ];
-        
+
         return $mimeToExtension[$mimeType] ?? null;
     }
 
@@ -220,6 +221,7 @@ class FileUploadService
     public function setAllowedMimeTypes(array $mimeTypes): self
     {
         $this->allowedMimeTypes = $mimeTypes;
+
         return $this;
     }
 
@@ -229,6 +231,7 @@ class FileUploadService
     public function setMaxFileSize(int $bytes): self
     {
         $this->maxFileSize = $bytes;
+
         return $this;
     }
 
@@ -238,12 +241,12 @@ class FileUploadService
     protected function formatFileSize(int $bytes): string
     {
         $units = ['B', 'KB', 'MB', 'GB'];
-        
+
         for ($i = 0; $bytes > 1024 && $i < count($units) - 1; $i++) {
             $bytes /= 1024;
         }
-        
-        return round($bytes, 2) . ' ' . $units[$i];
+
+        return round($bytes, 2).' '.$units[$i];
     }
 
     /**

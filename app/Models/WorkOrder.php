@@ -1,13 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\EquipmentInterval;
-use App\Models\User;
-use App\Models\WorkOrderTask;
-use App\Models\Deficiency;
-
 
 class WorkOrder extends Model
 {
@@ -56,7 +53,4 @@ class WorkOrder extends Model
     {
         return $this->hasOne(Deficiency::class)->latestOfMany();
     }
-
-    
-    
 }

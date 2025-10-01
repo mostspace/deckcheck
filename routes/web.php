@@ -1,29 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Http\Controllers\AttachmentController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DeckController;
+use App\Http\Controllers\DeficiencyController;
+use App\Http\Controllers\EquipmentController;
+use App\Http\Controllers\EquipmentIntervalController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\IntervalController;
+use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\InviteUserController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VesselController;
+use App\Http\Controllers\VesselSwitchController;
+use App\Http\Controllers\WorkOrderController;
+use App\Http\Controllers\WorkOrderFlowController;
+use App\Http\Controllers\WorkOrderTaskController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{
-    ProfileController,
-    UserController,
-    VesselController,
-    DeckController,
-    LocationController,
-    CategoryController,
-    IntervalController,
-    TaskController,
-    EquipmentController,
-    EquipmentIntervalController,
-    WorkOrderController,
-    WorkOrderTaskController,
-    DeficiencyController,
-    VesselSwitchController,
-    ScheduleController,
-    WorkOrderFlowController,
-    InviteUserController,
-    FileController,
-    AttachmentController,
-    ReportController,
-    InventoryController
-};
 
 // ------------------------------------  Public ----------------------------------------
 Route::view('/', 'welcome');
@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::middleware('vessel.access')->group(function () {
             Route::get('/category/{category}/edit', [VesselController::class, 'editCategory'])->name('edit');
             Route::put('/category/{category}', [VesselController::class, 'updateCategory'])->name('update');
-            
+
             // Schedule route must come before the catch-all {category} route
             Route::prefix('schedule')->name('schedule.')->group(function () {
                 Route::get('/', [ScheduleController::class, 'index'])->name('index');
@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
                     Route::get('/load/{workOrder}', 'load')->name('load');
                 });
             });
-            
+
             Route::get('/{category}', [VesselController::class, 'showCategory'])->name('show');
 
             Route::prefix('categories/{category}/intervals')->name('intervals.')->group(function () {

@@ -13,53 +13,51 @@
     <div class="mb-4">
         <nav class="flex items-center space-x-2 text-sm">
             <a href="{{ route('equipment.index') }}">
-                <span class="text-[#6840c6] hover:text-[#5a35a8] cursor-pointer">Equipment Index</span>
+                <span class="cursor-pointer text-[#6840c6] hover:text-[#5a35a8]">Equipment Index</span>
             </a>
-            <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+            <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
 
             <a href="{{ route('equipment.show', $workOrder->equipmentInterval->equipment) }}">
-                <span class="text-[#6840c6] hover:text-[#5a35a8] cursor-pointer">
+                <span class="cursor-pointer text-[#6840c6] hover:text-[#5a35a8]">
                     {{ $workOrder->equipmentInterval->equipment->name }}
                 </span>
             </a>
-            <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+            <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
 
             <a href="{{ route('equipment-intervals.show', $workOrder->equipmentInterval) }}">
-                <span class="text-[#6840c6] hover:text-[#5a35a8] cursor-pointer">
-                    {{ ucfirst($workOrder->equipmentInterval->frequency) }}: {{ $workOrder->equipmentInterval->description }}
+                <span class="cursor-pointer text-[#6840c6] hover:text-[#5a35a8]">
+                    {{ ucfirst($workOrder->equipmentInterval->frequency) }}:
+                    {{ $workOrder->equipmentInterval->description }}
                 </span>
             </a>
-            <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+            <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
 
-            <span class="text-[#475466] font-medium">Record #{{ $workOrder->id }}</span>
+            <span class="font-medium text-[#475466]">Record #{{ $workOrder->id }}</span>
         </nav>
     </div>
 
     {{-- #System Messages --}}
     @if (session('error'))
-        <div class="mb-4 p-3 bg-red-100 text-red-700 text-sm rounded">
+        <div class="mb-4 rounded bg-red-100 p-3 text-sm text-red-700">
             {{ session('error') }}
         </div>
     @endif
 
     {{-- #Main --}}
     <div class="mb-6" id="record-details">
-        <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm">
-            
+        <div class="rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
             {{-- ##Work Order Summary --}}
-            
-                    @include('components.maintenance.work-order-summary', [
-                        'workOrder' => $workOrder,
-                        'withButton' => true,
-                    ])
-                </div>
-            </div>
 
-
+            @include('components.maintenance.work-order-summary', [
+                'workOrder' => $workOrder,
+                'withButton' => true
+            ])
         </div>
     </div>
 
+    </div>
+    </div>
 
     {{-- Task Status Handling --}}
     <script>
@@ -89,18 +87,22 @@
                         const flagBtn = container.querySelector('button[data-status="flagged"]');
 
                         // Reset both buttons
-                        completeBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
-                        flagBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
+                        completeBtn.className =
+                            'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
+                        flagBtn.className =
+                            'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
                         completeBtn.disabled = false;
                         flagBtn.disabled = false;
 
                         // Apply selected styling
                         if (status === 'completed') {
-                            completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]', 'text-white');
+                            completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]',
+                                'text-white');
                             completeBtn.classList.remove('text-[#027947]', 'hover:bg-[#d0fadf]', 'bg-[#ebfdf2]');
                             completeBtn.disabled = true;
                         } else if (status === 'flagged') {
-                            flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]', 'text-white');
+                            flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]',
+                                'text-white');
                             flagBtn.classList.remove('text-[#b42318]', 'hover:bg-[#fee4e2]', 'bg-[#fef3f2]');
                             flagBtn.disabled = true;
                         }
@@ -123,7 +125,8 @@
 
             const allResolved = Array.from(taskCards).every(card => {
                 const btnContainer = card.closest('.flex');
-                return btnContainer.querySelector('button[disabled]'); // At least one button in each group is disabled
+                return btnContainer.querySelector(
+                    'button[disabled]'); // At least one button in each group is disabled
             });
 
             if (completeButton) {
@@ -212,6 +215,5 @@
                 });
         }
     </script>
-
 
 @endsection

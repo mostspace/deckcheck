@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Vessel;
 use App\Models\User;
+use App\Models\Vessel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -19,13 +21,13 @@ class VesselDataController extends Controller
 
         // Define size ranges and initialize bins
         $buckets = [
-            '<30m'    => [],
-            '30–39m'  => [],
-            '40–49m'  => [],
-            '50–59m'  => [],
-            '60–69m'  => [],
-            '70–79m'  => [],
-            '≥80m'    => [],
+            '<30m' => [],
+            '30–39m' => [],
+            '40–49m' => [],
+            '50–59m' => [],
+            '60–69m' => [],
+            '70–79m' => [],
+            '≥80m' => [],
         ];
 
         $totalUsers = 0;
@@ -79,6 +81,7 @@ class VesselDataController extends Controller
     public function create()
     {
         $users = User::where('system_role', '!=', 'user')->get();
+
         return view('admin.data.vessel.create', compact('users'));
     }
 
@@ -130,6 +133,7 @@ class VesselDataController extends Controller
     public function edit(Vessel $vessel)
     {
         $users = User::where('system_role', '!=', 'user')->get();
+
         return view('admin.data.vessel.edit', compact('vessel', 'users'));
     }
 
@@ -185,7 +189,7 @@ class VesselDataController extends Controller
                 $query->whereIn('status', ['active', 'invited'])
                     ->orderBy('crew_number')
                     ->with('user:id,first_name,last_name,profile_pic');
-            }
+            },
         ]);
 
         // Safely get owner boarding only if owner exists
@@ -196,14 +200,14 @@ class VesselDataController extends Controller
                 ->firstWhere('user_id', $vessel->owner->id);
         }
 
-        return view('admin.data.vessel.show', compact('vessel','ownerBoarding'));
+        return view('admin.data.vessel.show', compact('vessel', 'ownerBoarding'));
     }
 
     public function addUser(Vessel $vessel)
     {
         // Load boardings to get existing user IDs
         $vessel->load('boardings');
-        
+
         // Get users who don't already have a boarding with this vessel
         $existingUserIds = $vessel->boardings->pluck('user_id')->toArray();
         $availableUsers = User::whereNotIn('id', $existingUserIds)
@@ -251,7 +255,7 @@ class VesselDataController extends Controller
         ]);
 
         return redirect()->route('admin.vessels.show', $vessel)
-            ->with('success', 'User added to vessel successfully!' . ($isPrimary ? ' This is now their primary vessel.' : ''));
+            ->with('success', 'User added to vessel successfully!'.($isPrimary ? ' This is now their primary vessel.' : ''));
     }
 
     public function transferOwnership(Vessel $vessel)
@@ -278,7 +282,7 @@ class VesselDataController extends Controller
             ->where('status', 'active')
             ->first();
 
-        if (!$newOwnerBoarding) {
+        if (! $newOwnerBoarding) {
             return back()->withErrors(['new_owner_id' => 'Selected user must have an active boarding on this vessel.']);
         }
 
@@ -307,6 +311,4 @@ class VesselDataController extends Controller
         return redirect()->route('admin.vessels.show', $vessel)
             ->with('success', 'Vessel ownership transferred successfully!');
     }
-
-
 }
