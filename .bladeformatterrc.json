@@ -6,5 +6,6 @@
   "noMultipleEmptyLines": true,
   "endWithNewline": true,
   "noPhpSyntaxCheck": true,
-  "noTrailingCommaPhp": true
+  "noTrailingCommaPhp": true,
+  "wrapBladeDirectives": false
 }
