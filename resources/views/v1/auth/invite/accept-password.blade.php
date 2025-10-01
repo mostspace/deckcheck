@@ -5,17 +5,19 @@
 @section('content')
 
     <!-- Fullscreen Centered Container -->
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <!-- Registration Container -->
-        <div class="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden">
+        <div class="w-full max-w-3xl overflow-hidden rounded-xl bg-white shadow-lg">
 
             <!-- Progress Indicator -->
-            <div class="bg-[#f8f9fb] p-6 border-b border-[#e4e7ec]">
+            <div class="border-b border-[#e4e7ec] bg-[#f8f9fb] p-6">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <div class="relative w-12 h-12">
-                            <div class="w-12 h-12 rounded-full border-4 border-[#7e56d8] border-r-transparent animate-spin"></div>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-sm font-medium">
+                        <div class="relative h-12 w-12">
+                            <div class="h-12 w-12 animate-spin rounded-full border-4 border-[#7e56d8] border-r-transparent">
+                            </div>
+                            <div
+                                class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-sm font-medium">
                                 1/3
                             </div>
                         </div>
@@ -24,7 +26,7 @@
                 </div>
             </div>
 
-           {{-- @include('components.registration.inviting-vessel-summary') --}}
+            {{-- @include('components.registration.inviting-vessel-summary') --}}
 
             <!-- Form Content -->
             <div class="p-6">
@@ -33,59 +35,73 @@
                     <input type="hidden" name="token" value="{{ $token }}">
 
                     <!-- Name Fields -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex-col justify-start items-start gap-1.5 flex">
-                            <label for="first_name" class="text-[#344053] text-sm font-medium">First Name</label>
-                            <div class="self-stretch px-3.5 py-2.5 bg-[#f9fafb] rounded-lg shadow border border-[#cfd4dc] flex items-center gap-2">
-                                <input id="first_name" name="first_name" type="text" value="{{ $invitation->boarding->user->first_name }}"
-                                    class="grow text-[#98a2b3] text-base outline-none bg-transparent" readonly disabled>
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div class="flex flex-col items-start justify-start gap-1.5">
+                            <label for="first_name" class="text-sm font-medium text-[#344053]">First Name</label>
+                            <div
+                                class="flex items-center gap-2 self-stretch rounded-lg border border-[#cfd4dc] bg-[#f9fafb] px-3.5 py-2.5 shadow">
+                                <input id="first_name" name="first_name" type="text"
+                                    value="{{ $invitation->boarding->user->first_name }}"
+                                    class="grow bg-transparent text-base text-[#98a2b3] outline-none" readonly disabled>
                             </div>
                         </div>
-                        <div class="flex-col justify-start items-start gap-1.5 flex">
-                            <label for="last_name" class="text-[#344053] text-sm font-medium">Last Name</label>
-                            <div class="self-stretch px-3.5 py-2.5 bg-[#f9fafb] rounded-lg shadow border border-[#cfd4dc] flex items-center gap-2">
-                                <input id="last_name" name="last_name" type="text" value="{{ $invitation->boarding->user->last_name }}"
-                                    class="grow text-[#98a2b3] text-base outline-none bg-transparent" readonly disabled>
+                        <div class="flex flex-col items-start justify-start gap-1.5">
+                            <label for="last_name" class="text-sm font-medium text-[#344053]">Last Name</label>
+                            <div
+                                class="flex items-center gap-2 self-stretch rounded-lg border border-[#cfd4dc] bg-[#f9fafb] px-3.5 py-2.5 shadow">
+                                <input id="last_name" name="last_name" type="text"
+                                    value="{{ $invitation->boarding->user->last_name }}"
+                                    class="grow bg-transparent text-base text-[#98a2b3] outline-none" readonly disabled>
                             </div>
                         </div>
                     </div>
 
                     <!-- Email -->
-                    <div class="flex-col justify-start items-start gap-1.5 flex">
-                        <label for="email" class="text-[#344053] text-sm font-medium">Email</label>
-                        <div class="self-stretch px-3.5 py-2.5 bg-[#f9fafb] rounded-lg shadow border border-[#cfd4dc] flex items-center gap-2">
-                            <input id="email" name="email" type="email" value="{{ $invitation->boarding->user->email }}"
-                                class="grow text-[#98a2b3] text-base outline-none bg-transparent" readonly disabled>
+                    <div class="flex flex-col items-start justify-start gap-1.5">
+                        <label for="email" class="text-sm font-medium text-[#344053]">Email</label>
+                        <div
+                            class="flex items-center gap-2 self-stretch rounded-lg border border-[#cfd4dc] bg-[#f9fafb] px-3.5 py-2.5 shadow">
+                            <input id="email" name="email" type="email"
+                                value="{{ $invitation->boarding->user->email }}"
+                                class="grow bg-transparent text-base text-[#98a2b3] outline-none" readonly disabled>
                         </div>
                     </div>
 
                     <!-- Phone -->
-                    <div class="flex-col justify-start items-start gap-1.5 flex">
-                        <label for="phone" class="text-[#344053] text-sm font-medium">Phone Number</label>
-                        <div class="self-stretch px-3.5 py-2.5 bg-[#f9fafb] rounded-lg shadow border border-[#cfd4dc] flex items-center gap-2">
-                            <input id="phone" name="phone" type="tel" value="{{ $invitation->boarding->user->phone }}"
-                                class="grow text-[#98a2b3] text-base outline-none bg-transparent" readonly disabled>
+                    <div class="flex flex-col items-start justify-start gap-1.5">
+                        <label for="phone" class="text-sm font-medium text-[#344053]">Phone Number</label>
+                        <div
+                            class="flex items-center gap-2 self-stretch rounded-lg border border-[#cfd4dc] bg-[#f9fafb] px-3.5 py-2.5 shadow">
+                            <input id="phone" name="phone" type="tel"
+                                value="{{ $invitation->boarding->user->phone }}"
+                                class="grow bg-transparent text-base text-[#98a2b3] outline-none" readonly disabled>
                         </div>
                     </div>
 
                     <!-- Password Fields -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex-col justify-start items-start gap-1.5 flex">
-                            <label for="password" class="text-[#344053] text-sm font-medium">Password</label>
-                            <div class="self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-[#cfd4dc] flex items-center gap-2">
-                                <input id="password" name="password" type="password" class="grow text-[#0f1728] text-base outline-none bg-transparent"
+                    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <div class="flex flex-col items-start justify-start gap-1.5">
+                            <label for="password" class="text-sm font-medium text-[#344053]">Password</label>
+                            <div
+                                class="flex items-center gap-2 self-stretch rounded-lg border border-[#cfd4dc] bg-white px-3.5 py-2.5 shadow">
+                                <input id="password" name="password" type="password"
+                                    class="grow bg-transparent text-base text-[#0f1728] outline-none"
                                     placeholder="Create a password" required>
                                 <button type="button" class="text-[#667084]" onclick="toggleVisibility('password', this)">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>
                             </div>
                         </div>
-                        <div class="flex-col justify-start items-start gap-1.5 flex">
-                            <label for="password_confirmation" class="text-[#344053] text-sm font-medium">Confirm Password</label>
-                            <div class="self-stretch px-3.5 py-2.5 bg-white rounded-lg shadow border border-[#cfd4dc] flex items-center gap-2">
+                        <div class="flex flex-col items-start justify-start gap-1.5">
+                            <label for="password_confirmation" class="text-sm font-medium text-[#344053]">Confirm
+                                Password</label>
+                            <div
+                                class="flex items-center gap-2 self-stretch rounded-lg border border-[#cfd4dc] bg-white px-3.5 py-2.5 shadow">
                                 <input id="password_confirmation" name="password_confirmation" type="password"
-                                    class="grow text-[#0f1728] text-base outline-none bg-transparent" placeholder="Confirm your password" required>
-                                <button type="button" class="text-[#667084]" onclick="toggleVisibility('password_confirmation', this)">
+                                    class="grow bg-transparent text-base text-[#0f1728] outline-none"
+                                    placeholder="Confirm your password" required>
+                                <button type="button" class="text-[#667084]"
+                                    onclick="toggleVisibility('password_confirmation', this)">
                                     <i class="fa-regular fa-eye"></i>
                                 </button>
                             </div>
@@ -93,28 +109,28 @@
                     </div>
 
                     <!-- Password Requirements -->
-                    <div class="p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec]">
-                        <div class="text-[#344053] text-sm font-medium mb-2">Password Requirements:</div>
+                    <div class="rounded-lg border border-[#e4e7ec] bg-[#f8f9fb] p-4">
+                        <div class="mb-2 text-sm font-medium text-[#344053]">Password Requirements:</div>
                         <ul id="passwordRules" class="space-y-2 text-sm text-[#98a2b3]">
-                            <li class="flex items-center rule" data-rule="length">
+                            <li class="rule flex items-center" data-rule="length">
                                 <i class="fa-solid fa-check mr-2"></i> At least 8 characters long
                             </li>
-                            <li class="flex items-center rule" data-rule="uppercase">
+                            <li class="rule flex items-center" data-rule="uppercase">
                                 <i class="fa-solid fa-check mr-2"></i> Contains at least one uppercase letter
                             </li>
-                            <li class="flex items-center rule" data-rule="number">
+                            <li class="rule flex items-center" data-rule="number">
                                 <i class="fa-solid fa-check mr-2"></i> Contains at least one number
                             </li>
-                            <li class="flex items-center rule" data-rule="match">
+                            <li class="rule flex items-center" data-rule="match">
                                 <i class="fa-solid fa-check mr-2"></i> Passwords match
                             </li>
                         </ul>
                     </div>
 
                     <!-- Submit Button -->
-                    <div class="flex justify-end pt-6 border-t border-[#e4e7ec]">
+                    <div class="flex justify-end border-t border-[#e4e7ec] pt-6">
                         <button type="submit" id="submitButton"
-                            class="px-[18px] py-2.5 bg-[#7e56d8] rounded-lg shadow border border-[#7e56d8] text-white font-medium flex items-center gap-2 disabled:opacity-50"
+                            class="flex items-center gap-2 rounded-lg border border-[#7e56d8] bg-[#7e56d8] px-[18px] py-2.5 font-medium text-white shadow disabled:opacity-50"
                             disabled>
                             Continue
                             <i class="fa-solid fa-arrow-right text-white"></i>

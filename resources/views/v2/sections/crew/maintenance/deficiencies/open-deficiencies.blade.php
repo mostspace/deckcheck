@@ -1,15 +1,15 @@
 {{-- #Open Deficiencies --}}
-<div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm overflow-x-auto">
+<div class="overflow-x-auto rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
     <table class="w-full text-sm">
-        <thead class="bg-[#f8f9fb] text-[#475466] uppercase text-xs border-b border-[#e4e7ec]">
+        <thead class="border-b border-[#e4e7ec] bg-[#f8f9fb] text-xs uppercase text-[#475466]">
             <tr>
-                <th class="text-left px-6 py-3">ID</th>
-                <th class="text-left px-6 py-3">Equipment</th>
-                <th class="text-left px-6 py-3">Subject</th>
-                <th class="text-left px-6 py-3">Priority</th>
-                <th class="text-left px-6 py-3">Status</th>
-                <th class="text-left px-6 py-3">Opened</th>
-                <th class="text-left px-6 py-3">Actions</th>
+                <th class="px-6 py-3 text-left">ID</th>
+                <th class="px-6 py-3 text-left">Equipment</th>
+                <th class="px-6 py-3 text-left">Subject</th>
+                <th class="px-6 py-3 text-left">Priority</th>
+                <th class="px-6 py-3 text-left">Status</th>
+                <th class="px-6 py-3 text-left">Opened</th>
+                <th class="px-6 py-3 text-left">Actions</th>
             </tr>
         </thead>
 
@@ -37,7 +37,8 @@
                             {{ $deficiency->created_at->format('M j, Y') }}
                         </td>
                         <td class="px-6 py-4">
-                            <a href="{{ route('deficiencies.show', $deficiency) }}" class="text-sm font-medium text-[#6941c6] hover:underline">
+                            <a href="{{ route('deficiencies.show', $deficiency) }}"
+                                class="text-sm font-medium text-[#6941c6] hover:underline">
                                 View →
                             </a>
                         </td>
@@ -48,10 +49,10 @@
                 <tr>
                     <td colspan="7" class="px-6 py-12 text-center">
                         <div class="flex flex-col items-center justify-center text-[#667084]">
-                            <div class="w-16 h-16 bg-[#f8f9fb] rounded-full flex items-center justify-center mb-4">
+                            <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f8f9fb]">
                                 <i class="fa-solid fa-clipboard-list text-2xl text-[#c7c9d1]"></i>
                             </div>
-                            <div class="text-lg font-medium text-[#344053] mb-2">No Deficiencies Found</div>
+                            <div class="mb-2 text-lg font-medium text-[#344053]">No Deficiencies Found</div>
                             <div class="text-sm">No deficiencies have been logged yet for this vessel.</div>
                         </div>
                     </td>

@@ -11,11 +11,11 @@
     </div>
 
     <div>
-        <section class="bg-white rounded-lg border border-[#e4e7ec] p-6">
-            
+        <section class="rounded-lg border border-[#e4e7ec] bg-white p-6">
+
             @if ($errors->any())
-                <div class="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg">
-                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                <div class="mb-6 rounded-lg border border-red-300 bg-red-100 p-4 text-red-700">
+                    <ul class="list-disc space-y-1 pl-5 text-sm">
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
                         @endforeach

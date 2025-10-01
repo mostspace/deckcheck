@@ -6,63 +6,66 @@
     <main id="main-vessels">
         <!-- Header -->
         <div class="mb-6">
-            <div class="flex items-center text-sm text-navy-400 mb-2">
+            <div class="text-navy-400 mb-2 flex items-center text-sm">
                 <span>Data Management</span>
                 <i class="fa-solid fa-chevron-right mx-2"></i>
                 <span class="text-white">Vessels</span>
             </div>
-            <h1 class="text-2xl font-semibold mb-2">Vessel Management</h1>
+            <h1 class="mb-2 text-2xl font-semibold">Vessel Management</h1>
             <p class="text-navy-300">Monitor and manage all vessels in the system</p>
         </div>
 
         <!-- Flash Messages -->
-        @if(session('success'))
-            <div class="mb-6 bg-green-600 border border-green-500 text-white px-4 py-3 rounded relative" role="alert">
+        @if (session('success'))
+            <div class="relative mb-6 rounded border border-green-500 bg-green-600 px-4 py-3 text-white" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
-                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <button type="button" class="absolute bottom-0 right-0 top-0 px-4 py-3"
+                    onclick="this.parentElement.remove()">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
         @endif
 
-        @if(session('info'))
-            <div class="mb-6 bg-blue-600 border border-blue-500 text-white px-4 py-3 rounded relative" role="alert">
+        @if (session('info'))
+            <div class="relative mb-6 rounded border border-blue-500 bg-blue-600 px-4 py-3 text-white" role="alert">
                 <span class="block sm:inline">{{ session('info') }}</span>
-                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <button type="button" class="absolute bottom-0 right-0 top-0 px-4 py-3"
+                    onclick="this.parentElement.remove()">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
         @endif
 
-        @if(session('error'))
-            <div class="mb-6 bg-red-600 border border-red-500 text-white px-4 py-3 rounded relative" role="alert">
+        @if (session('error'))
+            <div class="relative mb-6 rounded border border-red-500 bg-red-600 px-4 py-3 text-white" role="alert">
                 <span class="block sm:inline">{{ session('error') }}</span>
-                <button type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3" onclick="this.parentElement.remove()">
+                <button type="button" class="absolute bottom-0 right-0 top-0 px-4 py-3"
+                    onclick="this.parentElement.remove()">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
         @endif
 
         <!-- Charts -->
-        <div id="vessel-analytics" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            <div class="bg-dark-800 p-6 rounded-lg border border-dark-700">
-                <h3 class="text-lg font-semibold mb-4 flex items-center">
+        <div id="vessel-analytics" class="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div class="bg-dark-800 border-dark-700 rounded-lg border p-6">
+                <h3 class="mb-4 flex items-center text-lg font-semibold">
                     <i class="fa-solid fa-ship mr-2 text-blue-400"></i>
                     Vessel Activity (30 Days)
                 </h3>
                 <div id="vessel-activity-chart" class="h-48"></div>
             </div>
 
-            <div class="bg-dark-800 p-6 rounded-lg border border-dark-700">
-                <h3 class="text-lg font-semibold mb-4 flex items-center">
+            <div class="bg-dark-800 border-dark-700 rounded-lg border p-6">
+                <h3 class="mb-4 flex items-center text-lg font-semibold">
                     <i class="fa-solid fa-users mr-2 text-green-400"></i>
                     Average Users per Vessel
                 </h3>
-                <div class="text-center mb-4">
+                <div class="mb-4 text-center">
                     <div class="text-4xl font-bold text-green-400">
                         {{ $overallAvgUsers ?? '—' }}
                     </div>
-                    <div class="text-sm text-navy-400">Average users per vessel</div>
+                    <div class="text-navy-400 text-sm">Average users per vessel</div>
                 </div>
 
                 <div id="users-per-vessel-chart" class="h-32"></div>
@@ -70,23 +73,24 @@
         </div>
 
         <!-- Table Section -->
-        <div id="vessel-table-section" class="bg-dark-800 rounded-lg border border-dark-700">
-            <div class="p-6 border-b border-dark-700">
-                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div id="vessel-table-section" class="bg-dark-800 border-dark-700 rounded-lg border">
+            <div class="border-dark-700 border-b p-6">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <h2 class="text-lg font-semibold">Active Vessels</h2>
                     <div class="flex flex-wrap gap-3">
                         <div class="flex items-center space-x-2">
-                            <button class="bg-dark-600 hover:bg-dark-500 px-3 py-2 rounded text-sm transition-colors">
+                            <button class="bg-dark-600 hover:bg-dark-500 rounded px-3 py-2 text-sm transition-colors">
                                 <i class="fa-solid fa-filter mr-1"></i>
                                 Filter
                             </button>
                         </div>
                         <div class="flex gap-2">
-                            <a href="{{ route('admin.vessels.create') }}" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded text-sm transition-colors text-white">
+                            <a href="{{ route('admin.vessels.create') }}"
+                                class="rounded bg-blue-600 px-4 py-2 text-sm text-white transition-colors hover:bg-blue-500">
                                 <i class="fa-solid fa-plus mr-1"></i>
                                 New Vessel
                             </a>
-                            <button class="bg-green-600 hover:bg-green-500 px-4 py-2 rounded text-sm transition-colors">
+                            <button class="rounded bg-green-600 px-4 py-2 text-sm transition-colors hover:bg-green-500">
                                 <i class="fa-solid fa-download mr-1"></i>
                                 Export
                             </button>
@@ -100,15 +104,15 @@
                 <table class="w-full">
                     <thead class="bg-dark-700">
                         <tr>
-                            <th class="text-left p-4 text-sm font-medium">Name</th>
-                            <th class="text-left p-4 text-sm font-medium">Size</th>
-                            <th class="text-left p-4 text-sm font-medium">Owner</th>
-                            <th class="text-left p-4 text-sm font-medium">Users</th>
-                            <th class="text-left p-4 text-sm font-medium">Subscription</th>
-                            <th class="text-left p-4 text-sm font-medium">Action</th>
+                            <th class="p-4 text-left text-sm font-medium">Name</th>
+                            <th class="p-4 text-left text-sm font-medium">Size</th>
+                            <th class="p-4 text-left text-sm font-medium">Owner</th>
+                            <th class="p-4 text-left text-sm font-medium">Users</th>
+                            <th class="p-4 text-left text-sm font-medium">Subscription</th>
+                            <th class="p-4 text-left text-sm font-medium">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-dark-700 text-sm text-navy-300">
+                    <tbody class="divide-dark-700 text-navy-300 divide-y text-sm">
                         @foreach ($vessels as $vessel)
                             <tr class="hover:bg-dark-700/50">
                                 <td class="p-4">
@@ -118,7 +122,8 @@
                                         @endphp
 
                                         <img src="https://flagcdn.com/h20/{{ $countryCode }}.png" alt="{{ $vessel->flag }}"
-                                            class="w-5 h-4 object-cover rounded-sm mr-2" onerror="this.style.display='none'">
+                                            class="mr-2 h-4 w-5 rounded-sm object-cover"
+                                            onerror="this.style.display='none'">
 
                                         <span class="font-medium text-white">{{ $vessel->name }}</span>
                                     </div>
@@ -127,20 +132,21 @@
                                 <td class="p-4">{{ optional($vessel->owner)->full_name ?? '—' }}</td>
                                 <td class="p-4">{{ $vessel->users_count }}</td>
                                 <td class="p-4">
-                                    <span class="px-2 py-1 text-xs rounded bg-green-900/30 text-green-400">Active</span>
+                                    <span class="rounded bg-green-900/30 px-2 py-1 text-xs text-green-400">Active</span>
                                 </td>
                                 <td class="p-4">
                                     <div class="flex space-x-2">
                                         <a href="{{ route('admin.vessels.show', $vessel) }}"
-                                            class="bg-blue-600 hover:bg-blue-500 px-3 py-1 rounded text-xs transition-colors text-white">
+                                            class="rounded bg-blue-600 px-3 py-1 text-xs text-white transition-colors hover:bg-blue-500">
                                             View Vessel
                                         </a>
-                                        
+
                                         @if (in_array(auth()->user()->system_role, ['superadmin', 'staff', 'dev']))
                                             <form action="{{ route('vessel.switch') }}" method="POST" class="inline">
                                                 @csrf
                                                 <input type="hidden" name="vessel_id" value="{{ $vessel->id }}">
-                                                <button type="submit" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700">
+                                                <button type="submit"
+                                                    class="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">
                                                     <i class="fa-solid fa-sign-in-alt mr-1"></i> Enter Vessel
                                                 </button>
                                             </form>
@@ -228,7 +234,6 @@
         });
     </script>
 
-
     <script>
         const usersPerVesselData = @json($avgUsersPerRange->values()->map(fn($val) => $val ?? ['name' => 'No Data'])->all());
         const usersPerVesselLabels = @json($avgUsersPerRange->keys());
@@ -286,6 +291,5 @@
             }
         });
     </script>
-
 
 @endsection

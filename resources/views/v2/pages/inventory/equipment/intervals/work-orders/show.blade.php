@@ -11,39 +11,35 @@
         'refererContext' => ['interval' => $workOrder->equipmentInterval]
     ])
 
-    <div class="px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div class="px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
 
-    @php
-        $assignedUser = $workOrder->assignee;
-        $users = $workOrder->equipmentInterval->equipment->vessel->users;
-    @endphp
+        @php
+            $assignedUser = $workOrder->assignee;
+            $users = $workOrder->equipmentInterval->equipment->vessel->users;
+        @endphp
 
-
-    {{-- #System Messages --}}
-    @if (session('error'))
-        <div class="mb-4 p-3 bg-red-100 text-red-700 text-sm rounded">
-            {{ session('error') }}
-        </div>
-    @endif
-
-    {{-- #Main --}}
-    <div class="mb-6" id="record-details">
-        <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm">
-            
-
-            {{-- ##Work Order Summary --}}
-            
-                    @include('components.maintenance.work-order-summary', [
-                        'workOrder' => $workOrder,
-                        'withButton' => true,
-                    ])
-                </div>
+        {{-- #System Messages --}}
+        @if (session('error'))
+            <div class="mb-4 rounded bg-red-100 p-3 text-sm text-red-700">
+                {{ session('error') }}
             </div>
+        @endif
 
+        {{-- #Main --}}
+        <div class="mb-6" id="record-details">
+            <div class="rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
+                {{-- ##Work Order Summary --}}
+
+                @include('components.maintenance.work-order-summary', [
+                    'workOrder' => $workOrder,
+                    'withButton' => true
+                ])
+            </div>
         </div>
-    </div>
 
+    </div>
+    </div>
 
     {{-- Task Status Handling --}}
     <script>
@@ -73,18 +69,22 @@
                         const flagBtn = container.querySelector('button[data-status="flagged"]');
 
                         // Reset both buttons
-                        completeBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
-                        flagBtn.className = 'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
+                        completeBtn.className =
+                            'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#ebfdf2] text-[#027947] hover:bg-[#d0fadf]';
+                        flagBtn.className =
+                            'px-3 py-1.5 text-sm font-medium rounded-lg bg-[#fef3f2] text-[#b42318] hover:bg-[#fee4e2]';
                         completeBtn.disabled = false;
                         flagBtn.disabled = false;
 
                         // Apply selected styling
                         if (status === 'completed') {
-                            completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]', 'text-white');
+                            completeBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#6840c6]', 'bg-[#6840c6]',
+                                'text-white');
                             completeBtn.classList.remove('text-[#027947]', 'hover:bg-[#d0fadf]', 'bg-[#ebfdf2]');
                             completeBtn.disabled = true;
                         } else if (status === 'flagged') {
-                            flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]', 'text-white');
+                            flagBtn.classList.add('ring-2', 'ring-offset-1', 'ring-[#b42318]', 'bg-[#b42318]',
+                                'text-white');
                             flagBtn.classList.remove('text-[#b42318]', 'hover:bg-[#fee4e2]', 'bg-[#fef3f2]');
                             flagBtn.disabled = true;
                         }
@@ -107,7 +107,8 @@
 
             const allResolved = Array.from(taskCards).every(card => {
                 const btnContainer = card.closest('.flex');
-                return btnContainer.querySelector('button[disabled]'); // At least one button in each group is disabled
+                return btnContainer.querySelector(
+                    'button[disabled]'); // At least one button in each group is disabled
             });
 
             if (completeButton) {

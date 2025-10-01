@@ -68,7 +68,8 @@
             }
         };
     </script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
 
     <style>
@@ -106,7 +107,7 @@
         .geometric-accent {
             background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
         }
-        
+
         .geometric-accent::before {
             content: '';
             position: absolute;
@@ -285,20 +286,20 @@
             .sidebar-desktop {
                 display: none !important;
             }
-            
+
             .mobile-menu-toggle {
                 display: flex !important;
             }
-            
+
             .main-panel-mobile {
                 margin-left: 0 !important;
                 width: 100% !important;
             }
-            
+
             .top-bar-mobile {
                 padding: 1rem !important;
             }
-            
+
             .content-mobile {
                 padding: 1rem !important;
             }
@@ -308,7 +309,7 @@
             .sidebar-desktop {
                 display: flex !important;
             }
-            
+
             .mobile-menu-toggle {
                 display: none !important;
             }
@@ -377,7 +378,7 @@
             .mobile-search {
                 display: block !important;
             }
-            
+
             .desktop-search {
                 display: none !important;
             }
@@ -385,56 +386,54 @@
     </style>
 </head>
 
-<body class="bg-dark-950 text-gray-100 flex h-screen overflow-hidden font-sans antialiased">
+<body class="bg-dark-950 flex h-screen overflow-hidden font-sans text-gray-100 antialiased">
     {{-- Mobile Menu Overlay --}}
     <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
-    
+
     {{-- Mobile Menu --}}
     <div id="mobile-menu" class="mobile-menu">
         {{-- Mobile Menu Header --}}
-        <div class="p-4 border-b border-subtle">
+        <div class="border-subtle border-b p-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="relative">
-                        <div class="w-8 h-8 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center shadow-lg">
-                            <i class="fa-solid fa-ship text-white text-lg"></i>
+                        <div
+                            class="from-accent-primary to-accent-secondary flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br shadow-lg">
+                            <i class="fa-solid fa-ship text-lg text-white"></i>
                         </div>
-                        <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-accent-secondary rounded-full border-2 border-dark-900"></div>
+                        <div
+                            class="bg-accent-secondary border-dark-900 absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2">
+                        </div>
                     </div>
                     <div>
-                        <span class="font-bold text-lg text-white">DeckCheck</span>
-                        <div class="text-xs text-gray-400 font-mono">ADMIN</div>
+                        <span class="text-lg font-bold text-white">DeckCheck</span>
+                        <div class="font-mono text-xs text-gray-400">ADMIN</div>
                     </div>
                 </div>
-                <button id="mobile-menu-close" class="p-2 text-gray-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors duration-200">
+                <button id="mobile-menu-close"
+                    class="hover:bg-dark-800 rounded-lg p-2 text-gray-400 transition-colors duration-200 hover:text-white">
                     <i class="fa-solid fa-times text-lg"></i>
                 </button>
             </div>
         </div>
 
         {{-- Mobile Navigation --}}
-        <div class="py-4 px-3 space-y-2">
+        <div class="space-y-2 px-3 py-4">
             <x-admin.nav-link icon="fa-tachometer-alt" label="Dashboard" route="admin.dashboard" />
-            
+
             <div class="pt-4">
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider">Management</div>
+                <div class="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Management</div>
                 <div class="space-y-1">
                     <x-admin.nav-link icon="fa-users" label="Staff" route="admin.staff.index" />
                     <x-admin.nav-link icon="fa-user-gear" label="User Management" route="admin.users.index" />
-                    <x-admin.nav-link 
-                        icon="fa-database" 
-                        label="Data Management"
-                        :subItems="[
-                            ['label' => 'Vessel', 'route' => 'admin.vessels.index']
-                        ]"
-                    />
+                    <x-admin.nav-link icon="fa-database" label="Data Management" :subItems="[['label' => 'Vessel', 'route' => 'admin.vessels.index']]" />
                     <x-admin.nav-link icon="fa-file-pen" label="Content Management" />
                     <x-admin.nav-link icon="fa-headset" label="Support" />
                 </div>
             </div>
 
             <div class="pt-4">
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider">System</div>
+                <div class="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500">System</div>
                 <div class="space-y-1">
                     <x-admin.nav-link icon="fa-shield-halved" label="Security" />
                     <x-admin.nav-link icon="fa-toolbox" label="Utilities" />
@@ -443,7 +442,7 @@
             </div>
 
             <div class="pt-4">
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider">Business</div>
+                <div class="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500">Business</div>
                 <div class="space-y-1">
                     <x-admin.nav-link icon="fa-money-bill-wave" label="Revenue" />
                     <x-admin.nav-link icon="fa-chart-line" label="Analytics" />
@@ -453,59 +452,60 @@
         </div>
 
         {{-- Mobile User Profile --}}
-        <div class="p-4 border-t border-subtle mt-auto">
+        <div class="border-subtle mt-auto border-t p-4">
             <div class="flex items-center space-x-3">
                 <div class="relative">
                     <img src="{{ auth()->user()->profile_pic_url ?? 'https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg' }}"
-                        class="w-8 h-8 rounded-lg border-2 border-accent-primary object-cover" />
-                    <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-dark-900"></div>
+                        class="border-accent-primary h-8 w-8 rounded-lg border-2 object-cover" />
+                    <div
+                        class="border-dark-900 absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full border-2 bg-green-400">
+                    </div>
                 </div>
-                <div class="flex-1 min-w-0">
-                    <div class="font-medium text-white truncate text-sm">{{ auth()->user()->name }}</div>
-                    <div class="text-xs text-gray-400 font-mono">{{ auth()->user()->system_role }}</div>
+                <div class="min-w-0 flex-1">
+                    <div class="truncate text-sm font-medium text-white">{{ auth()->user()->name }}</div>
+                    <div class="font-mono text-xs text-gray-400">{{ auth()->user()->system_role }}</div>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- Desktop Sidebar --}}
-    <div id="sidebar" class="sidebar-desktop sidebar-transition sidebar-expanded bg-dark-900 h-screen flex flex-col border-r border-subtle shadow-subtle">
+    <div id="sidebar"
+        class="sidebar-desktop sidebar-transition sidebar-expanded bg-dark-900 border-subtle shadow-subtle flex h-screen flex-col border-r">
         {{-- Logo Section --}}
         <div class="p-4">
             <div class="flex items-center space-x-3" id="logo-content">
                 <div class="relative">
-                    <div class="w-8 h-8 bg-gradient-to-br from-accent-primary to-accent-secondary rounded-lg flex items-center justify-center shadow-lg">
-                        <i class="fa-solid fa-ship text-white text-lg"></i>
+                    <div
+                        class="from-accent-primary to-accent-secondary flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br shadow-lg">
+                        <i class="fa-solid fa-ship text-lg text-white"></i>
                     </div>
-                    <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-accent-secondary rounded-full border-2 border-dark-900"></div>
+                    <div
+                        class="bg-accent-secondary border-dark-900 absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border-2">
+                    </div>
                 </div>
                 <div id="logo-text" class="logo-text">
-                    <span class="font-bold text-lg text-white">DeckCheck</span>
-                    <div class="text-xs text-gray-400 font-mono">ADMIN</div>
+                    <span class="text-lg font-bold text-white">DeckCheck</span>
+                    <div class="font-mono text-xs text-gray-400">ADMIN</div>
                 </div>
             </div>
         </div>
 
         {{-- Navigation --}}
-        <div class="flex-1 overflow-y-auto py-4 px-3 space-y-5">
+        <div class="flex-1 space-y-5 overflow-y-auto px-3 py-4">
             {{-- Dashboard --}}
             <div>
                 <x-admin.nav-link icon="fa-tachometer-alt" label="Dashboard" route="admin.dashboard" />
             </div>
-            
+
             {{-- Management Section --}}
             <div>
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider section-label" id="management-label">Management</div>
+                <div class="section-label mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500"
+                    id="management-label">Management</div>
                 <div class="space-y-0.5">
                     <x-admin.nav-link icon="fa-users" label="Staff" route="admin.staff.index" />
                     <x-admin.nav-link icon="fa-user-gear" label="User Management" route="admin.users.index" />
-                    <x-admin.nav-link 
-                        icon="fa-database" 
-                        label="Data Management"
-                        :subItems="[
-                            ['label' => 'Vessel', 'route' => 'admin.vessels.index']
-                        ]"
-                    />
+                    <x-admin.nav-link icon="fa-database" label="Data Management" :subItems="[['label' => 'Vessel', 'route' => 'admin.vessels.index']]" />
                     <x-admin.nav-link icon="fa-file-pen" label="Content Management" />
                     <x-admin.nav-link icon="fa-headset" label="Support" />
                 </div>
@@ -513,7 +513,8 @@
 
             {{-- System Section --}}
             <div>
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider section-label" id="system-label">System</div>
+                <div class="section-label mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500"
+                    id="system-label">System</div>
                 <div class="space-y-0.5">
                     <x-admin.nav-link icon="fa-shield-halved" label="Security" />
                     <x-admin.nav-link icon="fa-toolbox" label="Utilities" />
@@ -523,7 +524,8 @@
 
             {{-- Business Section --}}
             <div>
-                <div class="text-xs uppercase text-gray-500 font-semibold mb-3 px-2 tracking-wider section-label" id="business-label">Business</div>
+                <div class="section-label mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-gray-500"
+                    id="business-label">Business</div>
                 <div class="space-y-0.5">
                     <x-admin.nav-link icon="fa-money-bill-wave" label="Revenue" />
                     <x-admin.nav-link icon="fa-chart-line" label="Analytics" />
@@ -533,16 +535,18 @@
         </div>
 
         {{-- User Profile --}}
-        <div class="p-4 border-t border-subtle">
-            <div class="flex items-center space-x-3 user-profile" id="user-profile">
-                <div class="relative user-avatar">
+        <div class="border-subtle border-t p-4">
+            <div class="user-profile flex items-center space-x-3" id="user-profile">
+                <div class="user-avatar relative">
                     <img src="{{ auth()->user()->profile_pic ? Storage::url(auth()->user()->profile_pic) : asset('images/placeholders/user.png') }}"
-                        class="w-8 h-8 rounded-lg border-2 border-accent-primary object-cover" />
-                    <div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-dark-900"></div>
+                        class="border-accent-primary h-8 w-8 rounded-lg border-2 object-cover" />
+                    <div
+                        class="border-dark-900 absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full border-2 bg-green-400">
+                    </div>
                 </div>
-                <div class="flex-1 min-w-0 user-info" id="user-info">
-                    <div class="font-medium text-white truncate text-sm">{{ auth()->user()->name }}</div>
-                    <div class="text-xs text-gray-400 font-mono">{{ auth()->user()->system_role }}</div>
+                <div class="user-info min-w-0 flex-1" id="user-info">
+                    <div class="truncate text-sm font-medium text-white">{{ auth()->user()->name }}</div>
+                    <div class="font-mono text-xs text-gray-400">{{ auth()->user()->system_role }}</div>
                 </div>
             </div>
         </div>
@@ -554,51 +558,54 @@
     </button>
 
     {{-- Main Panel --}}
-    <div class="flex-1 overflow-hidden flex flex-col content-transition content-expanded main-panel-mobile">
+    <div class="content-transition content-expanded main-panel-mobile flex flex-1 flex-col overflow-hidden">
         {{-- Top Bar --}}
-        <div class="py-6 px-8 top-bar-mobile flex items-center justify-between">
+        <div class="top-bar-mobile flex items-center justify-between px-8 py-6">
             <div class="flex items-center space-x-4">
                 {{-- Mobile Menu Toggle --}}
                 <button id="mobile-menu-toggle" class="mobile-menu-toggle">
                     <i class="fa-solid fa-bars text-sm"></i>
                 </button>
-                
-                <a href="{{ route('admin.dashboard') }}" class="text-accent-primary hover:text-accent-secondary transition-colors duration-200 p-2 rounded-lg hover:bg-dark-800">
+
+                <a href="{{ route('admin.dashboard') }}"
+                    class="text-accent-primary hover:text-accent-secondary hover:bg-dark-800 rounded-lg p-2 transition-colors duration-200">
                     <i class="fa-solid fa-home"></i>
                 </a>
                 <h1 class="text-xl font-semibold text-white">@yield('title', 'Dashboard')</h1>
             </div>
-            
+
             <div class="flex items-center space-x-4">
                 {{-- Desktop Search --}}
-                <div class="relative desktop-search">
+                <div class="desktop-search relative">
                     <input type="text" placeholder="Search..."
-                        class="bg-dark-800 text-sm rounded-lg px-4 py-2 pl-10 w-64 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent border border-subtle">
-                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                        class="bg-dark-800 focus:ring-accent-primary border-subtle w-64 rounded-lg border px-4 py-2 pl-10 text-sm focus:border-transparent focus:outline-none focus:ring-2">
+                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-sm text-gray-400"></i>
                 </div>
-                
+
                 {{-- Mobile Search --}}
-                <div class="relative mobile-search">
+                <div class="mobile-search relative">
                     <input type="text" placeholder="Search..."
-                        class="bg-dark-800 text-sm rounded-lg px-4 py-2 pl-10 w-48 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent border border-subtle">
-                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400 text-sm"></i>
+                        class="bg-dark-800 focus:ring-accent-primary border-subtle w-48 rounded-lg border px-4 py-2 pl-10 text-sm focus:border-transparent focus:outline-none focus:ring-2">
+                    <i class="fa-solid fa-search absolute left-3 top-2.5 text-sm text-gray-400"></i>
                 </div>
-                
+
                 {{-- Notifications --}}
-                <button class="relative p-2 text-gray-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors duration-200">
+                <button
+                    class="hover:bg-dark-800 relative rounded-lg p-2 text-gray-400 transition-colors duration-200 hover:text-white">
                     <i class="fa-solid fa-bell text-sm"></i>
-                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-accent-danger rounded-full"></span>
+                    <span class="bg-accent-danger absolute -right-1 -top-1 h-2 w-2 rounded-full"></span>
                 </button>
-                
+
                 {{-- Settings --}}
-                <button class="p-2 text-gray-400 hover:text-white hover:bg-dark-800 rounded-lg transition-colors duration-200">
+                <button
+                    class="hover:bg-dark-800 rounded-lg p-2 text-gray-400 transition-colors duration-200 hover:text-white">
                     <i class="fa-solid fa-cog text-sm"></i>
                 </button>
             </div>
         </div>
 
         {{-- Page Content --}}
-        <div class="flex-1 overflow-y-auto bg-dark-950 content-mobile">
+        <div class="bg-dark-950 content-mobile flex-1 overflow-y-auto">
             <div class="p-8">
                 @yield('content')
             </div>
@@ -616,19 +623,19 @@
             const systemLabel = document.getElementById('system-label');
             const businessLabel = document.getElementById('business-label');
             const mainPanel = document.querySelector('.flex-1');
-            
+
             // Mobile menu elements
             const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
             const mobileMenuClose = document.getElementById('mobile-menu-close');
-            
+
             // Check for saved state
             const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
             if (isCollapsed) {
                 collapseSidebar();
             }
-            
+
             // Desktop sidebar toggle
             sidebarToggle.addEventListener('click', function() {
                 if (sidebar.classList.contains('sidebar-expanded')) {
@@ -637,99 +644,99 @@
                     expandSidebar();
                 }
             });
-            
+
             // Mobile menu toggle
             mobileMenuToggle.addEventListener('click', function() {
                 openMobileMenu();
             });
-            
+
             // Mobile menu close
             mobileMenuClose.addEventListener('click', function() {
                 closeMobileMenu();
             });
-            
+
             // Close mobile menu when clicking overlay
             mobileMenuOverlay.addEventListener('click', function() {
                 closeMobileMenu();
             });
-            
+
             // Close mobile menu when pressing Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
                     closeMobileMenu();
                 }
             });
-            
+
             // Close mobile menu when clicking on navigation links
             document.querySelectorAll('#mobile-menu a').forEach(link => {
                 link.addEventListener('click', function() {
                     closeMobileMenu();
                 });
             });
-            
+
             function openMobileMenu() {
                 mobileMenu.classList.add('active');
                 mobileMenuOverlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
-            
+
             function closeMobileMenu() {
                 mobileMenu.classList.remove('active');
                 mobileMenuOverlay.classList.remove('active');
                 document.body.style.overflow = '';
             }
-            
+
             function collapseSidebar() {
                 sidebar.classList.remove('sidebar-expanded');
                 sidebar.classList.add('sidebar-collapsed');
                 mainPanel.classList.remove('content-expanded');
                 mainPanel.classList.add('content-collapsed');
-                
+
                 // Hide text elements
                 logoText.style.display = 'none';
                 userInfo.style.display = 'none';
                 managementLabel.style.display = 'none';
                 systemLabel.style.display = 'none';
                 businessLabel.style.display = 'none';
-                
+
                 // Hide navigation text and subnav items
                 document.querySelectorAll('.nav-text').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.subnav-items').forEach(el => el.style.display = 'none');
-                
+
                 // Update toggle button
                 sidebarToggle.innerHTML = '<i class="fa-solid fa-chevron-right text-sm"></i>';
-                
+
                 // Save state
                 localStorage.setItem('sidebarCollapsed', 'true');
             }
-            
+
             function expandSidebar() {
                 sidebar.classList.remove('sidebar-collapsed');
                 sidebar.classList.add('sidebar-expanded');
                 mainPanel.classList.remove('content-collapsed');
                 mainPanel.classList.add('content-expanded');
-                
+
                 // Show text elements
                 logoText.style.display = 'block';
                 userInfo.style.display = 'block';
                 managementLabel.style.display = 'block';
                 systemLabel.style.display = 'block';
                 businessLabel.style.display = 'block';
-                
+
                 // Show navigation text and subnav items
                 document.querySelectorAll('.nav-text').forEach(el => el.style.display = 'block');
                 document.querySelectorAll('.subnav-items').forEach(el => el.style.display = 'block');
-                
+
                 // Update toggle button
                 sidebarToggle.innerHTML = '<i class="fa-solid fa-chevron-left text-sm"></i>';
-                
+
                 // Save state
                 localStorage.setItem('sidebarCollapsed', 'false');
             }
         });
     </script>
 
-@yield('scripts')
+    @yield('scripts')
 </body>
 
 </html>

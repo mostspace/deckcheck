@@ -25,29 +25,30 @@
                 <a href="{{ route('maintenance.index') }}" class="text-[#6840c6] hover:text-[#5a35a8]">
                     Maintenance Index
                 </a>
-                <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+                <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
                 <a href="{{ route('maintenance.show', $equipment->category) }}" class="text-[#6840c6] hover:text-[#5a35a8]">
                     {{ $equipment->category->name }}
                 </a>
-                <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+                <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
                 <span class="text-[#475466]">{{ $equipment->name }}</span>
             @elseif(Str::startsWith($refererPath, $categoryShowPathPattern))
-                <a href="{{ route('maintenance.showCategory', $equipment->category) }}" class="text-[#6840c6] hover:text-[#5a35a8]">
+                <a href="{{ route('maintenance.showCategory', $equipment->category) }}"
+                    class="text-[#6840c6] hover:text-[#5a35a8]">
                     {{ $equipment->category->name }}
                 </a>
-                <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+                <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
                 <span class="text-[#475466]">{{ $equipment->name }}</span>
             @elseif(Str::startsWith($refererPath, $equipmentIndexPath))
                 <a href="{{ route('equipment.index') }}" class="text-[#6840c6] hover:text-[#5a35a8]">
                     Equipment
                 </a>
-                <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+                <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
                 <span class="text-[#475466]">{{ $equipment->name }}</span>
             @else
                 <a href="{{ route('equipment.index') }}" class="text-[#6840c6] hover:text-[#5a35a8]">
                     Equipment Index
                 </a>
-                <i class="fa-solid fa-chevron-right text-[#667084] text-xs"></i>
+                <i class="fa-solid fa-chevron-right text-xs text-[#667084]"></i>
                 <span class="text-[#475466]">{{ $equipment->name }}</span>
             @endif
 
@@ -56,19 +57,20 @@
 
     {{-- System Messages --}}
     @if (session('success'))
-        <div class="mb-6 p-4 bg-green-100 border border-green-300 text-green-800 rounded-lg text-sm">
+        <div class="mb-6 rounded-lg border border-green-300 bg-green-100 p-4 text-sm text-green-800">
             {{ session('success') }}
         </div>
     @endif
 
     {{-- Header --}}
-    <div class="mb-6 flex flex-col lg:flex-row gap-6">
+    <div class="mb-6 flex flex-col gap-6 lg:flex-row">
 
         {{-- #Hero Photo --}}
         <div class="flex-shrink-0">
-            <div class="w-48 h-[149.8px] bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] flex items-center justify-center overflow-hidden">
+            <div
+                class="flex h-[149.8px] w-48 items-center justify-center overflow-hidden rounded-lg border border-[#e4e7ec] bg-[#f8f9fb]">
                 <img src="{{ $equipment->hero_photo ? Storage::url($equipment->hero_photo) : asset('images/placeholders/placeholder.png') }}"
-                    alt="Hero Photo for {{ $equipment->name }}" class="w-full h-full object-cover">
+                    alt="Hero Photo for {{ $equipment->name }}" class="h-full w-full object-cover">
             </div>
         </div>
 
@@ -79,14 +81,14 @@
                 <div class="flex gap-2">
 
                     {{-- ##Category Icon --}}
-                    <div class="w-8 h-8 bg-[#f9f5ff] border rounded-md flex items-center justify-center mr-1">
+                    <div class="mr-1 flex h-8 w-8 items-center justify-center rounded-md border bg-[#f9f5ff]">
                         <a href="{{ route('maintenance.show', $equipment->category) }}">
-                            <i class="fa-solid hover:text-[#7e56d8] {{ $equipment->category->icon }} text-[#6840c6]"></i>
+                            <i class="fa-solid {{ $equipment->category->icon }} text-[#6840c6] hover:text-[#7e56d8]"></i>
                         </a>
                     </div>
 
                     {{-- ##Equipment Name --}}
-                    <h1 class="text-2xl font-semibold text-[#0f1728] mb-2">{{ $equipment->name ?? 'Unamed' }}</h1>
+                    <h1 class="mb-2 text-2xl font-semibold text-[#0f1728]">{{ $equipment->name ?? 'Unamed' }}</h1>
 
                     {{-- ##Edit --}}
                     <button id="basic-modal-open" class="text-[#6840c6] hover:text-[#7e56d8]">
@@ -95,7 +97,7 @@
                 </div>
 
                 {{-- #Location --}}
-                <div class="flex items-center gap-1 mb-4">
+                <div class="mb-4 flex items-center gap-1">
                     <i class="fa-solid fa-location-dot text-sm text-[#6840c6]"></i>
                     <span class="text-sm font-bold text-[#484f5d]">{{ $equipment->deck->name }}</span>
                     <span class="text-sm text-[#667084]">/ {{ $equipment->location->name }}</span>
@@ -107,30 +109,31 @@
                 </div>
 
                 {{-- #Status Cards --}}
-                <div class="flex flex-col sm:flex-row gap-3">
+                <div class="flex flex-col gap-3 sm:flex-row">
 
                     {{-- ##Status --}}
-                    <div class="border rounded-lg p-4 min-w-[140px] {{ status_label_class($equipment->status) }}">
-                        <div class="flex items-center gap-2 mb-1">
+                    <div class="{{ status_label_class($equipment->status) }} min-w-[140px] rounded-lg border p-4">
+                        <div class="mb-1 flex items-center gap-2">
                             <i class="{{ status_label_icon($equipment->status) }}"></i>
                             <span class="text-sm font-medium">{{ $equipment->status ?? 'Unknown Status' }}</span>
                         </div>
-                        <p class="text-xs text-[#475466]">Commissioned {{ $equipment->in_service ? $equipment->in_service->format('F j, Y') : '—' }}</p>
+                        <p class="text-xs text-[#475466]">Commissioned
+                            {{ $equipment->in_service ? $equipment->in_service->format('F j, Y') : '—' }}</p>
                     </div>
 
                     {{-- ##Compliance --}}
-                    <div class="bg-[#fef3f2] border border-[#fecdca] rounded-lg p-4 min-w-[140px]">
-                        <div class="flex items-center gap-2 mb-1">
-                            <i class="text-[#b42318] fa-solid fa-triangle-exclamation"></i>
+                    <div class="min-w-[140px] rounded-lg border border-[#fecdca] bg-[#fef3f2] p-4">
+                        <div class="mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation text-[#b42318]"></i>
                             <span class="text-sm font-medium text-[#b42318]">## Overdue</span>
                         </div>
                         <p class="text-xs text-[#475466]">Test</p>
                     </div>
 
                     {{-- ##Scheduled --}}
-                    <div class="bg-[#fffaeb] border border-[#fed7aa] rounded-lg p-4 min-w-[140px]">
-                        <div class="flex items-center gap-2 mb-1">
-                            <i class="text-[#dc6803] fa-solid fa-clock"></i>
+                    <div class="min-w-[140px] rounded-lg border border-[#fed7aa] bg-[#fffaeb] p-4">
+                        <div class="mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-[#dc6803]"></i>
                             <span class="text-sm font-medium text-[#dc6803]">## Upcoming</span>
                         </div>
                         <p class="text-xs text-[#475466]">Test</p>
@@ -143,15 +146,15 @@
     </div>
 
     {{-- Equipment Data & Attributes --}}
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
 
         {{-- #Data Title Block --}}
-        <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm">
-            <div class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+        <div class="rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
+            <div class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-4">
                 <h2 class="text-lg font-semibold text-[#0f1728]">Equipment Information</h2>
 
                 {{-- ##Edit Equipment Data --}}
-                <button id="edit-equipment-info-btn" class="text-[#6840c6] hover:text-[#7e56d8] text-right">
+                <button id="edit-equipment-info-btn" class="text-right text-[#6840c6] hover:text-[#7e56d8]">
                     <i class="fa-solid fa-edit"></i>
                 </button>
             </div>
@@ -161,35 +164,35 @@
                 <div class="space-y-4">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">Manufacturer</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">Manufacturer</label>
                             <p class="text-sm font-bold text-[#344053]">{{ $equipment->manufacturer ?? '—' }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">Model / Part #</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">Model / Part #</label>
                             <p class="text-sm font-bold text-[#344053]">{{ $equipment->model ?? '—' }}</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">Serial Number</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">Serial Number</label>
                             <p class="text-sm font-bold text-[#344053]">{{ $equipment->serial_number ?? '—' }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">Custom ID</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">Custom ID</label>
                             <p class="text-sm font-bold text-[#344053]">{{ $equipment->internal_id ?? '—' }}</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">Purchase Date</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">Purchase Date</label>
                             <p class="text-sm font-bold text-[#344053]">
                                 {{ $equipment->purchase_date ? $equipment->purchase_date->format('F j, Y') : '—' }}
                             </p>
                         </div>
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">Manufacturing Date</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">Manufacturing Date</label>
                             <p class="text-sm font-bold text-[#344053]">
                                 {{ $equipment->manufacturing_date ? $equipment->manufacturing_date->format('F j, Y') : '—' }}
                             </p>
@@ -198,13 +201,13 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">In Service Date</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">In Service Date</label>
                             <p class="text-sm font-bold text-[#344053]">
                                 {{ $equipment->in_service ? $equipment->in_service->format('F j, Y') : '—' }}
                             </p>
                         </div>
                         <div>
-                            <label class="block text-sm font-light text-[#667084] mb-1">End of Life</label>
+                            <label class="mb-1 block text-sm font-light text-[#667084]">End of Life</label>
                             <p class="text-sm font-bold text-[#b42318]">
                                 {{ $equipment->expiry_date ? $equipment->expiry_date->format('F j, Y') : 'Not Applicable' }}
                             </p>
@@ -216,14 +219,14 @@
         </div>
 
         {{-- #Attributes JSON Table --}}
-        <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm">
+        <div class="rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
             {{-- ##Title Block --}}
-            <div class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+            <div class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-4">
                 <h2 class="text-lg font-semibold text-[#0f1728]">Attributes</h2>
 
                 {{-- ##Edit Attributes --}}
-                <button id="open-attributes-modal" class="text-[#6840c6] hover:text-[#7e56d8] text-right">
+                <button id="open-attributes-modal" class="text-right text-[#6840c6] hover:text-[#7e56d8]">
                     <i class="fa-solid fa-edit"></i>
                 </button>
             </div>
@@ -233,10 +236,12 @@
                 <table class="w-full">
                     <thead class="bg-[#f8f9fb]">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                            <th
+                                class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                                 Attribute
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                            <th
+                                class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                                 Value
                             </th>
                         </tr>
@@ -257,7 +262,7 @@
                         @empty
 
                             <tr>
-                                <td colspan="2" class="px-6 py-3 text-sm text-[#667084] italic">
+                                <td colspan="2" class="px-6 py-3 text-sm italic text-[#667084]">
                                     No attributes defined.
                                 </td>
                             </tr>
@@ -267,21 +272,20 @@
                 </table>
             </div>
 
-
         </div>
     </div>
 
     {{-- Equipment Attachments --}}
-    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
-        <div class="px-6 py-4 border-b border-[#e4e7ec]">
+    <div class="mt-6 rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
+        <div class="border-b border-[#e4e7ec] px-6 py-4">
             <h2 class="text-lg font-semibold text-[#0f1728]">Equipment Attachments</h2>
         </div>
         <div class="p-6">
             {{-- Debug Info --}}
-            @if(config('app.debug'))
-                <div class="mb-4 p-3 bg-gray-100 rounded text-xs">
-                    <strong>Debug:</strong> Equipment ID: {{ $equipment->id }}, 
-                    Vessel ID: {{ $equipment->vessel_id ?? 'null' }}, 
+            @if (config('app.debug'))
+                <div class="mb-4 rounded bg-gray-100 p-3 text-xs">
+                    <strong>Debug:</strong> Equipment ID: {{ $equipment->id }},
+                    Vessel ID: {{ $equipment->vessel_id ?? 'null' }},
                     Vessel: {{ $equipment->vessel->name ?? 'null' }}
                 </div>
             @endif
@@ -289,10 +293,10 @@
     </div>
 
     {{-- Maintenance Intervals --}}
-    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
+    <div class="mt-6 rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
         {{-- #Title Block --}}
-        <div class="flex px-6 py-4 border-b border-[#e4e7ec]">
+        <div class="flex border-b border-[#e4e7ec] px-6 py-4">
             <h2 class="text-lg font-semibold text-[#0f1728]">Maintenance Schedule</h2>
         </div>
 
@@ -300,25 +304,33 @@
             <table class="w-full">
                 <thead class="bg-[#f8f9fb]">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Interval
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Requirement Name
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             # of Tasks
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Facilitator
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Last Performed
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Next Due Date
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]"></th>
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
+                        </th>
 
                     </tr>
                 </thead>
@@ -328,14 +340,21 @@
 
                     @foreach ($equipment->intervals as $interval)
                         @php
-                            $lastWorkOrder = $interval->workOrders->whereNotNull('completed_at')->sortByDesc('completed_at')->first();
+                            $lastWorkOrder = $interval->workOrders
+                                ->whereNotNull('completed_at')
+                                ->sortByDesc('completed_at')
+                                ->first();
 
-                            $nextWorkOrder = $interval->workOrders->whereNull('completed_at')->sortBy('due_date')->first();
+                            $nextWorkOrder = $interval->workOrders
+                                ->whereNull('completed_at')
+                                ->sortBy('due_date')
+                                ->first();
                         @endphp
 
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 text-xs font-medium {{ frequency_label_class($interval->frequency) }} rounded-full">
+                            <td class="whitespace-nowrap px-6 py-4">
+                                <span
+                                    class="{{ frequency_label_class($interval->frequency) }} rounded-full px-2 py-1 text-xs font-medium">
                                     {{ $interval->frequency }}
                                 </span>
                             </td>
@@ -347,9 +366,13 @@
                             </td>
                             <td class="px-6 py-4 text-sm text-[#344053]">
                                 @php
-                                    $labelClass = $interval->facilitator === 'crew' ? 'bg-[#ebfdf2] text-[#027947]' : 'bg-[#fef6ee] text-[#c4320a]';
+                                    $labelClass =
+                                        $interval->facilitator === 'crew'
+                                            ? 'bg-[#ebfdf2] text-[#027947]'
+                                            : 'bg-[#fef6ee] text-[#c4320a]';
                                 @endphp
-                                <span class="px-2 py-1 text-xs font-medium {{ facilitator_label_class($interval->facilitator) }} rounded">
+                                <span
+                                    class="{{ facilitator_label_class($interval->facilitator) }} rounded px-2 py-1 text-xs font-medium">
                                     {{ ucfirst($interval->facilitator) }}
                                 </span>
                             </td>
@@ -361,7 +384,7 @@
                             </td>
                             <td class="px-6 py-4 text-sm font-medium">
                                 <button onclick="window.location='{{ route('equipment-intervals.show', $interval) }}'"
-                                    class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
+                                    class="rounded-lg p-2 text-[#667084] transition-colors hover:bg-[#f8f9fb] hover:text-[#344053]">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
                             </td>
@@ -375,28 +398,28 @@
     </div>
 
     {{-- Deficiencies --}}
-    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
+    <div class="mt-6 rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
         {{-- #Title Block --}}
-        <div class="px-6 py-4 border-b border-[#e4e7ec]">
+        <div class="border-b border-[#e4e7ec] px-6 py-4">
             <h2 class="text-lg font-semibold text-[#0f1728]">Deficiencies</h2>
         </div>
 
         {{-- #Toggle Switch and Create Button --}}
-        <div class="px-6 py-3 border-b border-[#e4e7ec] flex items-center justify-between">
-            <label class="flex items-center cursor-pointer">
+        <div class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-3">
+            <label class="flex cursor-pointer items-center">
                 <input type="checkbox" id="show-resolved-toggle" class="sr-only">
                 <div class="relative">
-                    <div class="block bg-[#e4e7ec] w-10 h-6 rounded-full"></div>
-                    <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 ease-in-out"></div>
+                    <div class="block h-6 w-10 rounded-full bg-[#e4e7ec]"></div>
+                    <div
+                        class="dot absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition-transform duration-200 ease-in-out">
+                    </div>
                 </div>
                 <span class="ml-3 text-sm font-medium text-[#475466]">Show Resolved</span>
             </label>
-            
-            <button 
-                id="openDeficiencyModal" 
-                class="px-4 py-2 bg-[#6840c6] text-white text-sm font-medium rounded-lg hover:bg-[#5a35a8] transition-colors duration-200 flex items-center space-x-2"
-            >
+
+            <button id="openDeficiencyModal"
+                class="flex items-center space-x-2 rounded-lg bg-[#6840c6] px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#5a35a8]">
                 <i class="fa-solid fa-plus"></i>
                 <span>New Deficiency</span>
             </button>
@@ -406,44 +429,55 @@
             <table class="w-full">
                 <thead class="bg-[#f8f9fb]">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             ID
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Status
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Subject
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Date Opened
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Priority
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
-                            
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
+
                         </th>
                     </tr>
                 </thead>
 
                 {{-- #Deficiencies Loop --}}
                 <tbody class="divide-y divide-[#e4e7ec]" id="deficiencies-tbody">
-                    @if($deficiencies->whereIn('status', ['open', 'waiting'])->count() > 0)
-                        @foreach($deficiencies->whereIn('status', ['open', 'waiting']) as $deficiency)
-                            <tr class="deficiency-row hover:bg-[#f8f9fb] transition-colors duration-200" data-status="{{ $deficiency->status }}">
+                    @if ($deficiencies->whereIn('status', ['open', 'waiting'])->count() > 0)
+                        @foreach ($deficiencies->whereIn('status', ['open', 'waiting']) as $deficiency)
+                            <tr class="deficiency-row transition-colors duration-200 hover:bg-[#f8f9fb]"
+                                data-status="{{ $deficiency->status }}">
                                 <td class="px-6 py-4 text-sm font-medium">
-                                    <a href="{{ route('deficiencies.show', $deficiency) }}" class="text-[#6840c6] hover:text-[#5a35a8] hover:underline transition-colors duration-200">
+                                    <a href="{{ route('deficiencies.show', $deficiency) }}"
+                                        class="text-[#6840c6] transition-colors duration-200 hover:text-[#5a35a8] hover:underline">
                                         {{ $deficiency->display_id ?: '#' . $deficiency->id }}
                                     </a>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($deficiency->status === 'open')
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>
+                                <td class="whitespace-nowrap px-6 py-4">
+                                    @if ($deficiency->status === 'open')
+                                        <span
+                                            class="rounded-full bg-[#fef3f2] px-2 py-1 text-xs font-medium text-[#b42318]">Open</span>
                                     @elseif($deficiency->status === 'waiting')
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Waiting</span>
+                                        <span
+                                            class="rounded-full bg-[#fef7ed] px-2 py-1 text-xs font-medium text-[#c4320a]">Waiting</span>
                                     @else
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Resolved</span>
+                                        <span
+                                            class="rounded-full bg-[#ecfdf3] px-2 py-1 text-xs font-medium text-[#027a48]">Resolved</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-sm text-[#344053]">
@@ -452,19 +486,24 @@
                                 <td class="px-6 py-4 text-sm text-[#344053]">
                                     {{ $deficiency->created_at->format('M j, Y') }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($deficiency->priority === 'high')
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">High</span>
+                                <td class="whitespace-nowrap px-6 py-4">
+                                    @if ($deficiency->priority === 'high')
+                                        <span
+                                            class="rounded-full bg-[#fef3f2] px-2 py-1 text-xs font-medium text-[#b42318]">High</span>
                                     @elseif($deficiency->priority === 'medium')
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Medium</span>
+                                        <span
+                                            class="rounded-full bg-[#fef7ed] px-2 py-1 text-xs font-medium text-[#c4320a]">Medium</span>
                                     @elseif($deficiency->priority === 'low')
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Low</span>
+                                        <span
+                                            class="rounded-full bg-[#ecfdf3] px-2 py-1 text-xs font-medium text-[#027a48]">Low</span>
                                     @else
-                                        <span class="px-2 py-1 text-xs font-medium bg-[#f1f5f9] text-[#475466] rounded-full">Unset</span>
+                                        <span
+                                            class="rounded-full bg-[#f1f5f9] px-2 py-1 text-xs font-medium text-[#475466]">Unset</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="{{ route('deficiencies.show', $deficiency) }}" class="p-2 text-[#667084] hover:text-[#6840c6] hover:bg-[#f4ebff] rounded-lg transition-all duration-200 transform hover:scale-110">
+                                    <a href="{{ route('deficiencies.show', $deficiency) }}"
+                                        class="transform rounded-lg p-2 text-[#667084] transition-all duration-200 hover:scale-110 hover:bg-[#f4ebff] hover:text-[#6840c6]">
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </a>
                                 </td>
@@ -485,12 +524,10 @@
     </div>
 
     {{-- Deficiency Create Modal --}}
-    <div
-        id="deficiencyCreateModal"
-        class="fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col bg-white transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl"
-    >
+    <div id="deficiencyCreateModal"
+        class="fixed right-0 top-0 z-50 flex h-full w-full max-w-md translate-x-full transform flex-col bg-white shadow-2xl transition-transform duration-300 ease-in-out">
         {{-- HEADER --}}
-        <header class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+        <header class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-4">
             <div class="flex items-center space-x-2">
                 {{-- Main Action --}}
                 <h2 class="text-2xl font-semibold text-[#0f1728]">
@@ -502,7 +539,7 @@
 
                 {{-- Equipment Name --}}
                 <div class="flex items-center space-x-1">
-                    <div class="w-8 h-8 bg-[#f9f5ff] border border-[#e4e7ec] rounded-md flex items-center justify-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-md border border-[#e4e7ec] bg-[#f9f5ff]">
                         <i class="fa-solid fa-exclamation-triangle text-[#6840c6]"></i>
                     </div>
                     <span class="text-2xl font-semibold text-[#6840c6]">
@@ -518,12 +555,8 @@
         </header>
 
         {{-- FORM --}}
-        <form
-            id="deficiencyForm"
-            action="{{ route('deficiencies.store') }}"
-            method="POST"
-            class="flex-1 flex flex-col overflow-hidden"
-        >
+        <form id="deficiencyForm" action="{{ route('deficiencies.store') }}" method="POST"
+            class="flex flex-1 flex-col overflow-hidden">
             @csrf
             <input type="hidden" name="equipment_id" value="{{ $equipment->id }}">
 
@@ -532,44 +565,31 @@
                 <div class="space-y-6">
                     {{-- Subject Field --}}
                     <div>
-                        <label for="subject" class="block text-sm font-medium text-[#374151] mb-2">
+                        <label for="subject" class="mb-2 block text-sm font-medium text-[#374151]">
                             Subject <span class="text-red-500">*</span>
                         </label>
-                        <input
-                            type="text"
-                            id="subject"
-                            name="subject"
-                            required
-                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
-                            placeholder="Enter deficiency subject"
-                        >
+                        <input type="text" id="subject" name="subject" required
+                            class="w-full rounded-lg border border-[#d1d5db] px-3 py-2 transition-colors duration-200 focus:border-[#6840c6] focus:ring-2 focus:ring-[#6840c6]"
+                            placeholder="Enter deficiency subject">
                     </div>
 
                     {{-- Description Field --}}
                     <div>
-                        <label for="description" class="block text-sm font-medium text-[#374151] mb-2">
+                        <label for="description" class="mb-2 block text-sm font-medium text-[#374151]">
                             Description
                         </label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            rows="4"
-                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200 resize-none"
-                            placeholder="Provide additional details about the deficiency (optional)"
-                        ></textarea>
+                        <textarea id="description" name="description" rows="4"
+                            class="w-full resize-none rounded-lg border border-[#d1d5db] px-3 py-2 transition-colors duration-200 focus:border-[#6840c6] focus:ring-2 focus:ring-[#6840c6]"
+                            placeholder="Provide additional details about the deficiency (optional)"></textarea>
                     </div>
 
                     {{-- Priority Field --}}
                     <div>
-                        <label for="priority" class="block text-sm font-medium text-[#374151] mb-2">
+                        <label for="priority" class="mb-2 block text-sm font-medium text-[#374151]">
                             Priority <span class="text-red-500">*</span>
                         </label>
-                        <select
-                            id="priority"
-                            name="priority"
-                            required
-                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
-                        >
+                        <select id="priority" name="priority" required
+                            class="w-full rounded-lg border border-[#d1d5db] px-3 py-2 transition-colors duration-200 focus:border-[#6840c6] focus:ring-2 focus:ring-[#6840c6]">
                             <option value="low" selected>Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
@@ -579,18 +599,14 @@
             </div>
 
             {{-- FOOTER --}}
-            <footer class="flex-shrink-0 flex items-center justify-end space-x-3 px-6 py-4 border-t border-[#e4e7ec] bg-white">
-                <button
-                    type="button"
-                    id="cancelDeficiencyModal"
-                    class="px-4 py-2 border border-[#d1d5db] rounded-lg text-sm text-[#374151] hover:bg-[#f9fafb] transition-colors duration-200"
-                >
+            <footer
+                class="flex flex-shrink-0 items-center justify-end space-x-3 border-t border-[#e4e7ec] bg-white px-6 py-4">
+                <button type="button" id="cancelDeficiencyModal"
+                    class="rounded-lg border border-[#d1d5db] px-4 py-2 text-sm text-[#374151] transition-colors duration-200 hover:bg-[#f9fafb]">
                     Cancel
                 </button>
-                <button
-                    type="submit"
-                    class="px-5 py-2 bg-[#6840c6] text-white rounded-lg text-sm font-medium hover:bg-[#5a35a8] transition-colors duration-200"
-                >
+                <button type="submit"
+                    class="rounded-lg bg-[#6840c6] px-5 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#5a35a8]">
                     Create Deficiency
                 </button>
             </footer>
@@ -599,11 +615,11 @@
 
     {{-- CSS for Toggle Switch --}}
     <style>
-        #show-resolved-toggle:checked + .relative .block {
+        #show-resolved-toggle:checked+.relative .block {
             background-color: #6840c6;
         }
-        
-        #show-resolved-toggle:checked + .relative .dot {
+
+        #show-resolved-toggle:checked+.relative .dot {
             transform: translateX(16px);
         }
     </style>
@@ -614,58 +630,66 @@
             const toggle = document.getElementById('show-resolved-toggle');
             const tbody = document.getElementById('deficiencies-tbody');
             const allDeficiencies = @json($deficiencies);
-            
+
             toggle.addEventListener('change', function() {
                 const showResolved = toggle.checked;
-                const filteredDeficiencies = showResolved 
-                    ? allDeficiencies 
-                    : allDeficiencies.filter(d => ['open', 'waiting'].includes(d.status));
-                
+                const filteredDeficiencies = showResolved ?
+                    allDeficiencies :
+                    allDeficiencies.filter(d => ['open', 'waiting'].includes(d.status));
+
                 // Clear existing rows
                 tbody.innerHTML = '';
-                
+
                 if (filteredDeficiencies.length > 0) {
                     filteredDeficiencies.forEach(function(deficiency) {
                         const row = document.createElement('tr');
-                        row.className = 'deficiency-row hover:bg-[#f8f9fb] transition-colors duration-200';
+                        row.className =
+                            'deficiency-row hover:bg-[#f8f9fb] transition-colors duration-200';
                         row.setAttribute('data-status', deficiency.status);
-                        
+
                         // Format date
                         const date = new Date(deficiency.created_at);
-                        const formattedDate = date.toLocaleDateString('en-US', { 
-                            month: 'short', 
-                            day: 'numeric', 
-                            year: 'numeric' 
+                        const formattedDate = date.toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric'
                         });
-                        
+
                         // Status badge
                         let statusBadge = '';
                         if (deficiency.status === 'open') {
-                            statusBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>';
+                            statusBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">Open</span>';
                         } else if (deficiency.status === 'waiting') {
-                            statusBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Waiting</span>';
+                            statusBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Waiting</span>';
                         } else {
-                            statusBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Resolved</span>';
+                            statusBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Resolved</span>';
                         }
-                        
+
                         // Priority badge
                         let priorityBadge = '';
                         if (deficiency.priority === 'high') {
-                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">High</span>';
+                            priorityBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#fef3f2] text-[#b42318] rounded-full">High</span>';
                         } else if (deficiency.priority === 'medium') {
-                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Medium</span>';
+                            priorityBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#fef7ed] text-[#c4320a] rounded-full">Medium</span>';
                         } else if (deficiency.priority === 'low') {
-                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Low</span>';
+                            priorityBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#ecfdf3] text-[#027a48] rounded-full">Low</span>';
                         } else {
-                            priorityBadge = '<span class="px-2 py-1 text-xs font-medium bg-[#f1f5f9] text-[#475466] rounded-full">Unset</span>';
+                            priorityBadge =
+                                '<span class="px-2 py-1 text-xs font-medium bg-[#f1f5f9] text-[#475466] rounded-full">Unset</span>';
                         }
-                        
+
                         // Subject
                         const subject = deficiency.subject || 'No subject';
-                        
+
                         // Display ID
                         const displayId = deficiency.display_id || '#' + deficiency.id;
-                        
+
                         row.innerHTML = `
                             <td class="px-6 py-4 text-sm font-medium">
                                 <a href="/deficiencies/${deficiency.id}" class="text-[#6840c6] hover:text-[#5a35a8] hover:underline transition-colors duration-200">
@@ -682,12 +706,13 @@
                                 </a>
                             </td>
                         `;
-                        
+
                         tbody.appendChild(row);
                     });
                 } else {
                     const noDataRow = document.createElement('tr');
-                    const message = showResolved ? 'No Deficiencies to Display' : 'No Open Deficiencies to Display';
+                    const message = showResolved ? 'No Deficiencies to Display' :
+                        'No Open Deficiencies to Display';
                     noDataRow.innerHTML = `
                         <td colspan="6" class="px-6 py-8 text-center text-sm text-[#667084]">
                             ${message}
@@ -732,45 +757,47 @@
             // Form submission
             document.getElementById('deficiencyForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 const formData = new FormData(this);
-                
+
                 fetch(this.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Close modal
-                        closeDeficiencyModal();
-                        
-                        // Reload the page to show the new deficiency
-                        window.location.reload();
-                    } else {
-                        // Handle validation errors
-                        console.error('Error creating deficiency:', data);
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close modal
+                            closeDeficiencyModal();
+
+                            // Reload the page to show the new deficiency
+                            window.location.reload();
+                        } else {
+                            // Handle validation errors
+                            console.error('Error creating deficiency:', data);
+                            alert('Error creating deficiency. Please try again.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         alert('Error creating deficiency. Please try again.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error creating deficiency. Please try again.');
-                });
+                    });
             });
 
             // View Resource Function
             window.viewResource = function(fileId, mimeType, displayName) {
                 // For images, videos, and audio, open in lightbox
-                if (mimeType.startsWith('image/') || mimeType.startsWith('video/') || mimeType.startsWith('audio/')) {
+                if (mimeType.startsWith('image/') || mimeType.startsWith('video/') || mimeType.startsWith(
+                        'audio/')) {
                     // Show loading lightbox immediately
                     const lightbox = document.createElement('div');
-                    lightbox.className = 'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
+                    lightbox.className =
+                        'fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4';
                     lightbox.id = 'resource-lightbox';
-                    
+
                     // Loading content
                     lightbox.innerHTML = `
                         <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden min-w-96">
@@ -786,19 +813,19 @@
                             </div>
                         </div>
                     `;
-                    
+
                     // Add click outside to close
                     lightbox.onclick = (e) => {
                         if (e.target === lightbox) {
                             window.closeResourceLightbox();
                         }
                     };
-                    
+
                     document.body.appendChild(lightbox);
-                    
+
                     // Add escape key listener
                     document.addEventListener('keydown', window.handleResourceEscapeKey);
-                    
+
                     // Get file details and load content
                     fetch(`/files/${fileId}`)
                         .then(response => response.json())
@@ -810,16 +837,19 @@
                                     month: 'short',
                                     day: 'numeric'
                                 });
-                                
+
                                 let content;
                                 if (mimeType.startsWith('image/')) {
-                                    content = `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl" onload="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'">`;
+                                    content =
+                                        `<img src="/files/${fileId}/view" alt="${displayName}" class="max-w-4xl max-h-[70vh] object-contain rounded-lg shadow-2xl" onload="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'">`;
                                 } else if (mimeType.startsWith('video/')) {
-                                    content = `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl" onloadeddata="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
+                                    content =
+                                        `<video controls class="max-w-4xl max-h-[70vh] rounded-lg shadow-2xl" onloadeddata="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'"><source src="/files/${fileId}/view" type="${mimeType}"></video>`;
                                 } else if (mimeType.startsWith('audio/')) {
-                                    content = `<audio controls class="max-w-4xl rounded-lg shadow-2xl" oncanplay="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
+                                    content =
+                                        `<audio controls class="max-w-4xl rounded-lg shadow-2xl" oncanplay="this.parentElement.parentElement.querySelector('.loading-content').style.display='none'"><source src="/files/${fileId}/view" type="${mimeType}"></audio>`;
                                 }
-                                
+
                                 // Update lightbox with content
                                 lightbox.innerHTML = `
                                     <div class="relative bg-white rounded-xl shadow-2xl border border-gray-200 overflow-hidden">
@@ -881,7 +911,7 @@
                     window.open(`/files/${fileId}/view`, '_blank');
                 }
             };
-            
+
             // Global close lightbox function
             window.closeResourceLightbox = function() {
                 const lightbox = document.getElementById('resource-lightbox');
@@ -890,7 +920,7 @@
                     document.removeEventListener('keydown', window.handleResourceEscapeKey);
                 }
             };
-            
+
             // Global escape key handler
             window.handleResourceEscapeKey = function(e) {
                 if (e.key === 'Escape') {
@@ -900,27 +930,29 @@
 
             // Delete Resource Function
             window.deleteResource = function(attachmentId, displayName) {
-                if (confirm(`Are you sure you want to delete "${displayName}"? This action cannot be undone.`)) {
+                if (confirm(
+                        `Are you sure you want to delete "${displayName}"? This action cannot be undone.`)) {
                     fetch(`/attachments/${attachmentId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Reload the page to reflect the changes
-                            window.location.reload();
-                        } else {
-                            alert('Error deleting resource: ' + (data.message || 'Please try again.'));
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error deleting resource. Please try again.');
-                    });
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content'),
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Reload the page to reflect the changes
+                                window.location.reload();
+                            } else {
+                                alert('Error deleting resource: ' + (data.message || 'Please try again.'));
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Error deleting resource. Please try again.');
+                        });
                 }
             };
         });
@@ -991,7 +1023,7 @@
                 formData.append('role', 'resource'); // Default role for all resources
                 formData.append('description', descriptionInput.value);
                 formData.append('display_name', displayNameInput.value.trim());
-                
+
                 // Debug logging
                 console.log('Form data being sent:', {
                     display_name: displayNameInput.value.trim(),
@@ -1001,102 +1033,102 @@
 
                 // Show loading state
                 uploadButton.disabled = true;
-                uploadButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Uploading...</span>';
+                uploadButton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i><span>Uploading...</span>';
 
-                fetch('{{ route("files.upload") }}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Close modal
-                        closeResourceModal();
-                        
-                        // Reload the page to show the new resource
-                        window.location.reload();
-                    } else {
-                        // Handle validation errors
-                        console.error('Error uploading resource:', data);
-                        alert('Error uploading resource: ' + (data.message || 'Please try again.'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error uploading resource. Please try again.');
-                })
-                .finally(() => {
-                    // Reset button state
-                    uploadButton.disabled = false;
-                    uploadButton.innerHTML = '<i class="fa-solid fa-upload"></i><span>Upload Resource</span>';
-                });
+                fetch('{{ route('files.upload') }}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content'),
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close modal
+                            closeResourceModal();
+
+                            // Reload the page to show the new resource
+                            window.location.reload();
+                        } else {
+                            // Handle validation errors
+                            console.error('Error uploading resource:', data);
+                            alert('Error uploading resource: ' + (data.message || 'Please try again.'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error uploading resource. Please try again.');
+                    })
+                    .finally(() => {
+                        // Reset button state
+                        uploadButton.disabled = false;
+                        uploadButton.innerHTML =
+                            '<i class="fa-solid fa-upload"></i><span>Upload Resource</span>';
+                    });
             });
         });
     </script>
 
     {{-- Resources --}}
-    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
+    <div class="mt-6 rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
         {{-- #Title Block --}}
-        <div class="px-6 py-4 border-b border-[#e4e7ec] flex items-center justify-between">
+        <div class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-4">
             <h2 class="text-lg font-semibold text-[#0f1728]">Resources</h2>
-            
-            <button 
-                id="openResourceModal" 
-                class="px-4 py-2 bg-[#6840c6] text-white text-sm font-medium rounded-lg hover:bg-[#5a35a8] transition-colors duration-200 flex items-center space-x-2"
-            >
+
+            <button id="openResourceModal"
+                class="flex items-center space-x-2 rounded-lg bg-[#6840c6] px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#5a35a8]">
                 <i class="fa-solid fa-plus"></i>
                 <span>Add Resource</span>
             </button>
         </div>
 
         <div class="p-6">
-            @if($equipment->hasAttachments())
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    @foreach($equipment->attachments as $attachment)
-                        <div class="flex items-center p-4 bg-[#f8f9fb] rounded-lg border border-[#e4e7ec] hover:bg-[#f2f3f6] cursor-pointer transition-colors">
-                            <div class="w-10 h-10 bg-[#f4ebff] rounded-lg flex items-center justify-center mr-3">
-                                @if($attachment->isImage())
-                                    <i class="text-[#6840c6] fa-solid fa-image"></i>
+            @if ($equipment->hasAttachments())
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @foreach ($equipment->attachments as $attachment)
+                        <div
+                            class="flex cursor-pointer items-center rounded-lg border border-[#e4e7ec] bg-[#f8f9fb] p-4 transition-colors hover:bg-[#f2f3f6]">
+                            <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-lg bg-[#f4ebff]">
+                                @if ($attachment->isImage())
+                                    <i class="fa-solid fa-image text-[#6840c6]"></i>
                                 @elseif($attachment->isPdf())
-                                    <i class="text-[#6840c6] fa-solid fa-file-pdf"></i>
+                                    <i class="fa-solid fa-file-pdf text-[#6840c6]"></i>
                                 @elseif(str_contains($attachment->file->mime_type, 'excel') || str_contains($attachment->file->mime_type, 'spreadsheet'))
-                                    <i class="text-[#6840c6] fa-solid fa-file-excel"></i>
+                                    <i class="fa-solid fa-file-excel text-[#6840c6]"></i>
                                 @elseif(str_contains($attachment->file->mime_type, 'word') || str_contains($attachment->file->mime_type, 'document'))
-                                    <i class="text-[#6840c6] fa-solid fa-file-word"></i>
+                                    <i class="fa-solid fa-file-word text-[#6840c6]"></i>
                                 @else
-                                    <i class="text-[#6840c6] fa-solid fa-file"></i>
+                                    <i class="fa-solid fa-file text-[#6840c6]"></i>
                                 @endif
                             </div>
                             <div class="flex-1">
                                 <h3 class="text-sm font-medium text-[#0f1728]">{{ $attachment->display_name }}</h3>
-                                <p class="text-xs text-[#667084]">{{ strtoupper($attachment->file->extension) }} • {{ $attachment->file->human_size }}</p>
+                                <p class="text-xs text-[#667084]">{{ strtoupper($attachment->file->extension) }} •
+                                    {{ $attachment->file->human_size }}</p>
                             </div>
                             <div class="flex items-center space-x-2">
                                 {{-- View button for all files --}}
-                                <button 
+                                <button
                                     onclick="viewResource('{{ $attachment->file->id }}', '{{ $attachment->file->mime_type }}', '{{ $attachment->display_name }}')"
-                                    class="text-[#667084] hover:text-[#6840c6] transition-colors"
-                                    title="View Resource"
-                                >
+                                    class="text-[#667084] transition-colors hover:text-[#6840c6]" title="View Resource">
                                     <i class="fa-solid fa-eye"></i>
                                 </button>
-                                
+
                                 {{-- Download button --}}
-                                <a href="{{ route('files.download', $attachment->file) }}" class="text-[#667084] hover:text-[#6840c6] transition-colors">
+                                <a href="{{ route('files.download', $attachment->file) }}"
+                                    class="text-[#667084] transition-colors hover:text-[#6840c6]">
                                     <i class="fa-solid fa-download"></i>
                                 </a>
-                                
+
                                 {{-- Delete button --}}
-                                <button 
+                                <button
                                     onclick="deleteResource({{ $attachment->id }}, '{{ $attachment->display_name }}')"
-                                    class="text-[#667084] hover:text-red-500 transition-colors"
-                                    title="Delete Resource"
-                                >
+                                    class="text-[#667084] transition-colors hover:text-red-500" title="Delete Resource">
                                     <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
@@ -1104,24 +1136,23 @@
                     @endforeach
                 </div>
             @else
-                <div class="text-center py-8 text-[#667084]">
-                    <div class="w-16 h-16 bg-[#f4ebff] rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="text-[#6840c6] fa-solid fa-file text-2xl"></i>
+                <div class="py-8 text-center text-[#667084]">
+                    <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-[#f4ebff]">
+                        <i class="fa-solid fa-file text-2xl text-[#6840c6]"></i>
                     </div>
-                    <h3 class="text-lg font-medium text-[#0f1728] mb-2">No Resources Yet</h3>
-                    <p class="text-sm">Upload manuals, certificates, and other important documents to keep them organized and accessible.</p>
+                    <h3 class="mb-2 text-lg font-medium text-[#0f1728]">No Resources Yet</h3>
+                    <p class="text-sm">Upload manuals, certificates, and other important documents to keep them organized
+                        and accessible.</p>
                 </div>
             @endif
         </div>
     </div>
 
     {{-- Resource Create Modal --}}
-    <div
-        id="resourceCreateModal"
-        class="fixed top-0 right-0 h-full w-full max-w-md z-50 flex flex-col bg-white transform translate-x-full transition-transform duration-300 ease-in-out shadow-2xl"
-    >
+    <div id="resourceCreateModal"
+        class="fixed right-0 top-0 z-50 flex h-full w-full max-w-md translate-x-full transform flex-col bg-white shadow-2xl transition-transform duration-300 ease-in-out">
         {{-- HEADER --}}
-        <header class="flex items-center justify-between px-6 py-4 border-b border-[#e4e7ec]">
+        <header class="flex items-center justify-between border-b border-[#e4e7ec] px-6 py-4">
             <div class="flex items-center space-x-2">
                 {{-- Main Action --}}
                 <h2 class="text-2xl font-semibold text-[#0f1728]">
@@ -1133,7 +1164,7 @@
 
                 {{-- Equipment Name --}}
                 <div class="flex items-center space-x-1">
-                    <div class="w-8 h-8 bg-[#f9f5ff] border border-[#e4e7ec] rounded-md flex items-center justify-center">
+                    <div class="flex h-8 w-8 items-center justify-center rounded-md border border-[#e4e7ec] bg-[#f9f5ff]">
                         <i class="fa-solid fa-file text-[#6840c6]"></i>
                     </div>
                     <span class="text-2xl font-semibold text-[#6840c6]">
@@ -1149,35 +1180,35 @@
         </header>
 
         {{-- FORM --}}
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <div class="flex flex-1 flex-col overflow-hidden">
             {{-- FORM BODY (scrollable) --}}
             <div class="flex-1 overflow-y-auto px-6 py-4">
                 <div class="space-y-6">
                     {{-- File Upload --}}
                     <div>
-                        <label class="block text-sm font-medium text-[#374151] mb-2">
+                        <label class="mb-2 block text-sm font-medium text-[#374151]">
                             File <span class="text-red-500">*</span>
                         </label>
-                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+                        <div
+                            class="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center transition-colors hover:border-gray-400">
                             <div class="space-y-2">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
-                                    <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none"
+                                    viewBox="0 0 48 48">
+                                    <path
+                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
-                                
+
                                 <div class="text-sm text-gray-600">
-                                    <label for="resource-file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                    <label for="resource-file"
+                                        class="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500">
                                         <span>Upload file</span>
-                                        <input 
-                                            id="resource-file"
-                                            name="file"
-                                            type="file"
-                                            class="sr-only"
-                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,image/*"
-                                        >
+                                        <input id="resource-file" name="file" type="file" class="sr-only"
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.txt,image/*">
                                     </label>
                                     <span class="ml-1">or drag and drop</span>
                                 </div>
-                                
+
                                 <p class="text-xs text-gray-500">
                                     50MB max file size. Supported formats: PDF, DOC, DOCX, XLS, XLSX, images, and more.
                                 </p>
@@ -1187,51 +1218,36 @@
 
                     {{-- Display Name --}}
                     <div>
-                        <label for="display_name" class="block text-sm font-medium text-[#374151] mb-2">
+                        <label for="display_name" class="mb-2 block text-sm font-medium text-[#374151]">
                             Display Name <span class="text-red-500">*</span>
                         </label>
-                        <input
-                            type="text"
-                            id="display_name"
-                            name="display_name"
-                            required
-                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200"
-                            placeholder="e.g., Operation Manual, Installation Guide"
-                        >
+                        <input type="text" id="display_name" name="display_name" required
+                            class="w-full rounded-lg border border-[#d1d5db] px-3 py-2 transition-colors duration-200 focus:border-[#6840c6] focus:ring-2 focus:ring-[#6840c6]"
+                            placeholder="e.g., Operation Manual, Installation Guide">
                     </div>
 
                     {{-- Description --}}
                     <div>
-                        <label for="description" class="block text-sm font-medium text-[#374151] mb-2">
+                        <label for="description" class="mb-2 block text-sm font-medium text-[#374151]">
                             Description
                         </label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            rows="3"
-                            class="w-full px-3 py-2 border border-[#d1d5db] rounded-lg focus:ring-2 focus:ring-[#6840c6] focus:border-[#6840c6] transition-colors duration-200 resize-none"
-                            placeholder="Brief description of this resource (optional)"
-                        ></textarea>
+                        <textarea id="description" name="description" rows="3"
+                            class="w-full resize-none rounded-lg border border-[#d1d5db] px-3 py-2 transition-colors duration-200 focus:border-[#6840c6] focus:ring-2 focus:ring-[#6840c6]"
+                            placeholder="Brief description of this resource (optional)"></textarea>
                     </div>
-
 
                 </div>
             </div>
 
             {{-- FOOTER --}}
-            <footer class="flex-shrink-0 flex items-center justify-end space-x-3 px-6 py-4 border-t border-[#e4e7ec] bg-white">
-                <button
-                    type="button"
-                    id="cancelResourceModal"
-                    class="px-4 py-2 text-sm font-medium text-[#374151] bg-white border border-[#d1d5db] rounded-lg hover:bg-[#f9fafb] transition-colors duration-200"
-                >
+            <footer
+                class="flex flex-shrink-0 items-center justify-end space-x-3 border-t border-[#e4e7ec] bg-white px-6 py-4">
+                <button type="button" id="cancelResourceModal"
+                    class="rounded-lg border border-[#d1d5db] bg-white px-4 py-2 text-sm font-medium text-[#374151] transition-colors duration-200 hover:bg-[#f9fafb]">
                     Cancel
                 </button>
-                <button
-                    type="button"
-                    id="uploadResource"
-                    class="px-4 py-2 bg-[#6840c6] text-white text-sm font-medium rounded-lg hover:bg-[#5a35a8] transition-colors duration-200 flex items-center space-x-2"
-                >
+                <button type="button" id="uploadResource"
+                    class="flex items-center space-x-2 rounded-lg bg-[#6840c6] px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-[#5a35a8]">
                     <i class="fa-solid fa-upload"></i>
                     <span>Upload Resource</span>
                 </button>
@@ -1240,10 +1256,10 @@
     </div>
 
     {{-- History --}}
-    <div class="bg-white rounded-lg border border-[#e4e7ec] shadow-sm mt-6">
+    <div class="mt-6 rounded-lg border border-[#e4e7ec] bg-white shadow-sm">
 
         {{-- #Title Block --}}
-        <div class="px-6 py-4 border-b border-[#e4e7ec]">
+        <div class="border-b border-[#e4e7ec] px-6 py-4">
             <h2 class="text-lg font-semibold text-[#0f1728]">History</h2>
         </div>
 
@@ -1251,16 +1267,20 @@
             <table class="w-full">
                 <thead class="bg-[#f8f9fb]">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Date
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Activity
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             User
                         </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-[#475466] uppercase tracking-wider border-b border-[#e4e7ec]">
+                        <th
+                            class="border-b border-[#e4e7ec] px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-[#475466]">
                             Actions
                         </th>
                     </tr>
@@ -1274,13 +1294,16 @@
                         <td class="px-6 py-4 text-sm text-[#344053]">
                             <div class="flex flex-col gap-1">
                                 <span>Interval Maintenance Completed</span>
-                                <span class="px-2 py-1 text-xs font-medium bg-[#f2f3f6] text-[#344053] rounded-full inline-block w-fit">Weekly - Visual
+                                <span
+                                    class="inline-block w-fit rounded-full bg-[#f2f3f6] px-2 py-1 text-xs font-medium text-[#344053]">Weekly
+                                    - Visual
                                     Inspection</span>
                             </div>
                         </td>
                         <td class="px-6 py-4 text-sm text-[#344053]">Alex Morgan</td>
                         <td class="px-6 py-4">
-                            <button class="p-2 text-[#667084] hover:text-[#344053] hover:bg-[#f8f9fb] rounded-lg transition-colors">
+                            <button
+                                class="rounded-lg p-2 text-[#667084] transition-colors hover:bg-[#f8f9fb] hover:text-[#344053]">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </td>
@@ -1301,7 +1324,7 @@
         'equipment' => $equipment,
         'categories' => $categories,
         'decks' => $decks,
-        'locations' => $locations,
+        'locations' => $locations
     ])
 
     {{-- End Content --}}
@@ -1425,7 +1448,6 @@
         });
     </script>
 
-
     {{-- #Data Edit Modal --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -1462,8 +1484,6 @@
             });
         });
     </script>
-
-
 
     {{-- #Attributes Modal --}}
     <script>
