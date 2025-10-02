@@ -5,14 +5,17 @@ Welcome to the DeckCheck application documentation. This repository contains com
 ## 📚 Documentation Index
 
 ### **Core System Documentation**
+
 - **[Vessel Access System Documentation](VESSEL_ACCESS_SYSTEM_DOCUMENTATION.md)** - Complete guide to the vessel access control system
 - **[Vessel Access Quick Reference](VESSEL_ACCESS_QUICK_REFERENCE.md)** - Quick reference for developers and administrators
 
 ### **User Management Documentation**
+
 - **[User Management Guide](USER_MANAGEMENT_README.md)** - User roles, permissions, and management
 - **[Staff Management Guide](STAFF_MANAGEMENT_README.md)** - Staff and admin user management
 
 ### **System Architecture**
+
 - **Vessel Access Control** - Implemented and working
 - **System Role Management** - `superadmin`, `staff`, `dev`, `user` roles
 - **Vessel Scoping** - All functionality properly scoped to vessels
@@ -21,6 +24,7 @@ Welcome to the DeckCheck application documentation. This repository contains com
 ## 🚀 Current Status
 
 ### **✅ Completed Features**
+
 - **Vessel Access System** - Fully implemented and working
 - **System Admin Access** - System users can access any vessel without boarding records
 - **Regular User Access** - Users access only vessels they're boarded on
@@ -28,6 +32,7 @@ Welcome to the DeckCheck application documentation. This repository contains com
 - **Controller Security** - Vessel access checks in all relevant controllers
 
 ### **🔒 Security Model**
+
 - **System Users** (`superadmin`, `staff`, `dev`): Access to all vessels
 - **Regular Users**: Access only to vessels with active boarding records
 - **Middleware Protection**: Route-level vessel access validation
@@ -52,4 +57,4 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed information about recent changes a
 
 ---
 
-*Last updated: August 2025*
+_Last updated: August 2025_

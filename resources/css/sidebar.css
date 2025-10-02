@@ -11,7 +11,7 @@
   height: 0;
   border-top: 6px solid transparent;
   border-bottom: 6px solid transparent;
-  border-right: 6px solid #B8EC27;
+  border-right: 6px solid #b8ec27;
 }
 
 .tooltip-arrow {
@@ -20,7 +20,7 @@
 
 /* ===== SIDEBAR LAYOUT ===== */
 #sidebar {
-  background-color: #16151E;
+  background-color: #16151e;
   min-height: 100vh;
   z-index: 20;
 }
@@ -62,8 +62,8 @@
 
 /* ===== HOVER STATES ===== */
 #sidebar li:hover svg {
-  background: rgba(253, 253, 253, 0.10);
-  border: 1px solid rgba(253, 253, 253, 0.20);
+  background: rgba(253, 253, 253, 0.1);
+  border: 1px solid rgba(253, 253, 253, 0.2);
 }
 
 #sidebar button:hover {
@@ -80,13 +80,13 @@
 }
 
 #sidebar li.active svg {
-  background: #B8EC27;
+  background: #b8ec27;
   color: var(--brand-900);
 }
 
 #sidebar li.active::before,
 #sidebar li.active::after {
-  content: "";
+  content: '';
   position: absolute;
   background: transparent;
   right: 0;
@@ -130,30 +130,58 @@
 
 /* ===== UTILITY CLASSES ===== */
 /* Brand colors */
-.bg-brand-900 { background-color: var(--brand-900); }
-.text-brand-900 { color: var(--brand-900); }
+.bg-brand-900 {
+  background-color: var(--brand-900);
+}
+.text-brand-900 {
+  color: var(--brand-900);
+}
 
 /* Primary colors */
-.bg-primary { background-color: #B8EC27; }
-.text-primary { color: #B8EC27; }
+.bg-primary {
+  background-color: #b8ec27;
+}
+.text-primary {
+  color: #b8ec27;
+}
 
 /* Accent colors */
-.border-accent-300 { border-color: var(--accent-300); }
-.bg-accent-200\/40 { background-color: rgba(212, 245, 95, 0.4); }
-.bg-accent-200\/20 { background-color: rgba(212, 245, 95, 0.2); }
+.border-accent-300 {
+  border-color: var(--accent-300);
+}
+.bg-accent-200\/40 {
+  background-color: rgba(212, 245, 95, 0.4);
+}
+.bg-accent-200\/20 {
+  background-color: rgba(212, 245, 95, 0.2);
+}
 
 /* Hover utilities */
-.hover\:text-primary:hover { color: #B8EC27 !important; }
-.hover\:bg-accent-200\/20:hover { background-color: rgba(212, 245, 95, 0.2); }
-.hover\:shadow-soft:hover { 
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+.hover\:text-primary:hover {
+  color: #b8ec27 !important;
 }
-.hover\:border-white\/20:hover { border-color: rgba(255, 255, 255, 0.2); }
-.hover\:bg-white\/10:hover { background-color: rgba(255, 255, 255, 0.1); }
+.hover\:bg-accent-200\/20:hover {
+  background-color: rgba(212, 245, 95, 0.2);
+}
+.hover\:shadow-soft:hover {
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+.hover\:border-white\/20:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.hover\:bg-white\/10:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
 
 /* Slate colors */
-.bg-slate-700\/70 { background-color: rgba(51, 65, 85, 0.7); }
-.hover\:bg-slate-600\/70:hover { background-color: rgba(71, 85, 105, 0.7); }
+.bg-slate-700\/70 {
+  background-color: rgba(51, 65, 85, 0.7);
+}
+.hover\:bg-slate-600\/70:hover {
+  background-color: rgba(71, 85, 105, 0.7);
+}
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {

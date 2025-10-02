@@ -16,10 +16,12 @@ The primary color is set to `#B8EC27` (bright lime green) and is used throughout
 The theme system provides multiple variations of the primary color:
 
 ### Primary Colors
+
 - `primary-50` to `primary-950` - Full color scale from lightest to darkest
 - `primary-500` - Main primary color (`#B8EC27`)
 
 ### Accent Colors
+
 - `accent-50` to `accent-950` - Same as primary colors for consistency
 - `accent-500` - Main accent color (same as primary)
 
@@ -48,11 +50,11 @@ The theme also provides CSS custom properties for more advanced styling:
 
 ```css
 :root {
-    --color-primary: #B8EC27;
-    --color-primary-light: #c5f096;
-    --color-primary-lighter: #ddf7c1;
-    --color-primary-dark: #8bb018;
-    --color-primary-darker: #6f8a1a;
+  --color-primary: #b8ec27;
+  --color-primary-light: #c5f096;
+  --color-primary-lighter: #ddf7c1;
+  --color-primary-dark: #8bb018;
+  --color-primary-darker: #6f8a1a;
 }
 ```
 
@@ -75,27 +77,26 @@ To change the primary color:
 ## Examples
 
 ### Tab Navigation
+
 ```html
 <!-- Active tab -->
-<button class="bg-primary-200 text-slate-900 border border-primary-300">
-    Active Tab
-</button>
+<button class="bg-primary-200 text-slate-900 border border-primary-300">Active Tab</button>
 
 <!-- Inactive tab -->
-<button class="border hover:bg-white">
-    Inactive Tab
-</button>
+<button class="border hover:bg-white">Inactive Tab</button>
 ```
 
 ### Announcement Bar
+
 ```html
 <div class="border-primary-300 bg-primary-200/40">
-    <span class="bg-primary-500"></span>
-    Announcement content
+  <span class="bg-primary-500"></span>
+  Announcement content
 </div>
 ```
 
 ### Avatar Borders
+
 ```html
 <img class="border-2 border-primary-300" src="avatar.jpg" alt="Avatar" />
 ```

@@ -21,7 +21,7 @@ function openSidebar() {
     requestAnimationFrame(() => {
       if (backdrop) backdrop.classList.remove('opacity-0');
       if (panel) {
-        panel.classList.remove('-translate-x-full','translate-x-[-100%]');
+        panel.classList.remove('-translate-x-full', 'translate-x-[-100%]');
         panel.classList.add('translate-x-0');
       }
     });
@@ -43,26 +43,26 @@ function closeSidebar() {
 openBtn?.addEventListener('click', openSidebar);
 closeBtn?.addEventListener('click', closeSidebar);
 backdrop?.addEventListener('click', closeSidebar);
-window.addEventListener('keydown', (e) => { 
-  if (e.key === 'Escape') closeSidebar(); 
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSidebar();
 });
 
 // Announcement dismissal
 document.getElementById('btnDismissAnnouncement')?.addEventListener('click', () => {
   const el = document.getElementById('announcement');
   if (!el) return;
-  
+
   el.style.transition = 'opacity 0.3s ease-out, height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out';
   const startHeight = el.offsetHeight;
   el.style.height = startHeight + 'px';
   void el.offsetHeight;
-  
+
   el.classList.add('opacity-0');
   el.style.height = '0px';
   el.style.paddingTop = '0px';
   el.style.paddingBottom = '0px';
   el.style.marginBottom = '0px';
-  
+
   setTimeout(() => el.remove(), 300);
 });
 
@@ -75,7 +75,7 @@ const chevronIcon = timeframeDropdown?.querySelector('img');
 function toggleDropdown() {
   if (!timeframeMenu) return;
   const isOpen = timeframeMenu.classList.contains('opacity-100');
-  
+
   if (isOpen) {
     timeframeMenu.classList.remove('opacity-100', 'visible', 'scale-100');
     timeframeMenu.classList.add('opacity-0', 'invisible', 'scale-95');
@@ -94,24 +94,24 @@ function closeDropdown() {
   chevronIcon?.classList.remove('rotate-180');
 }
 
-timeframeDropdown?.addEventListener('click', (e) => {
+timeframeDropdown?.addEventListener('click', e => {
   e.stopPropagation();
   toggleDropdown();
 });
 
-timeframeMenu?.addEventListener('click', (e) => {
+timeframeMenu?.addEventListener('click', e => {
   const button = e.target.closest('button[data-value]');
   if (button) {
     const value = button.dataset.value;
     const text = button.textContent.trim();
-    
+
     if (selectedTimeframe) selectedTimeframe.textContent = text;
     closeDropdown();
     console.log('Selected timeframe:', value, text);
   }
 });
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', e => {
   if (!timeframeDropdown?.contains(e.target)) {
     closeDropdown();
   }
@@ -136,8 +136,8 @@ function closeDrawerFn() {
 
 helpButtons.forEach(btn => btn?.addEventListener('click', openDrawer));
 closeDrawer?.addEventListener('click', closeDrawerFn);
-window.addEventListener('keydown', (e) => { 
-  if (e.key === 'Escape') closeDrawerFn(); 
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeDrawerFn();
 });
 
 // Tab functionality
@@ -151,16 +151,18 @@ function setActiveTab(nextTab) {
     const isActive = tab === nextTab;
     tab.setAttribute('aria-selected', String(isActive));
     tab.tabIndex = isActive ? 0 : -1;
-    
+
     if (isActive) {
       // Check if this is the workflow tab
       const isWorkflowTab = tab.id === 'tab-workflow';
       if (isWorkflowTab) {
         // Workflow tab should always have primary/50 background, even when active
-        tab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+        tab.className =
+          'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
       } else {
         // Regular tab active state - white background
-        tab.className = 'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-white text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
+        tab.className =
+          'px-2 sm:px-3 py-1.5 rounded-t-md rounded-b-none text-xs sm:text-sm bg-white text-slate-900 border border-[#E4E4E4] border-b-transparent whitespace-nowrap flex items-center gap-1 sm:gap-2 flex-shrink-0';
       }
       const icon = tab.querySelector('img');
       if (icon) {
@@ -174,10 +176,12 @@ function setActiveTab(nextTab) {
       const isWorkflowTab = tab.id === 'tab-workflow';
       if (isWorkflowTab) {
         // Workflow tab always has primary/50 background
-        tab.className = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 rounded-t-md flex-shrink-0';
+        tab.className =
+          'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border bg-primary-500 bg-opacity-50 hover:bg-primary-500 hover:bg-opacity-100 text-slate-900 rounded-t-md flex-shrink-0';
       } else {
         // Regular tabs have default styling
-        tab.className = 'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0';
+        tab.className =
+          'px-2 sm:px-3 py-1.5 text-xs sm:text-sm whitespace-nowrap flex items-center gap-1 sm:gap-2 border hover:bg-white rounded-t-md flex-shrink-0';
       }
       const icon = tab.querySelector('img');
       if (icon) {
@@ -197,33 +201,32 @@ function setActiveTab(nextTab) {
 }
 
 function getCurrentIndex() {
-  return Math.max(0, tabs.findIndex(t => t.getAttribute('aria-selected') === 'true'));
+  return Math.max(
+    0,
+    tabs.findIndex(t => t.getAttribute('aria-selected') === 'true')
+  );
 }
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => setActiveTab(tab));
-  tab.addEventListener('keydown', (e) => {
+  tab.addEventListener('keydown', e => {
     const key = e.key;
     let idx = getCurrentIndex();
-    if (key === 'ArrowRight') { 
-      e.preventDefault(); 
-      setActiveTab(tabs[(idx + 1) % tabs.length]); 
-    }
-    else if (key === 'ArrowLeft') { 
-      e.preventDefault(); 
-      setActiveTab(tabs[(idx - 1 + tabs.length) % tabs.length]); 
-    }
-    else if (key === 'Home') { 
-      e.preventDefault(); 
-      setActiveTab(tabs[0]); 
-    }
-    else if (key === 'End') { 
-      e.preventDefault(); 
-      setActiveTab(tabs[tabs.length - 1]); 
-    }
-    else if (key === 'Enter' || key === ' ') { 
-      e.preventDefault(); 
-      setActiveTab(tab); 
+    if (key === 'ArrowRight') {
+      e.preventDefault();
+      setActiveTab(tabs[(idx + 1) % tabs.length]);
+    } else if (key === 'ArrowLeft') {
+      e.preventDefault();
+      setActiveTab(tabs[(idx - 1 + tabs.length) % tabs.length]);
+    } else if (key === 'Home') {
+      e.preventDefault();
+      setActiveTab(tabs[0]);
+    } else if (key === 'End') {
+      e.preventDefault();
+      setActiveTab(tabs[tabs.length - 1]);
+    } else if (key === 'Enter' || key === ' ') {
+      e.preventDefault();
+      setActiveTab(tab);
     }
   });
 });
@@ -233,7 +236,16 @@ const sidebarButtons = Array.from(document.querySelectorAll('aside nav button'))
 const sidebarNav = document.querySelector('aside nav');
 
 function makeActiveSidebarButton(btn) {
-  const activeClasses = ['bg-accent-500','text-brand-900','shadow-soft','ring-2','ring-white','overflow-visible','relative','z-10'];
+  const activeClasses = [
+    'bg-accent-500',
+    'text-brand-900',
+    'shadow-soft',
+    'ring-2',
+    'ring-white',
+    'overflow-visible',
+    'relative',
+    'z-10',
+  ];
   sidebarButtons.forEach(b => {
     b.classList.remove(...activeClasses);
     b.removeAttribute('aria-current');
@@ -243,7 +255,7 @@ function makeActiveSidebarButton(btn) {
     }
   });
   btn.classList.add(...activeClasses);
-  btn.setAttribute('aria-current','page');
+  btn.setAttribute('aria-current', 'page');
   const icon = btn.querySelector('img');
   if (icon) {
     icon.classList.add('filter', 'invert');
@@ -259,14 +271,14 @@ sidebarButtons.forEach(b => b.addEventListener('click', () => makeActiveSidebarB
 // Real-time clock functionality
 function updateTime() {
   const now = new Date();
-  const pdtTime = new Date(now.toLocaleString("en-US", {timeZone: "America/Los_Angeles"}));
-  
+  const pdtTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+
   const timeString = pdtTime.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
-    hour12: true
+    hour12: true,
   });
-  
+
   const timeElement = document.getElementById('currentTime');
   if (timeElement) {
     timeElement.textContent = `${timeString} (PDT)`;

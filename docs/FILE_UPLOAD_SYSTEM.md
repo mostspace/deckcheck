@@ -23,6 +23,7 @@ The file upload system provides a comprehensive, production-ready solution for m
 ## Features
 
 ### ✅ **Core Functionality**
+
 - Vessel-scoped file storage with S3 integration
 - File deduplication using SHA256 hashing
 - Polymorphic relationships for any model
@@ -31,6 +32,7 @@ The file upload system provides a comprehensive, production-ready solution for m
 - Comprehensive access control and permissions
 
 ### ✅ **User Experience**
+
 - Drag & drop file uploads with progress tracking
 - Real-time validation and error handling
 - Custom display names for uploaded files
@@ -39,6 +41,7 @@ The file upload system provides a comprehensive, production-ready solution for m
 - Loading animations and smooth transitions
 
 ### ✅ **File Management**
+
 - Automatic file type detection and validation
 - Support for all major file formats
 - 50MB file size limit (configurable)
@@ -78,7 +81,7 @@ use App\Models\Traits\HasAttachments;
 class Equipment extends Model
 {
     use HasAttachments;
-    
+
     // ... existing code
 }
 ```
@@ -111,7 +114,7 @@ $equipment->removeAllAttachments();
 The system includes a comprehensive Blade component for file uploads:
 
 ```blade
-<x-file-upload 
+<x-file-upload
     :model="$equipment"
     modelClass="Equipment"
     role="resource"
@@ -123,6 +126,7 @@ The system includes a comprehensive Blade component for file uploads:
 ```
 
 **Component Props:**
+
 - `model`: The model instance to attach files to
 - `modelClass`: The class name for the model (used in API calls)
 - `role`: The role/category for the uploaded files
@@ -136,13 +140,14 @@ The system includes a comprehensive Blade component for file uploads:
 The system provides a dedicated component for displaying attachments:
 
 ```blade
-<x-attachment-card 
+<x-attachment-card
     :attachment="$attachment"
     :showActions="true"
 />
 ```
 
 **Features:**
+
 - File type icons based on MIME type
 - Display name and file size
 - Upload date and uploader information
@@ -182,6 +187,7 @@ GET    /attachments/{type}/{id}   # Get model attachments
 The system includes a professional lightbox for viewing media files:
 
 **Features:**
+
 - **Instant Loading**: Shows loading spinner immediately while content loads
 - **Responsive Design**: Content constrained to `max-w-4xl max-h-[70vh]`
 - **Multiple Close Methods**: ESC key, click outside, X button
@@ -190,6 +196,7 @@ The system includes a professional lightbox for viewing media files:
 - **Metadata Display**: File name, upload date, uploader, file size
 
 **Supported Media Types:**
+
 - **Images**: JPEG, PNG, GIF, WebP, SVG (with onload detection)
 - **Videos**: MP4, WebM, AVI (with onloadeddata detection)
 - **Audio**: MP3, WAV, OGG (with oncanplay detection)
@@ -207,6 +214,7 @@ The system includes a professional lightbox for viewing media files:
 The file upload system is fully integrated into the equipment show page:
 
 **Resources Section:**
+
 - Dynamic display of existing attachments
 - "Add Resource" button with side-out modal
 - File upload with drag & drop support
@@ -214,6 +222,7 @@ The file upload system is fully integrated into the equipment show page:
 - Real-time validation and progress tracking
 
 **Modal Features:**
+
 - Clean, professional design
 - File input with type restrictions
 - Display name field (saves to database)
@@ -222,6 +231,7 @@ The file upload system is fully integrated into the equipment show page:
 - Error handling and success feedback
 
 **Attachment Display:**
+
 - File type icons and metadata
 - Action buttons for each attachment
 - Responsive grid layout
@@ -335,7 +345,7 @@ public function show(Equipment $equipment)
             Add Resource
         </button>
     </div>
-    
+
     @if($equipment->hasAttachments())
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($equipment->attachments as $attachment)
@@ -357,8 +367,8 @@ public function show(Equipment $equipment)
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6">
                 <h3 class="text-lg font-semibold mb-4">Add Resource</h3>
-                
-                <x-file-upload 
+
+                <x-file-upload
                     :model="$equipment"
                     modelClass="Equipment"
                     role="resource"
@@ -366,17 +376,17 @@ public function show(Equipment $equipment)
                     accept="*/*"
                     label="Choose File"
                 />
-                
+
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700">Display Name</label>
                     <input type="text" id="resourceDisplayName" class="form-input w-full mt-1" placeholder="Enter a display name">
                 </div>
-                
+
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700">Description</label>
                     <textarea id="resourceDescription" class="form-textarea w-full mt-1" rows="3" placeholder="Optional description"></textarea>
                 </div>
-                
+
                 <div class="flex justify-end space-x-3 mt-6">
                     <button onclick="closeResourceModal()" class="btn-secondary">Cancel</button>
                 </div>
@@ -389,6 +399,7 @@ public function show(Equipment $equipment)
 ## Future Enhancements
 
 ### **🚀 Planned Features**
+
 - [ ] **Image Thumbnails**: Automatic thumbnail generation for images
 - [ ] **File Previews**: In-browser preview for documents
 - [ ] **Advanced Search**: Full-text search across file contents
@@ -398,6 +409,7 @@ public function show(Equipment $equipment)
 - [ ] **Storage Analytics**: Usage tracking and cost monitoring
 
 ### **🔧 Technical Improvements**
+
 - [ ] **CDN Integration**: Global file distribution
 - [ ] **Image Optimization**: Automatic compression and resizing
 - [ ] **Video Transcoding**: Multiple format support
@@ -409,6 +421,7 @@ public function show(Equipment $equipment)
 The file upload system provides a robust, user-friendly foundation for file management throughout the application. With its comprehensive feature set, security measures, and professional user interface, it's ready for production use and future enhancements.
 
 The system successfully addresses all MVP requirements:
+
 - ✅ File uploads with S3 storage
 - ✅ Vessel-scoped file management
 - ✅ Polymorphic relationships
