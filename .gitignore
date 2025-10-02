@@ -33,6 +33,7 @@ package-lock.json
 /bootstrap/cache/packages.php
 /bootstrap/cache/services.php
 /bootstrap/cache/routes-v*.php
+/bootstrap/cache/ser*.tmp
 
 # IDEs & editors
 /.idea
