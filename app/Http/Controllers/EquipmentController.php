@@ -72,16 +72,7 @@ class EquipmentController extends Controller
             ->unique()
             ->values();
 
-        // return view('v1.inventory.equipment.index', compact(
-        //     'equipment',
-        //     'operationalCount',
-        //     'inoperableCount',
-        //     'staticFields',
-        //     'attributeKeys',
-        //     'defaultColumns'
-        // ));
-
-        return view('v2.pages.maintenance.manifest', compact(
+        return view('v2.pages.maintenance.manifest.index', compact(
             'equipment',
             'operationalCount',
             'inoperableCount',
@@ -94,11 +85,17 @@ class EquipmentController extends Controller
     // Update index table columns
     public function updateVisibleColumns(Request $request)
     {
+        // Check if request came from manifest context
+        $requestPath = $request->getPathInfo();
+        $isManifestContext = str_contains($requestPath, 'maintenance/manifest');
+
         // If "Restore Defaults" was clicked
         if ($request->has('reset')) {
             session()->forget('visible_columns');
 
-            return redirect()->route('equipment.index')->with('success', 'Column preferences reset to default.');
+            $redirectRoute = $isManifestContext ? 'maintenance.manifest.index' : 'inventory.equipment';
+
+            return redirect()->route($redirectRoute)->with('success', 'Column preferences reset to default.');
         }
 
         // Otherwise validate and store selected columns
@@ -109,16 +106,24 @@ class EquipmentController extends Controller
 
         session(['visible_columns' => $validated['columns'] ?? []]);
 
-        return redirect()->route('equipment.index')->with('success', 'Visible columns updated.');
+        $redirectRoute = $isManifestContext ? 'maintenance.manifest.index' : 'inventory.equipment';
+
+        return redirect()->route($redirectRoute)->with('success', 'Visible columns updated.');
     }
 
     // Create & Store Equipment
-    public function create()
+    public function create(Request $request)
     {
         $vessel = currentVessel();
 
         $categories = Category::where('vessel_id', $vessel->id)->orderBy('name')->get();
         $decks = Deck::where('vessel_id', $vessel->id)->orderBy('name')->get();
+
+        $requestPath = $request->getPathInfo();
+
+        if ($requestPath === '/maintenance/manifest/create') {
+            return view('v2.pages.maintenance.manifest.create', compact('categories', 'decks'));
+        }
 
         return view('v2.pages.inventory.equipment.create', compact('categories', 'decks'));
     }
@@ -140,6 +145,15 @@ class EquipmentController extends Controller
 
         // Trigger interval inheritance logic
         app(IntervalInheritanceService::class)->handle($equipment);
+
+        $requestPath = $request->getPathInfo();
+
+        // Check if request came from manifest context
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return redirect()
+                ->route('maintenance.manifest.show', $equipment)
+                ->with('success', 'Equipment added and maintenance intervals inherited.');
+        }
 
         return redirect()
             ->route('equipment.show', $equipment)
@@ -181,6 +195,19 @@ class EquipmentController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        // Check if request came from manifest context
+        $requestPath = request()->getPathInfo();
+
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return view('v2.pages.maintenance.manifest.show', compact(
+                'equipment',
+                'categories',
+                'decks',
+                'locations',
+                'deficiencies'
+            ));
+        }
+
         return view('v2.pages.inventory.equipment.show', compact(
             'equipment',
             'categories',
@@ -215,6 +242,14 @@ class EquipmentController extends Controller
 
         $equipment->update($data);
 
+        // Check if request came from manifest context
+        $requestPath = $request->getPathInfo();
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return redirect()
+                ->route('maintenance.manifest.show', $equipment)
+                ->with('success', 'Equipment record updated.');
+        }
+
         return redirect()
             ->route('equipment.show', $equipment)
             ->with('success', 'Equipment record updated.');
@@ -244,6 +279,14 @@ class EquipmentController extends Controller
         //    Make sure you have these keys in your $fillable on the model
         $equipment->update($validated);
 
+        // Check if request came from manifest context
+        $requestPath = $request->getPathInfo();
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return redirect()
+                ->route('maintenance.manifest.show', $equipment)
+                ->with('success', 'Equipment updated successfully.');
+        }
+
         // 3. Redirect back to the show page
         return redirect()
             ->route('equipment.show', $equipment)
@@ -266,6 +309,14 @@ class EquipmentController extends Controller
         $equipment->update([
             'attributes_json' => $data['attributes_json'] ?? [],
         ]);
+
+        // Check if request came from manifest context
+        $requestPath = $request->getPathInfo();
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return redirect()
+                ->route('maintenance.manifest.show', $equipment)
+                ->with('success', 'Attributes updated successfully.');
+        }
 
         return redirect()
             ->route('equipment.show', $equipment)

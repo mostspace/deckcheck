@@ -9,7 +9,6 @@ export default defineConfig({
         'resources/css/sidebar.css',
         'resources/js/app.js',
         'resources/js/layouts/sidebar.js',
-        'resources/js/pages/crew/maintenance/manifest.js',
       ],
       refresh: true,
     }),

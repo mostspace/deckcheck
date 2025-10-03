@@ -77,6 +77,30 @@ Route::middleware('auth')->group(function () {
                 });
             });
 
+            // Maintenance Manifest (Equipment in maintenance context)
+            Route::prefix('manifest')->name('manifest.')->controller(EquipmentController::class)->group(function () {
+                Route::get('/create', 'create')->name('create');
+                Route::get('/', 'index')->name('index');
+                Route::post('/', 'store')->name('store');
+                Route::get('/{equipment}', 'show')->name('show');
+                Route::put('/{equipment}/basic', 'updateBasic')->name('updateBasic');
+                Route::put('/{equipment}/attributes', 'updateAttributes')->name('attributes.update');
+                Route::put('/{equipment}/data', 'updateData')->name('updateData');
+                Route::post('/columns', 'updateVisibleColumns')->name('columns.update');
+
+                // Manifest Equipment Intervals (matching equipment route structure)
+                Route::get('/intervals/{interval}', [EquipmentIntervalController::class, 'show'])
+                    ->name('intervals.show');
+
+                // Manifest Work Orders (matching equipment route structure)
+                Route::get('/intervals/work-orders/{workOrder}', [WorkOrderController::class, 'show'])
+                    ->name('work-orders.show');
+
+                // Manifest Deck Locations AJAX
+                Route::get('/decks/{deck}/locations', [DeckController::class, 'locations'])
+                    ->name('decks.locations');
+            });
+
             Route::get('/{category}', [VesselController::class, 'showCategory'])->name('show');
 
             Route::prefix('categories/{category}/intervals')->name('intervals.')->group(function () {

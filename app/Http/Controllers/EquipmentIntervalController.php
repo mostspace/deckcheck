@@ -56,6 +56,12 @@ class EquipmentIntervalController extends Controller
             'workOrders.tasks' => fn ($query) => $query->orderBy('sequence_position'),
         ]);
 
+        // Check if request came from manifest context
+        $requestPath = request()->getPathInfo();
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return view('v2.pages.maintenance.manifest.intervals.show', compact('interval', 'users'));
+        }
+
         return view('v2.pages.inventory.equipment.intervals.show', compact('interval', 'users'));
     }
 

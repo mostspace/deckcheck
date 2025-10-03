@@ -55,7 +55,7 @@ class FileController extends Controller
 
             $file = $this->fileUploadService->uploadFile(
                 $request->file('file'),
-                $request->vessel_id,
+                (int) $request->vessel_id,
                 Auth::id(),
                 's3_private',
                 $request->visibility ?? 'private',
@@ -148,7 +148,7 @@ class FileController extends Controller
         try {
             $files = $this->fileUploadService->uploadFiles(
                 $request->file('files'),
-                $request->vessel_id,
+                (int) $request->vessel_id,
                 Auth::id(),
                 's3_private',
                 $request->visibility ?? 'private'

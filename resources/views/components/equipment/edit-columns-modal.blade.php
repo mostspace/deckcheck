@@ -5,7 +5,9 @@
     <div class="relative w-full max-w-lg space-y-4 rounded-xl bg-white p-6 shadow-xl">
         <h3 class="text-lg font-semibold text-gray-900">Edit Visible Columns</h3>
 
-        <form action="{{ route('equipment.columns.update') }}" method="POST">
+        <form
+            action="{{ route(request()->is('maintenance/manifest*') ? 'maintenance.manifest.columns.update' : 'equipment.columns.update') }}"
+            method="POST">
             @csrf
 
             {{-- Column Checklist UI --}}

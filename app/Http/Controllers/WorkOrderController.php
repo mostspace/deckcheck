@@ -52,6 +52,12 @@ class WorkOrderController extends Controller
             ->orderBy('first_name')
             ->get();
 
+        // Check if request came from manifest context
+        $requestPath = request()->getPathInfo();
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return view('v2.pages.maintenance.manifest.intervals.work-orders.show', compact('workOrder', 'availableUsers'));
+        }
+
         return view('v2.pages.inventory.equipment.intervals.work-orders.show', compact('workOrder', 'availableUsers'));
     }
 
@@ -223,6 +229,13 @@ class WorkOrderController extends Controller
                 'message' => 'Work order marked as completed.',
                 'work_order_id' => $workOrder->id,
             ]);
+        }
+
+        // Check if request came from manifest context
+        $requestPath = $request->getPathInfo();
+        if (str_contains($requestPath, 'maintenance/manifest')) {
+            return redirect()->route('maintenance.manifest.work-orders.show', $workOrder)
+                ->with('success', 'Work order marked as completed.');
         }
 
         return redirect()->route('work-orders.show', $workOrder)
